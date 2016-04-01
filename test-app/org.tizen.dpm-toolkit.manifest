@@ -1,0 +1,8 @@
+<manifest>
+	<define>
+		<domain name="org.tizen.dpm-toolkit"/>
+	</define>
+	<request>
+		<domain name="_"/>
+	</request>
+</manifest>
