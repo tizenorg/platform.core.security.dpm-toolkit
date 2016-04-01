@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://tizen.org/ns/packages" package="org.tizen.dpm-toolkit" api-version="3.0" version="1.0.0" install-location="internal-only">
+    <label>dpm-toolkit</label>
+    <profile name="mobile"/>
+    <description>Tizen DPM test application</description>
+    <ui-application appid="org.tizen.dpm-toolkit" exec="/usr/apps/org.tizen.dpm-toolkit/bin/org.tizen.dpm-toolkit" nodisplay="false" multiple="false" type="capp" taskmanage="true">
+        <label>dpm-toolkit</label>
+        <icon>org.tizen.dpm-toolkit.png</icon>
+    </ui-application>
+</manifest>
