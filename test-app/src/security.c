@@ -3,25 +3,25 @@
 int rock_now_handler(struct dpm_toolkit_entity* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "rock_now_handler");
-	return 0;
+	return POLICY_RESULT_SUCCESS;
 }
 
 int wipe_data_handler(struct dpm_toolkit_entity* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "wipe_data_handler");
-	return 0;
+	return POLICY_RESULT_SUCCESS;
 }
 
 int reboot_handler(struct dpm_toolkit_entity* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "reboot_handler");
-	return 0;
+	return POLICY_RESULT_SUCCESS;
 }
 
 int power_off_device_handler(struct dpm_toolkit_entity* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "power_off_device_handler");
-	return 0;
+	return POLICY_RESULT_SUCCESS;
 }
 
 dpm_toolkit_entity_t dpm_toolkit_security_policy[] = {

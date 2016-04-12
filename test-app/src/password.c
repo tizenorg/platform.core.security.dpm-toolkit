@@ -15,19 +15,19 @@ int set_enforce_password_handler(struct dpm_toolkit_entity* self)
 	dlog_print(DLOG_DEBUG, LOG_TAG, "status : %s ", param);
 
 	xmlFree(param);
-	return 0;
+	return POLICY_RESULT_SUCCESS;
 }
 
 int get_password_policy_handler(struct dpm_toolkit_entity* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "get_password_policy_handler");
-	return 0;
+	return POLICY_RESULT_SUCCESS;
 }
 
 int set_password_recovery(struct dpm_toolkit_entity* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_password_recovery");
-	return 0;
+	return POLICY_RESULT_SUCCESS;
 }
 
 dpm_toolkit_entity_t dpm_toolkit_password_policy[] = {

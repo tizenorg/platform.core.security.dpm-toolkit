@@ -3,19 +3,19 @@
 int set_allow_wifi_handler(struct dpm_toolkit_entity* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_allow_wifi_handler");
-	return 0;
+	return POLICY_RESULT_SUCCESS;
 }
 
 int get_allow_wifi_handler(struct dpm_toolkit_entity* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "get_allow_wifi_handler");
-	return 0;
+	return POLICY_RESULT_SUCCESS;
 }
 
 int get_ssid_handler(struct dpm_toolkit_entity* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "get_ssid_handler");
-	return 0;
+	return POLICY_RESULT_SUCCESS;
 }
 
 dpm_toolkit_entity_t dpm_toolkit_wifi_policy[] = {

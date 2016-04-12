@@ -21,6 +21,12 @@
 
 #define __CONSTRUCTOR__ __attribute__ ((constructor))
 
+#define POLICY_SUCCESS_TXT "SUCCESS"
+#define POLICY_FAIL_TXT "FAIL"
+
+#define POLICY_RESULT_SUCCESS 0
+#define POLICY_RESULT_FAIL 1
+
 typedef struct appdata {
 	Evas_Object *win;
 	Evas_Object *conform;
