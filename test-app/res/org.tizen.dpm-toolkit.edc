@@ -1,0 +1,4 @@
+collections {
+	base_scale: 2.6;
+	#include "../edc_resource/genlist_custom.edc"
+}

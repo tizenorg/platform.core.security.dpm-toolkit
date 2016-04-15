@@ -2,7 +2,7 @@
 
 /*#define POLICY_XML_FILE_PATH "/home/owner/test.xml"*/
 #define POLICY_XML_FILE_PATH "/usr/apps/org.tizen.dpm-toolkit/test.xml"
-static Elm_Genlist_Item_Class* itc_policy_group, * itc_policy;
+static Elm_Genlist_Item_Class* itc_policy_group, * itc_policy, * itc_policy_entry;
 static xmlDoc* dpmDoc = NULL;
 
 void _popup_hide_cb(void* data, Evas_Object* obj, void* event_info)
@@ -153,7 +153,6 @@ int dpm_toolkit_add_policy(GList** policies, dpm_toolkit_entity_t* policy)
 
 void dpm_parser_free_policy_list(void)
 {
-
 	dlog_print(DLOG_DEBUG, LOG_TAG, "## policy list free ## ");
 
 	GList* pg_list = NULL;
@@ -217,6 +216,62 @@ static char* _gl_policy_label_get(void* data, Evas_Object* obj, const char* part
 		return NULL;
 }
 
+static void _entry_cb(void* data, Evas_Object* obj, void* event_info, const char* smart_event)
+{
+	dpm_toolkit_entity_t* selected_entity = (dpm_toolkit_entity_t*)data;
+	Evas_Object* entry = obj;
+	const char* entry_str = NULL;
+	entry_str = elm_entry_entry_get(entry);
+
+	/* Free previous entry */
+	g_free(selected_entity->entry_input);
+	selected_entity->entry_input = strdup(entry_str);
+}
+
+static void _entry_changed_cb(void* data, Evas_Object* obj, void* event_info)
+{
+	_entry_cb(data, obj, event_info, "changed");
+}
+
+static void _entry_preedit_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	_entry_cb(data, obj, event_info, "preedit,changed");
+}
+
+static Evas_Object* _gl_entry_content_get(void* data, Evas_Object* obj, const char* part)
+{
+	Evas_Object* layout, * entry, * label;
+	dpm_toolkit_entity_t* selected_entity = NULL;
+
+	selected_entity = (dpm_toolkit_entity_t*)data;
+
+	layout = elm_layout_add(obj);
+	elm_layout_file_set(layout, global_ad->edj_path, "gl_custom_item");
+	evas_object_size_hint_align_set(layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+
+	label = elm_label_add(obj);
+	evas_object_size_hint_weight_set(label, EVAS_HINT_EXPAND, 0);
+	evas_object_size_hint_align_set(label, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	elm_object_text_set(label, (const char*)xmlGetProp(selected_entity->model, (xmlChar*) "desc"));
+	elm_object_part_content_set(layout, "elm.text", label);
+
+	entry = elm_entry_add(obj);
+	elm_entry_single_line_set(entry, EINA_TRUE);
+	elm_entry_scrollable_set(entry, EINA_TRUE);
+	evas_object_size_hint_weight_set(entry, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(entry, EVAS_HINT_FILL, EVAS_HINT_FILL);
+
+	elm_entry_entry_set(entry, (const char*)xmlGetProp(selected_entity->model, (xmlChar*) "default"));
+	selected_entity->entry_input = strdup((char*)xmlGetProp((xmlNodePtr)selected_entity->model, (xmlChar*) "default"));
+
+	elm_object_part_content_set(layout, "elm.swallow.content" , entry);
+	evas_object_smart_callback_add(entry, "changed", _entry_changed_cb, selected_entity);
+	evas_object_smart_callback_add(entry, "preedit,changed", _entry_preedit_cb, selected_entity);
+
+	return layout;
+}
+
 static void create_genlist_items_classes()
 {
 	itc_policy_group = elm_genlist_item_class_new();
@@ -230,6 +285,13 @@ static void create_genlist_items_classes()
 	itc_policy->func.text_get = _gl_policy_label_get;
 	itc_policy->func.state_get = NULL;
 	itc_policy->func.del = NULL;
+
+	itc_policy_entry = elm_genlist_item_class_new();
+	itc_policy_entry->item_style = "full";
+	itc_policy_entry->func.text_get = NULL;
+	itc_policy_entry->func.content_get = _gl_entry_content_get;
+	itc_policy_entry->func.state_get = NULL;
+	itc_policy_entry->func.del = NULL;
 
 }
 
@@ -247,12 +309,18 @@ static void _gl_policy_select(void* data, Evas_Object* obj, void* event_info)
 {
 	dpm_toolkit_entity_t* selected_policy = (dpm_toolkit_entity_t*) data;
 	int ret = selected_policy->handler(selected_policy);
+	elm_genlist_item_selected_set((Elm_Object_Item*) event_info, EINA_FALSE);
 
 	if (ret == POLICY_RESULT_SUCCESS)
 		display_result_popup((char*)xmlGetProp((xmlNodePtr) selected_policy->model, (xmlChar*) "desc"), POLICY_SUCCESS_TXT);
 	else
 		display_result_popup((char*)xmlGetProp((xmlNodePtr) selected_policy->model, (xmlChar*) "desc"), POLICY_FAIL_TXT);
 
+}
+
+static void _gl_policy_entry_select(void* data, Evas_Object* obj, void* event_info)
+{
+	elm_genlist_item_selected_set((Elm_Object_Item*)event_info, EINA_FALSE);
 }
 
 static void _gl_policy_group_select(void* data, Evas_Object* obj, void* event_info)
@@ -270,7 +338,12 @@ static void _gl_policy_group_select(void* data, Evas_Object* obj, void* event_in
 	for (policyList = g_list_first(selected_group->policies); (policyList && policyList->data); policyList = g_list_next(policyList)) {
 		policy_entity_info = (dpm_toolkit_entity_t*) policyList->data;
 
-		if (xmlStrcmp(xmlGetProp(policy_entity_info->model, (xmlChar*) "status"), (xmlChar*) "ON") == 0)
+		if (xmlStrcmp(xmlGetProp(policy_entity_info->model, (xmlChar*) "status"), (xmlChar*) "ON") != 0)
+			continue;
+		if (xmlStrcmp(xmlGetProp(policy_entity_info->model, (xmlChar*) "entry"), (xmlChar*) "ON") == 0) {
+			elm_genlist_item_append(genlist, itc_policy, (void*)policy_entity_info, NULL, ELM_GENLIST_ITEM_NONE, _gl_policy_select, (void*)policy_entity_info);
+			elm_genlist_item_append(genlist, itc_policy_entry, (void*)policy_entity_info, NULL, ELM_GENLIST_ITEM_NONE, _gl_policy_entry_select, (void*)policy_entity_info);
+		} else
 			elm_genlist_item_append(genlist, itc_policy, (void*)policy_entity_info, NULL, ELM_GENLIST_ITEM_NONE, _gl_policy_select, (void*)policy_entity_info);
 	}
 	elm_naviframe_item_push(global_ad->nf, selected_group->id, NULL, NULL, genlist, NULL);
@@ -283,9 +356,8 @@ void create_genlist(appdata_s* ad)
 	GList* g_list = NULL;
 	ad->list = elm_genlist_add(ad->nf);
 
-	dlog_print(DLOG_ERROR, LOG_TAG, "g_list_length(ad->dpm_policy_group_list) = %d", g_list_length(effective_dpm_policy_group_list));
+	dlog_print(DLOG_DEBUG, LOG_TAG, "g_list_length(ad->dpm_policy_group_list) = %d", g_list_length(effective_dpm_policy_group_list));
 	for (g_list = g_list_first(effective_dpm_policy_group_list); (g_list && g_list->data); g_list = g_list_next(g_list)) {
-
 		policy_group = (dpm_toolkit_policy_group_t *) g_list->data;
 		elm_genlist_item_append(ad->list, itc_policy_group, (void*)policy_group, NULL, ELM_GENLIST_ITEM_NONE, _gl_policy_group_select, (void*)policy_group);
 	}
@@ -295,7 +367,29 @@ void create_genlist(appdata_s* ad)
 static void create_base_gui(appdata_s* ad)
 {
 	Elm_Object_Item* nf_it;
-	dlog_print(DLOG_ERROR, LOG_TAG, "create base gui");
+	char* res_path = NULL;
+	char* edj_path = NULL;
+	size_t path_size;
+	dlog_print(DLOG_DEBUG, LOG_TAG, "create base gui");
+
+	/* Get EDJ path */
+	res_path = app_get_resource_path();
+	if (res_path == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "failed get resource path");
+		ui_app_exit();
+		return;
+	}
+	path_size = strlen(res_path) + strlen("org.tizen.dpm-toolkit.edj") + 1;
+	edj_path = (char*)malloc(path_size);
+	if (edj_path == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "malloc fail");
+		ui_app_exit();
+		return;
+	}
+	snprintf(edj_path, path_size, "%s%s", res_path, "org.tizen.dpm-toolkit.edj");
+	global_ad->edj_path = strdup(edj_path);
+	free(res_path);
+
 	/* Window */
 	ad->win = elm_win_util_standard_add(PACKAGE, PACKAGE);
 	elm_win_conformant_set(ad->win, EINA_TRUE);

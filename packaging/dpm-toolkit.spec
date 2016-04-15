@@ -19,6 +19,8 @@ BuildRequires: pkgconfig(capi-appfw-application)
 BuildRequires: pkgconfig(efl-extension)
 BuildRequires: pkgconfig(libxml-2.0)
 BuildRequires: pkgconfig(capi-system-system-settings)
+BuildRequires: pkgconfig(evas)
+BuildRequires: pkgconfig(dpm)
 
 %if %{with x}
 BuildRequires: pkgconfig(x11)
@@ -75,6 +77,7 @@ DPM test application
 %manifest test-app/org.tizen.dpm-toolkit.manifest
 %defattr(-,root,root,-)
 %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/bin/*
+%{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/res/*
 %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/test.xml
 %{TZ_SYS_RO_PACKAGES}/org.tizen.dpm-toolkit.xml
 %{TZ_SYS_RW_ICONS}/default/small/org.tizen.dpm-toolkit.png

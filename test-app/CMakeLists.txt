@@ -29,6 +29,8 @@ PKG_CHECK_MODULES(test_pkgs REQUIRED
 	capi-appfw-application
 	libxml-2.0
 	capi-system-system-settings
+	evas
+	dpm
 )
 
 
@@ -52,9 +54,16 @@ INSTALL(TARGETS ${PKG_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${PKG_NAME}/bin)
 
 TARGET_LINK_LIBRARIES(${PKG_NAME} ${test_pkgs_LIBRARIES})
 
+#Create edj file
+ADD_CUSTOM_TARGET(org.tizen.dpm-toolkit.edj
+	COMMAND edje_cc -no-save ${CMAKE_CURRENT_SOURCE_DIR}/res/org.tizen.dpm-toolkit.edc
+	${CMAKE_BINARY_DIR}/org.tizen.dpm-toolkit.edj
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/res/org.tizen.dpm-toolkit.edc)
+
+ADD_DEPENDENCIES(${PACKAGE} org.tizen.dpm-toolkit.edj)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/org.tizen.dpm-toolkit.edj DESTINATION ${CMAKE_INSTALL_PREFIX}/${PKG_NAME}/res)
+
 #Install app data
 INSTALL(FILES res/${PKG_NAME}.png DESTINATION ${CMAKE_DESKTOP_ICON_DIR})
 INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${PKG_NAME}.xml DESTINATION ${CMAKE_APP_SHARE_PACKAGES_DIR})
 INSTALL(FILES data/test.xml DESTINATION ${CMAKE_INSTALL_PREFIX}/${PKG_NAME})
-
-
