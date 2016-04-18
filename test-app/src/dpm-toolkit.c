@@ -426,9 +426,9 @@ static void create_base_gui(appdata_s* ad)
 
 }
 
-static void dpm_toolkit_rebuild_policyGorup(const char *xmlFilePath)
+static void dpm_toolkit_rebuild_policyGroup(const char *xmlFilePath)
 {
-	dlog_print(DLOG_DEBUG, LOG_TAG, "start dpm_toolkit_rebuild_policyGorup");
+	dlog_print(DLOG_DEBUG, LOG_TAG, "start dpm_toolkit_rebuild_policyGroup");
 
 	dpmDoc = xmlParseFile(xmlFilePath);
 
@@ -482,7 +482,7 @@ static bool app_create(void* data)
 	appdata_s* ad = data;
 	elm_app_base_scale_set(1.8);
 
-	dpm_toolkit_rebuild_policyGorup(POLICY_XML_FILE_PATH);
+	dpm_toolkit_rebuild_policyGroup(POLICY_XML_FILE_PATH);
 	create_base_gui(ad);
 
 	return true;
