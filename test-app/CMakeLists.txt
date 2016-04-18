@@ -43,7 +43,8 @@ SET(PKG_NAME "${PACKAGE}")
 SET(PKG_SRCS ./src/dpm-toolkit.c
 			 ./src/password.c
 			 ./src/security.c
-			 ./src/wifi.c)
+			 ./src/wifi.c
+			 ./src/restriction.c)
 
 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIE")
