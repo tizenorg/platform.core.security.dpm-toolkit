@@ -26,6 +26,7 @@
 
 #define POLICY_RESULT_SUCCESS 0
 #define POLICY_RESULT_FAIL 1
+#define POLICY_RESULT_NONE 100
 
 typedef struct appdata {
 	Evas_Object* win;
@@ -49,10 +50,22 @@ typedef struct dpm_toolkit_policy_group {
 	GList* policies;
 }dpm_toolkit_policy_group_t;
 
+typedef struct popup_data {
+	Evas_Object* popup;
+	Evas_Object* entry;
+	dpm_toolkit_entity_t* policy;
+	int popup_flag;
+} popup_data_t;
+
+popup_data_t global_popup;
+
 GList* global_dpm_policy_group_list;
 GList* effective_dpm_policy_group_list;
 
 int dpm_toolkit_add_policy_group(GList** Grouplist , dpm_toolkit_policy_group_t* group);
 int dpm_toolkit_init_policy(GList** policies, dpm_toolkit_entity_t* policy, int policyNum);
+
+void display_result_popup(const char* title, const char* popup_message);
+void display_input_popup(const char* title, dpm_toolkit_entity_t* selected_policy);
 
 #endif /* __dpm-toolkit_H__ */
