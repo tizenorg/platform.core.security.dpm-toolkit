@@ -5,55 +5,6 @@
 static Elm_Genlist_Item_Class* itc_policy_group, * itc_policy, * itc_policy_entry;
 static xmlDoc* dpmDoc = NULL;
 
-void _popup_hide_cb(void* data, Evas_Object* obj, void* event_info)
-{
-	evas_object_del(obj);
-}
-
-void _popup_hide_finished_cb(void* data, Evas_Object* obj, void* event_info)
-{
-	evas_object_del(obj);
-}
-
-void _popup_block_clicked_cb(void* data, Evas_Object* obj, void* event_info)
-{
-	evas_object_del(obj);
-}
-
-
-void _response_cb(void* data, Evas_Object* obj, void* event_info)
-{
-	evas_object_del(data);
-}
-
-void display_result_popup(const char* title, const char* popup_message)
-{
-	Evas_Object* popup = NULL;
-	Evas_Object* btn = NULL;
-
-	if (title == NULL || popup_message == NULL)
-		dlog_print(DLOG_ERROR, LOG_TAG, "Invalid parameters");
-
-	popup = elm_popup_add(global_ad->nf);
-	elm_popup_align_set(popup, ELM_NOTIFY_ALIGN_FILL, 1.0);
-	evas_object_size_hint_weight_set(popup, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	elm_object_part_text_set(popup, "title,text", title);
-	elm_object_text_set(popup, popup_message);
-
-	eext_object_event_callback_add(popup, EEXT_CALLBACK_BACK, _popup_hide_cb, NULL);
-	evas_object_smart_callback_add(popup, "dismissed", _popup_hide_finished_cb, NULL);
-	evas_object_smart_callback_add(popup, "block,clicked", _popup_block_clicked_cb, NULL);
-
-	btn = elm_button_add(popup);
-	elm_object_text_set(btn, "OK");
-	elm_object_style_set(btn, "bottom");
-	elm_object_part_content_set(popup, "button1", btn);
-	evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_smart_callback_add(btn, "clicked", _response_cb, popup);
-	evas_object_show(popup);
-
-}
-
 xmlNodePtr evaluate_xmlNode(xmlDoc* dpmDoc, char* policy_group, char* policy_id)
 {
 	char* xpath = NULL;
@@ -313,7 +264,7 @@ static void _gl_policy_select(void* data, Evas_Object* obj, void* event_info)
 
 	if (ret == POLICY_RESULT_SUCCESS)
 		display_result_popup((char*)xmlGetProp((xmlNodePtr) selected_policy->model, (xmlChar*) "desc"), POLICY_SUCCESS_TXT);
-	else
+	else if (ret == POLICY_RESULT_FAIL)
 		display_result_popup((char*)xmlGetProp((xmlNodePtr) selected_policy->model, (xmlChar*) "desc"), POLICY_FAIL_TXT);
 
 }
@@ -361,12 +312,18 @@ void create_genlist(appdata_s* ad)
 		policy_group = (dpm_toolkit_policy_group_t *) g_list->data;
 		elm_genlist_item_append(ad->list, itc_policy_group, (void*)policy_group, NULL, ELM_GENLIST_ITEM_NONE, _gl_policy_group_select, (void*)policy_group);
 	}
-	evas_object_show(ad->list);
+
+}
+
+void _end_btn_cb(void* data, Evas_Object* obj, void* event_info)
+{
+	ui_app_exit();
 }
 
 static void create_base_gui(appdata_s* ad)
 {
 	Elm_Object_Item* nf_it;
+	Evas_Object* btn;
 	char* res_path = NULL;
 	char* edj_path = NULL;
 	size_t path_size;
@@ -410,6 +367,7 @@ static void create_base_gui(appdata_s* ad)
 
 	/* Naviframe */
 	ad->nf = elm_naviframe_add(ad->conform);
+	elm_naviframe_prev_btn_auto_pushed_set(ad->nf, EINA_TRUE);
 	eext_object_event_callback_add(ad->nf, EEXT_CALLBACK_BACK, eext_naviframe_back_cb, ad);
 	evas_object_size_hint_weight_set(ad->nf, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_object_content_set(ad->conform, ad->nf);
@@ -418,7 +376,12 @@ static void create_base_gui(appdata_s* ad)
 	/*Genlist */
 	create_genlist_items_classes();
 	create_genlist(ad);
-	nf_it = elm_naviframe_item_push(ad->nf, "DPM Toolkit", NULL, NULL, ad->list, NULL);
+
+	btn = elm_button_add(ad->nf);
+	elm_object_style_set(btn, "naviframe/end_btn/default");
+	evas_object_smart_callback_add(btn, "clicked", _end_btn_cb, NULL);
+
+	nf_it = elm_naviframe_item_push(ad->nf, "DPM Toolkit", btn, NULL, ad->list, NULL);
 	elm_naviframe_item_pop_cb_set(nf_it, naviframe_pop_cb, ad);
 
 	/* Show window after base gui is set up */
@@ -426,9 +389,9 @@ static void create_base_gui(appdata_s* ad)
 
 }
 
-static void dpm_toolkit_rebuild_policyGorup(const char *xmlFilePath)
+static void dpm_toolkit_rebuild_policyGroup(const char *xmlFilePath)
 {
-	dlog_print(DLOG_DEBUG, LOG_TAG, "start dpm_toolkit_rebuild_policyGorup");
+	dlog_print(DLOG_DEBUG, LOG_TAG, "start dpm_toolkit_rebuild_policyGroup");
 
 	dpmDoc = xmlParseFile(xmlFilePath);
 
@@ -482,7 +445,7 @@ static bool app_create(void* data)
 	appdata_s* ad = data;
 	elm_app_base_scale_set(1.8);
 
-	dpm_toolkit_rebuild_policyGorup(POLICY_XML_FILE_PATH);
+	dpm_toolkit_rebuild_policyGroup(POLICY_XML_FILE_PATH);
 	create_base_gui(ad);
 
 	return true;

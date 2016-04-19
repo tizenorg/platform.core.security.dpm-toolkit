@@ -41,6 +41,7 @@ LINK_DIRECTORIES(${test_pkgs_LIBRARY_DIRS})
 
 SET(PKG_NAME "${PACKAGE}")
 SET(PKG_SRCS ./src/dpm-toolkit.c
+			 ./src/dpm-toolkit-popup.c
 			 ./src/password.c
 			 ./src/security.c
 			 ./src/wifi.c
