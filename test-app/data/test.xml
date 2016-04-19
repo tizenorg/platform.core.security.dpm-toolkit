@@ -6,7 +6,7 @@
 		</policy>
 		<policy id="SET_ENFORCE_PASSWORD" desc="Enforce Password Change" status="ON" entry="ON" default="entry test1">
 		</policy>
-		<policy id="SET_PASSWORD_RECOVERY" desc="Set Password Recovery" status="ON" entry="ON" default="entry test2">
+		<policy id="SET_PASSWORD_RECOVERY" desc="Set Password Recovery" status="ON">
 		</policy>
 		<policy id="SET_PASSWORD_QUALITY" desc="Set Password Quality" status="ON" username="owner" quality="DPM_PASSWORD_QUALITY_ALPHANUMERIC">
 		</policy>
