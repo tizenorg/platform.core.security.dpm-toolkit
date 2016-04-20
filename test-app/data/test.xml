@@ -58,4 +58,10 @@
 
 	</policy-group>
 
+	<policy-group id="LOCATION">
+		<policy id="ALLOW_LOCATION_STATE_CHANGE" desc="Allow Location State Change" status="ON">
+		</policy>
+		<policy id="DISALLOW_LOCATION_STATE_CHANGE" desc="Disallow Location State Change" status="ON">
+		</policy>
+	</policy-group>
 </manifest>

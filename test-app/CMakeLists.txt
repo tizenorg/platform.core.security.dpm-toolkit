@@ -44,7 +44,8 @@ SET(PKG_SRCS ./src/dpm-toolkit.c
 			 ./src/password.c
 			 ./src/security.c
 			 ./src/wifi.c
-			 ./src/restriction.c)
+			 ./src/restriction.c
+			 ./src/location.c)
 
 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIE")
