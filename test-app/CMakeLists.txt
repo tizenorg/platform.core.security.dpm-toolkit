@@ -44,8 +44,9 @@ SET(PKG_SRCS ./src/dpm-toolkit.c
 			 ./src/password.c
 			 ./src/security.c
 			 ./src/wifi.c
-			 ./src/restriction.c)
-
+			 ./src/restriction.c
+             ./src/bluetooth.c
+)
 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIE")
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pie")
