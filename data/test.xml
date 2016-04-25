@@ -57,7 +57,16 @@
 		</policy>
 		<policy id="OFF_FACTORY_RESET_RESTRICTION" desc="DISABLE FACTORY_RESET_RESTRICTION" status="ON">
 		</policy>
-
 	</policy-group>
 
+	<policy-group id="ZONE">
+		<policy id="CREATE_ZONE" desc="Create zone" status="ON" wizappid="org.tizen.zone-setup-wizard">
+		</policy>
+		<policy id="DESTROY_ZONE" desc="Destroy zone" status="ON">
+		</policy>
+		<policy id="GET_ZONE_LIST" desc="Get zones list" status="ON">
+		</policy>
+		<policy id="GET_ZONE_STATE" desc="Get zone state" status="ON">
+		</policy>
+	</policy-group>
 </manifest>
