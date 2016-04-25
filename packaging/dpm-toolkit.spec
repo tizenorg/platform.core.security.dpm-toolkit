@@ -1,8 +1,5 @@
-%bcond_with x
-%bcond_with wayland
-
-Name: dpm-toolkit
-Summary: Tizen DPM Test package
+Name: org.tizen.dpm-toolkit
+Summary: Tizen DPM test toolkit package
 Version: 0.1
 Release: 0
 ExclusiveArch: %arm
@@ -22,12 +19,8 @@ BuildRequires: pkgconfig(capi-system-system-settings)
 BuildRequires: pkgconfig(evas)
 BuildRequires: pkgconfig(dpm)
 
-%if %{with x}
-BuildRequires: pkgconfig(x11)
-%endif
-
 %description
-Device Policy Manager test pakcage
+Device Policy Manager test toolkit pakcage
 
 %prep
 %setup -q
@@ -36,11 +29,6 @@ Device Policy Manager test pakcage
 cmake . -DCMAKE_INSTALL_PREFIX="%{TZ_SYS_RO_APP}" \
        -DCMAKE_DESKTOP_ICON_DIR="%{TZ_SYS_RW_ICONS}/default/small" \
        -DCMAKE_APP_SHARE_PACKAGES_DIR="%{TZ_SYS_RO_PACKAGES}" \
-%if %{with wayland} && !%{with x}
--Dwith_wayland=TRUE
-%else
--Dwith_x=TRUE
-%endif
 
 make %{?jobs:-j%jobs}
 
@@ -48,33 +36,21 @@ make %{?jobs:-j%jobs}
 %make_install
 
 #for package signing step
-#%define signature_list %{TZ_USER_APP}/org.tizen.test-app;
+#%define signature_list %{TZ_USER_APP}/org.tizen.dpm-toolkit;
 #%define tizen_sign 1
 #%define tizen_sign_base %{signature_list}
 #%define tizen_sign_level platform
 #%define tizen_author_sign 1
 #%define tizen_dist_sign 1
 
-#mkdir -p %{buildroot}/%{_datadir}/packages/
-#cp %{_builddir}/%{buildsubdir}/org.tizen.dpm-util.xml %{buildroot}/%{_datadir}/packages/org.tizen.dpm-util.xml
-
-%package -n org.tizen.dpm-toolkit
-Summary: DPM test application
-Group: Security/Other
-
-Requires: %{name} = %{version}-%{release}
-
-%description -n org.tizen.dpm-toolkit
-DPM test application
-
-%post -n org.tizen.dpm-toolkit
+%post
 /sbin/ldconfig
 
-%postun -n org.tizen.dpm-toolkit
+%postun
 /sbin/ldconfig
 
-%files -n org.tizen.dpm-toolkit
-%manifest test-app/org.tizen.dpm-toolkit.manifest
+%files
+%manifest org.tizen.dpm-toolkit.manifest
 %defattr(-,root,root,-)
 %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/bin/*
 %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/res/*
