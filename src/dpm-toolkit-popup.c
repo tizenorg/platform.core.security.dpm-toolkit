@@ -45,9 +45,13 @@ void _set_btn_response_cb(void *data, Evas_Object *obj, void *event_info)
 void _radio_set_btn_response_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	int ret;
-	SLOGD("selected radio index : %d", global_popup.radio_index);
-	global_popup.policy->radio_index = global_popup.radio_index;
 
+	if (global_popup.radio_index < 0)
+		global_popup.policy->radio_index = 0;
+	else
+		global_popup.policy->radio_index = global_popup.radio_index;
+
+	SLOGD("selected radio index : %d", global_popup.policy->radio_index);
 	ret = global_popup.policy->handler(global_popup.policy);
 
 	if (ret == POLICY_RESULT_SUCCESS) {
@@ -147,6 +151,7 @@ void display_radio_popup(const char* title, dpm_toolkit_entity_t* selected_polic
 
 	global_popup.popup_flag = 1;
 	global_popup.policy = selected_policy;
+	global_popup.radio_index = -1;
 
 	popup = elm_popup_add(global_ad->nf);
 	elm_popup_align_set(popup, ELM_NOTIFY_ALIGN_FILL, 1.0);

@@ -343,6 +343,7 @@ static void create_base_gui(appdata_s* ad)
 	snprintf(edj_path, path_size, "%s%s", res_path, "org.tizen.dpm-toolkit.edj");
 	global_ad->edj_path = strdup(edj_path);
 	free(res_path);
+	free(edj_path);
 
 	/* Window */
 	ad->win = elm_win_util_standard_add(PACKAGE, PACKAGE);
