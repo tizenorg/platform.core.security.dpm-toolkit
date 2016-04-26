@@ -69,4 +69,23 @@
 		<policy id="GET_ZONE_STATE" desc="Get zone state" status="ON">
 		</policy>
 	</policy-group>
+
+	<policy-group id="BLUETOOTH">
+		<policy id="ADD_DEVICE_TO_BLACKLIST" desc="Add device MAC address to blacklist" status="ON">
+		</policy>
+		<policy id="REMOVE_DEVICE_FROM_BLACKLIST" desc="Remove device MAC address from blacklist" status="ON">
+		</policy>
+		<policy id="SET_DEVICE_RESTRICTION" desc="Set device restriction" status="ON">
+		</policy>
+		<policy id="IS_DEVICE_RESTRICTED" desc="Check device restriction" status="ON">
+		</policy>
+		<policy id="ADD_UUID_TO_BLACKLIST" desc="Add uuid to blacklist" status="ON">
+		</policy>
+		<policy id="REMOVE_UUID_FROM_BLACKLIST" desc="Remove uuid from blacklist" status="ON">
+		</policy>
+		<policy id="SET_UUID_RESTRICTION" desc="Set uuid restriction" status="ON">
+		</policy>
+		<policy id="IS_UUID_RESTRICTED" desc="Check uuid restriction" status="ON">
+		</policy>
+	</policy-group>
 </manifest>
