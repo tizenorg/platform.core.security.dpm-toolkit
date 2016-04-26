@@ -291,11 +291,8 @@ static void _gl_policy_group_select(void* data, Evas_Object* obj, void* event_in
 
 		if (xmlStrcmp(xmlGetProp(policy_entity_info->model, (xmlChar*) "status"), (xmlChar*) "ON") != 0)
 			continue;
-		if (xmlStrcmp(xmlGetProp(policy_entity_info->model, (xmlChar*) "entry"), (xmlChar*) "ON") == 0) {
-			elm_genlist_item_append(genlist, itc_policy, (void*)policy_entity_info, NULL, ELM_GENLIST_ITEM_NONE, _gl_policy_select, (void*)policy_entity_info);
-			elm_genlist_item_append(genlist, itc_policy_entry, (void*)policy_entity_info, NULL, ELM_GENLIST_ITEM_NONE, _gl_policy_entry_select, (void*)policy_entity_info);
-		} else
-			elm_genlist_item_append(genlist, itc_policy, (void*)policy_entity_info, NULL, ELM_GENLIST_ITEM_NONE, _gl_policy_select, (void*)policy_entity_info);
+
+		elm_genlist_item_append(genlist, itc_policy, (void*)policy_entity_info, NULL, ELM_GENLIST_ITEM_NONE, _gl_policy_select, (void*)policy_entity_info);
 	}
 	elm_naviframe_item_push(global_ad->nf, selected_group->id, NULL, NULL, genlist, NULL);
 
@@ -364,6 +361,10 @@ static void create_base_gui(appdata_s* ad)
 	evas_object_size_hint_weight_set(ad->conform, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_win_resize_object_add(ad->win, ad->conform);
 	evas_object_show(ad->conform);
+
+	/* Indicator */
+	elm_win_indicator_mode_set(ad->win, ELM_WIN_INDICATOR_SHOW);
+	elm_win_indicator_opacity_set(ad->win, ELM_WIN_INDICATOR_TRANSPARENT);
 
 	/* Naviframe */
 	ad->nf = elm_naviframe_add(ad->conform);

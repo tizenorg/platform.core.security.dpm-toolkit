@@ -1,14 +1,17 @@
 #include "dpm-toolkit.h"
 #include <dpm/password.h>
 
-/* dpm integration test */
-
+/* dpm integration test & radio popup test */
 int password_set_password_quality_handler(struct dpm_toolkit_entity* self)
 {
 	dpm_client_h handle;
 	dpm_toolkit_entity_t* selected_policy = self;
 	char* param_username = NULL;
-	char* param_quality = NULL;
+	dpm_password_quality_e param_quality = -1;
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"UNSPECIFIED", "SIMPLE PASSWORD", "SOMETHING", "NUMERIC", "ALPAHBETIC", "ALPAHNUMERIC"};
+	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
+
+	handler_display_radio_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"), selected_policy, radio_text_quality, radio_num);
 
 	handle = dpm_create_client();
 	if (handle == NULL) {
@@ -17,14 +20,38 @@ int password_set_password_quality_handler(struct dpm_toolkit_entity* self)
 	}
 
 	param_username = (char*)xmlGetProp(selected_policy->model, (xmlChar*)"username");
-	param_quality = (char*)xmlGetProp(selected_policy->model, (xmlChar*)"quality");
-	if (param_username == NULL || param_quality == NULL) {
+
+	dlog_print(DLOG_DEBUG, LOG_TAG, "username: %s", param_username);
+	dlog_print(DLOG_DEBUG, LOG_TAG, "radio index: %d", selected_policy->radio_index);
+
+	switch (selected_policy->radio_index) {
+	case 0:
+		param_quality = DPM_PASSWORD_QUALITY_UNSPECIFIED;
+		break;
+	case 1:
+		param_quality = DPM_PASSWORD_QUALITY_SIMPLE_PASSWORD;
+		break;
+	case 2:
+		param_quality = DPM_PASSWORD_QUALITY_SOMETHING;
+		break;
+	case 3:
+		param_quality = DPM_PASSWORD_QUALITY_NUMERIC;
+		break;
+	case 4:
+		param_quality = DPM_PASSWORD_QUALITY_ALPHABETIC;
+		break;
+	case 5:
+		param_quality = DPM_PASSWORD_QUALITY_ALPHANUMERIC;
+		break;
+	}
+
+	dlog_print(DLOG_DEBUG, LOG_TAG, "password quality: %d", param_quality);
+	if (param_username == NULL || param_quality < 0) {
 		dlog_print(DLOG_ERROR, LOG_TAG, "not founded parameter");
 		return POLICY_RESULT_FAIL;
 	}
-	dlog_print(DLOG_DEBUG, LOG_TAG, "username: %s quality: %s", param_username, param_quality);
 
-	if (dpm_set_password_quality(handle, param_username, (int)param_quality) == 0) {
+	if (dpm_set_password_quality(handle, param_username, param_quality) == 0) {
 		dpm_destroy_client(handle);
 		return POLICY_RESULT_SUCCESS;
 	}
@@ -60,22 +87,30 @@ int get_password_policy_handler(struct dpm_toolkit_entity* self)
 /* input popup test */
 int set_password_recovery(struct dpm_toolkit_entity* self)
 {
-	dlog_print(DLOG_DEBUG, LOG_TAG, "set_password_recovery");
-
+	SLOGD("set_password_recovery");
 	dpm_toolkit_entity_t* selected_policy = self;
 	char *input;
 
-	if (global_popup.popup_flag == 0) {
-		display_input_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"), selected_policy);
-		return POLICY_RESULT_NONE;
-	}
+	handler_display_input_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"), selected_policy);
 
 	input = selected_policy->entry_input;
 	SLOGD("input data : %s", input);
-	global_popup.popup_flag = 0;
 
 	display_result_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"), input);
 	return POLICY_RESULT_NONE;
+}
+
+int radio_popup_test(struct dpm_toolkit_entity* self)
+{
+	dlog_print(DLOG_DEBUG, LOG_TAG, "radio_popup_test");
+
+	dpm_toolkit_entity_t* selected_policy = self;
+	char radio_text[][MAX_RADIO_TEXT_LEN] = {"radio1", "radio2", "radio3", "radio4 -abcdefghij"};
+	int radio_num = sizeof(radio_text) / sizeof(radio_text[0]);
+
+	handler_display_radio_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"), selected_policy, radio_text, radio_num);
+
+	return POLICY_RESULT_SUCCESS;
 }
 
 dpm_toolkit_entity_t dpm_toolkit_password_policy[] = {
@@ -94,7 +129,12 @@ dpm_toolkit_entity_t dpm_toolkit_password_policy[] = {
 	{
 	 .id = "SET_PASSWORD_QUALITY",
 	 .handler = password_set_password_quality_handler
+	},
+	{
+	 .id = "RADIO_POPUP_TEST",
+	 .handler = radio_popup_test
 	}
+
 };
 
 dpm_toolkit_policy_group_t password_policy_group = {

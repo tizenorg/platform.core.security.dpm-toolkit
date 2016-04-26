@@ -4,11 +4,13 @@
 	<policy-group id="PASSWORD">
 		<policy id="GET_ALLOW_APP" desc="get allow app" status="ON">
 		</policy>
-		<policy id="SET_ENFORCE_PASSWORD" desc="Enforce Password Change" status="ON" entry="ON" default="entry test1">
+		<policy id="SET_ENFORCE_PASSWORD" desc="Enforce Password Change" status="ON">
 		</policy>
 		<policy id="SET_PASSWORD_RECOVERY" desc="Set Password Recovery" status="ON">
 		</policy>
-		<policy id="SET_PASSWORD_QUALITY" desc="Set Password Quality" status="ON" username="owner" quality="DPM_PASSWORD_QUALITY_ALPHANUMERIC">
+		<policy id="SET_PASSWORD_QUALITY" desc="Set Password Quality" status="ON" username="owner">
+		</policy>
+		<policy id="RADIO_POPUP_TEST" desc="radio popup test" status="ON">
 		</policy>
 	</policy-group>
 
