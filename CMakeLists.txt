@@ -31,11 +31,12 @@ LINK_DIRECTORIES(${test_pkgs_LIBRARY_DIRS})
 
 SET(PKG_SRCS src/dpm-toolkit.c
 			 src/dpm-toolkit-popup.c
-			 src/password.c
-			 src/security.c
-			 src/wifi.c
-			 src/restriction.c
-			 src/zone.c)
+			#  src/password.c
+			#  src/security.c
+			#  src/wifi.c
+			#  src/restriction.c
+			#  src/zone.c
+             src/bluetooth.c)
 
 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -fPIE")
