@@ -13,7 +13,7 @@ int password_set_password_quality_handler(struct dpm_toolkit_entity* self)
 
 	handler_display_radio_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"), selected_policy, radio_text_quality, radio_num);
 
-	handle = dpm_create_client();
+	handle = dpm_context_create();
 	if (handle == NULL) {
 		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
 		return POLICY_RESULT_FAIL;
@@ -47,16 +47,17 @@ int password_set_password_quality_handler(struct dpm_toolkit_entity* self)
 
 	dlog_print(DLOG_DEBUG, LOG_TAG, "password quality: %d", param_quality);
 	if (param_username == NULL || param_quality < 0) {
+		dpm_context_destroy(handle);
 		dlog_print(DLOG_ERROR, LOG_TAG, "not founded parameter");
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (dpm_set_password_quality(handle, param_username, param_quality) == 0) {
-		dpm_destroy_client(handle);
+		dpm_context_destroy(handle);
 		return POLICY_RESULT_SUCCESS;
 	}
 
-	dpm_destroy_client(handle);
+	dpm_context_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
