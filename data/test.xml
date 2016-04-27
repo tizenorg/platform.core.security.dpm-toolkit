@@ -59,6 +59,13 @@
 		</policy>
 	</policy-group>
 
+	<policy-group id="LOCATION">
+		<policy id="SET_LOCATION_STATE" desc="Set Location State" status="ON">
+		</policy>
+		<policy id="GET_LOCATION_STATE" desc="Get Loctaion State" status="ON">
+		</policy>
+	</policy-group>
+
 	<policy-group id="ZONE">
 		<policy id="CREATE_ZONE" desc="Create zone" status="ON" wizappid="org.tizen.zone-setup-wizard">
 		</policy>
