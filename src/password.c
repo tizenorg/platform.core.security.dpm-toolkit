@@ -13,7 +13,7 @@ int password_set_password_quality_handler(struct dpm_toolkit_entity* self)
 
 	handler_display_radio_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"), selected_policy, radio_text_quality, radio_num);
 
-	handle = dpm_create_client();
+	handle = dpm_create_cilent();
 	if (handle == NULL) {
 		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
 		return POLICY_RESULT_FAIL;
