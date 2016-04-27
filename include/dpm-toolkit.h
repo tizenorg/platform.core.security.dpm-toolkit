@@ -41,18 +41,18 @@ typedef struct appdata {
 
 appdata_s* global_ad;
 
-typedef struct dpm_toolkit_entity{
+typedef struct dpm_toolkit_entity {
 	char* id;
 	int (*handler)(struct dpm_toolkit_entity* self);
 	xmlNodePtr model;
 	char* entry_input;
 	int radio_index;
-}dpm_toolkit_entity_t;
+} dpm_toolkit_entity_t;
 
 typedef struct dpm_toolkit_policy_group {
 	char* id;
 	GList* policies;
-}dpm_toolkit_policy_group_t;
+} dpm_toolkit_policy_group_t;
 
 typedef struct popup_data {
 	Evas_Object* popup;
