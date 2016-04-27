@@ -2,15 +2,41 @@
 <manifest>
 	<policy-version>0.1.0</policy-version>
 	<policy-group id="PASSWORD">
-		<policy id="GET_ALLOW_APP" desc="get allow app" status="ON">
+		<policy id="SET_PASSWORD_QUALITY" desc="Set Password Quality" status="ON">
 		</policy>
-		<policy id="SET_ENFORCE_PASSWORD" desc="Enforce Password Change" status="ON">
+		<policy id="SET_PASSWORD_MIN_LENGTH" desc="Set Password Minimum Length" status="ON">
 		</policy>
-		<policy id="SET_PASSWORD_RECOVERY" desc="Set Password Recovery" status="ON">
+		<policy id="SET_PASSWORD_MIN_COMPLEX_CHARS" desc="Set Password Minimum Complex Characters" status="ON">
 		</policy>
-		<policy id="SET_PASSWORD_QUALITY" desc="Set Password Quality" status="ON" username="owner">
+		<policy id="SET_PASSWORD_MAX_FAILED_ATTEMPTS_FOR_WIPE" desc="Set Password Maximum number of failed attempts before device is wiped" status="ON">
 		</policy>
-		<policy id="RADIO_POPUP_TEST" desc="radio popup test" status="ON">
+		<policy id="SET_PASSWORD_EXPIRES" desc="Set the number of days after which the password expires" status="ON">
+		</policy>
+		<policy id="SET_PASSWORD_HISTORY" desc="Set the number of previous passwords" status="ON">
+		</policy>
+		<policy id="SET_PASSWORD_PATTERN" desc="Set Password Pattern" status="ON">
+		</policy>
+		<policy id="RESET_PASSWORD" desc="Reset Password" status="ON">
+		</policy>
+		<policy id="ENFORCE_PASSWORD_CHANGE" desc="Enforce Password Change" status="ON">
+		</policy>
+		<policy id="SET_MAX_INACTIVITY_TIME_DEVICE_LOCK" desc="Set Maximum Inactivity Time Device Lock" status="ON">
+		</policy>
+		<policy id="GET_MAX_INACTIVITY_TIME_DEVICE_LOCK" desc="Get Maximum Inactivity Time Device Lock" status="ON">
+		</policy>
+		<policy id="SET_PASSWORD_STATUS" desc="Set Password Status" status="ON">
+		</policy>
+		<policy id="DELETE_PASSWORD_PATTERN" desc="Delete Password Pattern" status="ON">
+		</policy>
+		<policy id="GET_PASSWORD_PATTERN" desc="Get Password Pattern" status="ON">
+		</policy>
+		<policy id="SET_MAX_CHAR_OCCURRENCES" desc="Set Maximum Character Occurrences" status="ON">
+		</policy>
+		<policy id="GET_MAX_CHAR_OCCURRENCES" desc="Get Maximum Character Occurrences" status="ON">
+		</policy>
+		<policy id="SET_MAX_NUMERIC_SEQUENCE_LENGTH" desc="Set Maximum Numeric Sequence Length" status="ON">
+		</policy>
+		<policy id="GET_MAX_NUMERIC_SEQUENCE_LENGTH" desc="Get Maximum Numeric Sequence Length" status="ON">
 		</policy>
 	</policy-group>
 
@@ -33,6 +59,14 @@
 	</policy-group>
 
 	<policy-group id="RESTRICTION">
+	    <policy id="SET_CAMERA_STATE" desc="Set Camera State" status="ON">
+		</policy>
+		<policy id="GET_CAMERA_STATE" desc="Get Camera State" status="ON">
+		</policy>
+		<policy id="SET_MICROPHONE_STATE" desc="Set Microphone State" status="ON">
+		</policy>
+		<policy id="GET_MICROPHONE_STATE" desc="Get Microphone State" status="ON">
+		</policy>
 		<policy id="ON_CLIPBOARD_RESTRICTION" desc="ENABLE CLIPBOARD_RESTRICTION" status="ON">
 		</policy>
 		<policy id="OFF_CLIPBOARD_RESTRICTION" desc="DISABLE CLIPBOARD_RESTRICTION" status="ON">

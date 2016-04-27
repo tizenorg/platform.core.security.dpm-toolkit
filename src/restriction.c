@@ -3,387 +3,190 @@
 
 /* dpm integration test */
 // ON_SET_CHANGES_RESTRICTION
-int on_clipboard_restriction_handler(struct dpm_toolkit_entity* self)
+int set_camera_state_handler(struct dpm_toolkit_entity* self)
 {
+    dlog_print(DLOG_DEBUG, LOG_TAG, "set_camera_state_handler");
+	dpm_context_h handle;
+    dpm_restriction_policy_h camera_policy_handle;
 	dpm_toolkit_entity_t* selected_policy = self;
+	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	int radio_num = sizeof(radio_text) / sizeof(radio_text[0]);
+	int enable = 1;
 
-	dpm_client_h handle;
-	bool enable = false;
+	handler_display_radio_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"), selected_policy, radio_text, radio_num);
 
-	handle = dpm_create_client();
+	dlog_print(DLOG_DEBUG, LOG_TAG, "radio index: %d", selected_policy->radio_index);
+
+	switch(selected_policy->radio_index) {
+		case 0:
+			enable = 1;
+			break;
+		case 1:
+			enable = 0;
+			break;
+		default:
+			enable = 1;
+			break;
+    }
+
+    dlog_print(DLOG_DEBUG, LOG_TAG, "Camera State: %d", enable);			
+
+	handle = dpm_context_create();
 	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
 		return POLICY_RESULT_FAIL;
 	}
-
-	if (dpm_set_clipboard_restriction(handle, true) != 0) {
-		dpm_destroy_client(handle);
+	
+    camera_policy_handle = dpm_context_acquire_restriction_policy(handle);
+	if (camera_policy_handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create camera policy handle");
 		return POLICY_RESULT_FAIL;
 	}
-
-	enable = dpm_is_clipboard_restricted(handle);
-	if (enable == true) {
-		dpm_destroy_client(handle);
+	
+	if (dpm_restriction_set_camera_state(camera_policy_handle, enable) == 0) {
+		dpm_context_release_restriction_policy(handle, camera_policy_handle);
+		dpm_context_destroy(handle);
 		return POLICY_RESULT_SUCCESS;
 	}
 
-	dpm_destroy_client(handle);
+    dpm_context_release_restriction_policy(handle, camera_policy_handle);
+	dpm_context_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
-int off_clipboard_restriction_handler(struct dpm_toolkit_entity* self)
+
+int get_camera_state_handler(struct dpm_toolkit_entity* self)
 {
+	dlog_print(DLOG_DEBUG, LOG_TAG, "get_camera_state_handler");
+    dpm_context_h handle;
+	dpm_restriction_policy_h camera_policy_handle;
 	dpm_toolkit_entity_t* selected_policy = self;
+	int state = 1;
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
 
-	dpm_client_h handle;
-	bool enable = false;
-
-	handle = dpm_create_client();
+	handle = dpm_context_create();
 	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+	
+    camera_policy_handle = dpm_context_acquire_restriction_policy(handle);
+	if (camera_policy_handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create camera policy handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_set_clipboard_restriction(handle, false) != 0) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_FAIL;
+	if (dpm_restriction_get_camera_state(camera_policy_handle, &state) == 0) {
+		dpm_context_release_restriction_policy(handle, camera_policy_handle);
+		dpm_context_destroy(handle);
+		display_result_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"), state_text[state]);
+		return POLICY_RESULT_NONE;
 	}
 
-	enable = dpm_is_clipboard_restricted(handle);
-	if (enable == false) {
-		dpm_destroy_client(handle);
+    dpm_context_release_restriction_policy(handle, camera_policy_handle);
+	dpm_context_destroy(handle);
+	return POLICY_RESULT_FAIL;
+}
+
+int set_microphone_state_handler(struct dpm_toolkit_entity* self)
+{
+	dlog_print(DLOG_DEBUG, LOG_TAG, "set_microphone_state_handler");
+	dpm_context_h handle;
+    dpm_restriction_policy_h mic_policy_handle;
+	dpm_toolkit_entity_t* selected_policy = self;
+	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	int radio_num = sizeof(radio_text) / sizeof(radio_text[0]);
+	int enable = 1;
+
+	handler_display_radio_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"), selected_policy, radio_text, radio_num);
+
+    dlog_print(DLOG_DEBUG, LOG_TAG, "radio index: %d", selected_policy->radio_index);
+	
+	switch(selected_policy->radio_index) {
+		case 0:
+			enable = 1;
+			break;
+		case 1:
+			enable = 0;
+			break;
+		default:
+			enable = 1;
+			break;
+    }
+
+	dlog_print(DLOG_DEBUG, LOG_TAG, "Microphone State: %d", enable);
+
+	handle = dpm_context_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+	
+    mic_policy_handle = dpm_context_acquire_restriction_policy(handle);
+	if (mic_policy_handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create microphone policy handle");
+		return POLICY_RESULT_FAIL;
+	}
+	
+	if (dpm_restriction_set_microphone_state(mic_policy_handle, enable) == 0) {
+		dpm_context_release_restriction_policy(handle, mic_policy_handle);
+		dpm_context_destroy(handle);
 		return POLICY_RESULT_SUCCESS;
 	}
 
-	dpm_destroy_client(handle);
+    dpm_context_release_restriction_policy(handle, mic_policy_handle);
+	dpm_context_destroy(handle);
 	return POLICY_RESULT_FAIL;
-
 }
-int on_clipboard_share_restriction_handler(struct dpm_toolkit_entity* self)
+
+int get_microphone_state_handler(struct dpm_toolkit_entity* self)
 {
+	dlog_print(DLOG_DEBUG, LOG_TAG, "get_microphone_state_handler");
+    dpm_context_h handle;
+	dpm_restriction_policy_h mic_policy_handle;
 	dpm_toolkit_entity_t* selected_policy = self;
+	int state = 1;
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
 
-	dpm_client_h handle;
-	bool enable = false;
-
-	handle = dpm_create_client();
+	handle = dpm_context_create();
 	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+	
+    mic_policy_handle = dpm_context_acquire_restriction_policy(handle);
+	if (mic_policy_handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create microphone policy handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_set_clipboard_restriction(handle, true) != 0) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_FAIL;
+	if (dpm_restriction_get_microphone_state(mic_policy_handle, &state) == 0) {
+		dpm_context_release_restriction_policy(handle, mic_policy_handle);
+		dpm_context_destroy(handle);
+		display_result_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"), state_text[state]);
+		return POLICY_RESULT_NONE;
 	}
 
-	enable = dpm_is_clipboard_restricted(handle);
-	if (enable == true) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_SUCCESS;
-	}
-
-	dpm_destroy_client(handle);
+    dpm_context_release_restriction_policy(handle, mic_policy_handle);
+	dpm_context_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
-int off_clipboard_share_restriction_handler(struct dpm_toolkit_entity* self)
-{
-	dpm_toolkit_entity_t* selected_policy = self;
-
-	dpm_client_h handle;
-	bool enable = false;
-
-	handle = dpm_create_client();
-	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_set_clipboard_share_restriction(handle, false) != 0) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_FAIL;
-	}
-
-	enable = dpm_is_clipboard_share_restricted(handle);
-	if (enable == false) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_SUCCESS;
-	}
-
-	dpm_destroy_client(handle);
-	return POLICY_RESULT_FAIL;
-}
-
-
-int on_settings_changes_restriction_handler(struct dpm_toolkit_entity* self)
-{
-	dpm_toolkit_entity_t* selected_policy = self;
-
-	dpm_client_h handle;
-	bool enable = false;
-
-	handle = dpm_create_client();
-	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_set_clipboard_restriction(handle, true) != 0) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_FAIL;
-	}
-
-	enable = dpm_is_clipboard_restricted(handle);
-	if (enable == true) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_SUCCESS;
-	}
-
-	dpm_destroy_client(handle);
-	return POLICY_RESULT_FAIL;
-}
-
-int off_settings_changes_restriction_handler(struct dpm_toolkit_entity* self)
-{
-	dpm_toolkit_entity_t* selected_policy = self;
-
-	dpm_client_h handle;
-	bool enable = false;
-
-	handle = dpm_create_client();
-	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_set_clipboard_restriction(handle, false) != 0) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_FAIL;
-	}
-
-	enable = dpm_is_clipboard_restricted(handle);
-	if (enable == false) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_SUCCESS;
-	}
-
-	dpm_destroy_client(handle);
-	return POLICY_RESULT_FAIL;
-}
-
-int on_usb_debugging_restriction_handler(struct dpm_toolkit_entity* self)
-{
-	dpm_toolkit_entity_t* selected_policy = self;
-
-	dpm_client_h handle;
-	bool enable = false;
-
-	handle = dpm_create_client();
-	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_set_usb_debugging_restriction(handle, true) != 0) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_FAIL;
-	}
-
-	enable = dpm_is_usb_debugging_restricted(handle);
-	if (enable == true) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_SUCCESS;
-	}
-
-	dpm_destroy_client(handle);
-	return POLICY_RESULT_FAIL;
-}
-int off_usb_debugging_restriction_handler(struct dpm_toolkit_entity* self)
-{
-	dpm_toolkit_entity_t* selected_policy = self;
-
-	dpm_client_h handle;
-	bool enable = false;
-
-	handle = dpm_create_client();
-	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_set_usb_debugging_restriction(handle, false) != 0) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_FAIL;
-	}
-
-	enable = dpm_is_usb_debugging_restricted(handle);
-	if (enable == false) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_SUCCESS;
-	}
-
-	dpm_destroy_client(handle);
-	return POLICY_RESULT_FAIL;
-}
-
-int on_usb_mass_storage_restriction_handler(struct dpm_toolkit_entity* self)
-{
-	dpm_toolkit_entity_t* selected_policy = self;
-
-	dpm_client_h handle;
-	bool enable = false;
-
-	handle = dpm_create_client();
-	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_set_usb_mass_storage_restriction(handle, true) != 0) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_FAIL;
-	}
-
-	enable = dpm_is_usb_mass_storage_restricted(handle);
-	if (enable == true) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_SUCCESS;
-	}
-
-	dpm_destroy_client(handle);
-	return POLICY_RESULT_FAIL;
-}
-int off_usb_mass_storage_restriction_handler(struct dpm_toolkit_entity* self)
-{
-	dpm_toolkit_entity_t* selected_policy = self;
-
-	dpm_client_h handle;
-	bool enable = false;
-
-	handle = dpm_create_client();
-	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_set_usb_mass_storage_restriction(handle, false) != 0) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_FAIL;
-	}
-
-	enable = dpm_is_usb_mass_storage_restricted(handle);
-	if (enable == false) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_SUCCESS;
-	}
-
-	dpm_destroy_client(handle);
-	return POLICY_RESULT_FAIL;
-}
-
-int on_factory_reset_restriction_handler(struct dpm_toolkit_entity* self)
-{
-	dpm_toolkit_entity_t* selected_policy = self;
-
-	dpm_client_h handle;
-	bool enable = false;
-
-	handle = dpm_create_client();
-	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_set_factory_reset_restriction(handle, true) != 0) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_FAIL;
-	}
-
-	enable = dpm_is_factory_reset_restricted(handle);
-	if (enable == true) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_SUCCESS;
-	}
-
-	dpm_destroy_client(handle);
-	return POLICY_RESULT_FAIL;
-}
-int off_factory_reset_restriction_handler(struct dpm_toolkit_entity* self)
-{
-	dpm_toolkit_entity_t* selected_policy = self;
-
-	dpm_client_h handle;
-	bool enable = false;
-
-	handle = dpm_create_client();
-	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_set_factory_reset_restriction(handle, false) != 0) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_FAIL;
-	}
-
-	enable = dpm_is_factory_reset_restricted(handle);
-	if (enable == false) {
-		dpm_destroy_client(handle);
-		return POLICY_RESULT_SUCCESS;
-	}
-
-	dpm_destroy_client(handle);
-	return POLICY_RESULT_FAIL;
-}
-
 
 dpm_toolkit_entity_t dpm_toolkit_restriction_policy[] = {
 	{
-	 .id = "ON_CLIPBOARD_RESTRICTION",
-	 .handler = on_clipboard_restriction_handler
+	 .id = "SET_CAMERA_STATE",
+	 .handler = set_camera_state_handler
 	},
 	{
-	 .id = "OFF_CLIPBOARD_RESTRICTION",
-	 .handler = off_clipboard_restriction_handler
+	 .id = "GET_CAMERA_STATE",
+	 .handler = get_camera_state_handler
 	},
 	{
-	 .id = "ON_CLIPBOARD_SHARE_RESTRICTION",
-	 .handler = on_clipboard_share_restriction_handler
+	 .id = "SET_MICROPHONE_STATE",
+	 .handler = set_microphone_state_handler
 	},
 	{
-	 .id = "OFF_CLIPBOARD_SHARE_RESTRICTION",
-	 .handler = off_clipboard_share_restriction_handler
-	},
-	{
-	 .id = "ON_SETTINGS_CHANGES_RESTRICTION",
-	 .handler = on_settings_changes_restriction_handler
-	},
-	{
-	 .id = "OFF_SETTINGS_CHANGES_RESTRICTION",
-	 .handler = off_settings_changes_restriction_handler
-	},
-	{
-	 .id = "ON_USB_DEBUGGING_RESTRICTION",
-	 .handler = on_usb_debugging_restriction_handler
-	},
-	{
-	 .id = "OFF_USB_DEBUGGING_RESTRICTION",
-	 .handler = off_usb_debugging_restriction_handler
-	},
-	{
-	 .id = "ON_USB_MASS_STORAGE_RESTRICTION",
-	 .handler = on_usb_mass_storage_restriction_handler
-	},
-	{
-	 .id = "OFF_USB_MASS_STORAGE_RESTRICTION",
-	 .handler = off_usb_mass_storage_restriction_handler
-	},
-	{
-	 .id = "ON_FACTORY_RESET_RESTRICTION",
-	 .handler = on_factory_reset_restriction_handler
-	},
-	{
-	 .id = "OFF_FACTORY_RESET_RESTRICTION",
-	 .handler = off_factory_reset_restriction_handler
+	 .id = "GET_MICROPHONE_STATE",
+	 .handler = get_microphone_state_handler
 	}
 };
 
