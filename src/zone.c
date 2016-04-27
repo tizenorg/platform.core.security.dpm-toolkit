@@ -3,49 +3,49 @@
 
 int create_zone_handler(struct dpm_toolkit_entity* self)
 {
-        dpm_client_h handle;
-        char *wizappid;
-        int ret;
+	dpm_client_h handle;
+	char* wizappid;
+	int ret;
 
-        handle = dpm_create_client();
-        if (handle == NULL) {
-                dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-                return POLICY_RESULT_FAIL;
-        }
+	handle = dpm_create_client();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
+		return POLICY_RESULT_FAIL;
+	}
 
-        handler_display_input_popup("Zone name", self);
-        wizappid = (char*)xmlGetProp(self->model, (xmlChar*)"wizappid") ;
+	handler_display_input_popup("Zone name", self);
+	wizappid = (char*)xmlGetProp(self->model, (xmlChar*) "wizappid");
 
-        if (wizappid == NULL) {
-                dlog_print(DLOG_ERROR, LOG_TAG, "wizappid parameter not found");
-                return POLICY_RESULT_FAIL;
-        }
+	if (wizappid == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "wizappid parameter not found");
+		return POLICY_RESULT_FAIL;
+	}
 
-        ret = dpm_create_zone(handle, self->entry_input, wizappid);
+	ret = dpm_create_zone(handle, self->entry_input, wizappid);
 
-        dpm_destroy_client(handle);
+	dpm_destroy_client(handle);
 
-	return (ret == DPM_ERROR_NONE)? POLICY_RESULT_SUCCESS : POLICY_RESULT_FAIL;
+	return (ret == DPM_ERROR_NONE) ? POLICY_RESULT_SUCCESS : POLICY_RESULT_FAIL;
 }
 
 int destroy_zone_handler(struct dpm_toolkit_entity* self)
 {
-        dpm_client_h handle;
-        int ret;
+	dpm_client_h handle;
+	int ret;
 
-        handle = dpm_create_client();
-        if (handle == NULL) {
-                dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-                return POLICY_RESULT_FAIL;
-        }
+	handle = dpm_create_client();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
+		return POLICY_RESULT_FAIL;
+	}
 
-        handler_display_input_popup("Zone name", self);
+	handler_display_input_popup("Zone name", self);
 
-        ret = dpm_remove_zone(handle, self->entry_input);
+	ret = dpm_remove_zone(handle, self->entry_input);
 
-        dpm_destroy_client(handle);
+	dpm_destroy_client(handle);
 
-	return (ret == DPM_ERROR_NONE)? POLICY_RESULT_SUCCESS : POLICY_RESULT_FAIL;
+	return (ret == DPM_ERROR_NONE) ? POLICY_RESULT_SUCCESS : POLICY_RESULT_FAIL;
 }
 
 int get_zone_list_handler(struct dpm_toolkit_entity* self)

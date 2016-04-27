@@ -269,11 +269,6 @@ static void _gl_policy_select(void* data, Evas_Object* obj, void* event_info)
 
 }
 
-static void _gl_policy_entry_select(void* data, Evas_Object* obj, void* event_info)
-{
-	elm_genlist_item_selected_set((Elm_Object_Item*)event_info, EINA_FALSE);
-}
-
 static void _gl_policy_group_select(void* data, Evas_Object* obj, void* event_info)
 {
 	Evas_Object* genlist = elm_genlist_add(global_ad->nf);
