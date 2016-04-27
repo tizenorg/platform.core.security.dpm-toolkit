@@ -3,15 +3,10 @@
 
 int create_zone_handler(struct dpm_toolkit_entity* self)
 {
-	dpm_client_h handle;
+        dpm_zone_policy_h policy;
+	dpm_context_h context;
 	char* wizappid;
 	int ret;
-
-	handle = dpm_create_client();
-	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-		return POLICY_RESULT_FAIL;
-	}
 
 	handler_display_input_popup("Zone name", self);
 	wizappid = (char*)xmlGetProp(self->model, (xmlChar*) "wizappid");
@@ -21,29 +16,52 @@ int create_zone_handler(struct dpm_toolkit_entity* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	ret = dpm_create_zone(handle, self->entry_input, wizappid);
+        context = dpm_context_create();
+        if (context == NULL) {
+                dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to create client context");
+                return POLICY_RESULT_FAIL;
+        }
 
-	dpm_destroy_client(handle);
+        policy = dpm_context_acquire_zone_policy(context);
+        if (policy == NULL) {
+                dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get zone policy interface");
+                dpm_context_destroy(context);
+                return POLICY_RESULT_FAIL;
+        }
+
+	ret = dpm_zone_create(policy, self->entry_input, wizappid);
+
+        dpm_context_release_zone_policy(context, policy);
+        dpm_context_destroy(context);
 
 	return (ret == DPM_ERROR_NONE) ? POLICY_RESULT_SUCCESS : POLICY_RESULT_FAIL;
 }
 
 int destroy_zone_handler(struct dpm_toolkit_entity* self)
 {
-	dpm_client_h handle;
+        dpm_zone_policy_h policy;
+	dpm_context_h context;
 	int ret;
-
-	handle = dpm_create_client();
-	if (handle == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create client handle");
-		return POLICY_RESULT_FAIL;
-	}
 
 	handler_display_input_popup("Zone name", self);
 
-	ret = dpm_remove_zone(handle, self->entry_input);
+        context = dpm_context_create();
+        if (context == NULL) {
+                dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to create client context");
+                return POLICY_RESULT_FAIL;
+        }
 
-	dpm_destroy_client(handle);
+        policy = dpm_context_acquire_zone_policy(context);
+        if (policy == NULL) {
+                dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get zone policy interface");
+                dpm_context_destroy(context);
+                return POLICY_RESULT_FAIL;
+        }
+
+	ret = dpm_zone_destroy(policy, self->entry_input);
+
+        dpm_context_release_zone_policy(context, policy);
+        dpm_context_destroy(context);
 
 	return (ret == DPM_ERROR_NONE) ? POLICY_RESULT_SUCCESS : POLICY_RESULT_FAIL;
 }
