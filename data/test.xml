@@ -59,7 +59,7 @@
 	</policy-group>
 
 	<policy-group id="RESTRICTION">
-	    <policy id="SET_CAMERA_STATE" desc="Set Camera State" status="ON">
+		<policy id="SET_CAMERA_STATE" desc="Set Camera State" status="ON">
 		</policy>
 		<policy id="GET_CAMERA_STATE" desc="Get Camera State" status="ON">
 		</policy>
@@ -67,29 +67,9 @@
 		</policy>
 		<policy id="GET_MICROPHONE_STATE" desc="Get Microphone State" status="ON">
 		</policy>
-		<policy id="ON_CLIPBOARD_RESTRICTION" desc="ENABLE CLIPBOARD_RESTRICTION" status="ON">
+		<policy id="SET_LOCATION_STATE" desc="Set Location State" status="ON">
 		</policy>
-		<policy id="OFF_CLIPBOARD_RESTRICTION" desc="DISABLE CLIPBOARD_RESTRICTION" status="ON">
-		</policy>
-		<policy id="ON_CLIPBOARD_SHARE_RESTRICTION" desc="ENABLE CLIPBOARD_SHARE_RESTRICTION" status="ON">
-		</policy>
-		<policy id="OFF_CLIPBOARD_SHARE_RESTRICTION" desc="DISABLE CLIPBOARD_SHARE_RESTRICTION" status="ON">
-		</policy>
-		<policy id="ON_SETTINGS_CHANGES_RESTRICTION" desc="ENABLE SETTINGS_CHANGES_RESTRICTION" status="ON">
-		</policy>
-		<policy id="OFF_SETTINGS_CHANGES_RESTRICTION" desc="DISABLE SETTINGS_CHANGES_RRESTRICTION" status="ON">
-		</policy>
-		<policy id="ON_USB_DEBUGGING_RESTRICTION" desc="ENABLE USB_DEBUGGING_RESTRICTION" status="ON">
-		</policy>
-		<policy id="OFF_USB_DEBUGGING_RESTRICTION" desc="DISABLE USB_DEBUGGING_RESTRICTION" status="ON">
-		</policy>
-		<policy id="ON_USB_MASS_STORAGE_RESTRICTION" desc="ENABLE USB_MASS_STORAGE_RESTRICTION" status="ON">
-		</policy>
-		<policy id="OFF_USB_MASS_STORAGE_RESTRICTION" desc="DISABLE USB_MASS_STORAGE_RESTRICTION" status="ON">
-		</policy>
-		<policy id="ON_FACTORY_RESET_RESTRICTION" desc="ENABLE FACTORY_RESET_RESTRICTION" status="ON">
-		</policy>
-		<policy id="OFF_FACTORY_RESET_RESTRICTION" desc="DISABLE FACTORY_RESET_RESTRICTION" status="ON">
+		<policy id="GET_LOCATION_STATE" desc="Get Location State" status="ON">
 		</policy>
 	</policy-group>
 
