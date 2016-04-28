@@ -71,6 +71,18 @@
 		</policy>
 		<policy id="GET_LOCATION_STATE" desc="Get Location State" status="ON">
 		</policy>
+		<policy id="SET_CLIPBOARD_STATE" desc="Set Clipboard State" status="ON">
+		</policy>
+		<policy id="GET_CLIPBOARD_STATE" desc="Get Clipboard State" status="ON">
+		</policy>
+		<policy id="SET_SETTINGS_CHANGES_RESTRICTION" desc="Set Settings Changes Restriction" status="ON">
+		</policy>
+		<policy id="GET_SETTINGS_CHANGES_RESTRICTION" desc="Get Settings Changes Restriction" status="ON">
+		</policy>
+		<policy id="SET_USB_DEBUGGING_STATE" desc="Set USB Debugging State" status="ON">
+		</policy>
+		<policy id="GET_USB_DEBUGGING_STATE" desc="GET USB Debugging State" status="ON">
+		</policy>
 	</policy-group>
 
 	<policy-group id="ZONE">
