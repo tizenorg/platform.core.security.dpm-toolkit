@@ -176,8 +176,8 @@ int set_location_state_handler(struct dpm_toolkit_entity *self)
 	dpm_context_h ctx = NULL;
 	dpm_restriction_policy_h handle = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
-	int enable = -1;
-	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
+	int enable = 1;
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
 	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
 
 	handler_display_radio_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *)"desc"),
@@ -198,10 +198,10 @@ int set_location_state_handler(struct dpm_toolkit_entity *self)
 
 	switch (selected_policy->radio_index) {
 	case 0:
-		enable = 0;
+		enable = 1;
 		break;
 	case 1:
-		enable = 1;
+		enable = 0;
 		break;
 	default:
 		break;
@@ -224,8 +224,8 @@ int get_location_state_handler(struct dpm_toolkit_entity *self)
 	dpm_context_h ctx = NULL;
 	dpm_restriction_policy_h handle = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
-	int location_status = -1;
-	char input[PATH_MAX] = "\0";
+	int state = 1;
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
 
 	ctx = dpm_context_create();
 	if (ctx == NULL) {
@@ -240,8 +240,8 @@ int get_location_state_handler(struct dpm_toolkit_entity *self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	dpm_restriction_get_location_state(handle, &location_status);
-	if (location_status < 0) {
+	dpm_restriction_get_location_state(handle, &state);
+	if (state < 0) {
 		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to get location status");
 		dpm_context_release_restriction_policy(ctx, handle);
 		dpm_context_destroy(ctx);
@@ -251,8 +251,7 @@ int get_location_state_handler(struct dpm_toolkit_entity *self)
 	dpm_context_release_restriction_policy(ctx, handle);
 	dpm_context_destroy(ctx);
 
-	snprintf(input, PATH_MAX, "Location Allow status : %d", location_status);
-	display_result_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *)"desc"), input);
+	display_result_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *)"desc"), state_text[state]);
 	return POLICY_RESULT_SUCCESS;
 }
 
