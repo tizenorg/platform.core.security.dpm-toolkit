@@ -2,16 +2,19 @@
 
 void _popup_hide_cb(void* data, Evas_Object* obj, void* event_info)
 {
+	global_popup.popup_flag = 0;
 	evas_object_del(obj);
 }
 
 void _popup_hide_finished_cb(void* data, Evas_Object* obj, void* event_info)
 {
+	global_popup.popup_flag = 0;
 	evas_object_del(obj);
 }
 
 void _popup_block_clicked_cb(void* data, Evas_Object* obj, void* event_info)
 {
+	global_popup.popup_flag = 0;
 	evas_object_del(obj);
 }
 
@@ -80,9 +83,9 @@ void display_result_popup(const char* title, const char* popup_message)
 	elm_object_part_text_set(popup, "title,text", title);
 	elm_object_text_set(popup, popup_message);
 
-	/* eext_object_event_callback_add(popup, EEXT_CALLBACK_BACK, _popup_hide_cb, NULL);
+	eext_object_event_callback_add(popup, EEXT_CALLBACK_BACK, _popup_hide_cb, NULL);
 	evas_object_smart_callback_add(popup, "dismissed", _popup_hide_finished_cb, NULL);
-	evas_object_smart_callback_add(popup, "block,clicked", _popup_block_clicked_cb, NULL); */
+	evas_object_smart_callback_add(popup, "block,clicked", _popup_block_clicked_cb, NULL);
 
 	btn = elm_button_add(popup);
 	elm_object_text_set(btn, "OK");
@@ -106,6 +109,10 @@ void display_input_popup(const char* title, dpm_toolkit_entity_t* selected_polic
 	evas_object_size_hint_weight_set(popup, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_object_part_text_set(popup, "title,text", title);
 
+	eext_object_event_callback_add(popup, EEXT_CALLBACK_BACK, _popup_hide_cb, NULL);
+	evas_object_smart_callback_add(popup, "dismissed", _popup_hide_finished_cb, NULL);
+	evas_object_smart_callback_add(popup, "block,clicked", _popup_block_clicked_cb, NULL);
+
 	entry = elm_entry_add(popup);
 	global_popup.entry = entry;
 	elm_entry_single_line_set(entry, EINA_TRUE);
@@ -121,7 +128,6 @@ void display_input_popup(const char* title, dpm_toolkit_entity_t* selected_polic
 	elm_object_part_content_set(popup, "button1", btn);
 	evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_smart_callback_add(btn, "clicked", _set_btn_response_cb, popup);
-	evas_object_show(popup);
 
 	btn = elm_button_add(popup);
 	elm_object_text_set(btn, "cancel");
@@ -159,6 +165,10 @@ void display_radio_popup(const char* title, dpm_toolkit_entity_t* selected_polic
 	elm_popup_scrollable_set(popup, EINA_TRUE);
 	elm_object_part_text_set(popup, "title,text", title);
 
+	eext_object_event_callback_add(popup, EEXT_CALLBACK_BACK, _popup_hide_cb, NULL);
+	evas_object_smart_callback_add(popup, "dismissed", _popup_hide_finished_cb, NULL);
+	evas_object_smart_callback_add(popup, "block,clicked", _popup_block_clicked_cb, NULL);
+
 	box = elm_box_add(popup);
 	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
@@ -193,7 +203,6 @@ void display_radio_popup(const char* title, dpm_toolkit_entity_t* selected_polic
 	elm_object_part_content_set(popup, "button1", btn);
 	evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_smart_callback_add(btn, "clicked", _radio_set_btn_response_cb, popup);
-	evas_object_show(popup);
 
 	btn = elm_button_add(popup);
 	elm_object_text_set(btn, "cancel");

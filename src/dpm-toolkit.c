@@ -248,11 +248,7 @@ static void create_genlist_items_classes()
 
 static Eina_Bool naviframe_pop_cb(void* data, Elm_Object_Item* it)
 {
-	appdata_s* ad = data;
-
-	/* Let window go to hide state. */
-	elm_win_lower(ad->win);
-
+	ui_app_exit();
 	return EINA_FALSE;
 }
 
