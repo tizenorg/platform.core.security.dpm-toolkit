@@ -1,13 +1,11 @@
 #include "dpm-toolkit.h"
 #include <dpm/restriction.h>
 
-/* dpm integration test */
-// ON_SET_CHANGES_RESTRICTION
 int set_camera_state_handler(struct dpm_toolkit_entity *self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_camera_state_handler");
-	dpm_context_h handle;
-	dpm_restriction_policy_h camera_policy_handle;
+	dpm_context_h handle = NULL;
+	dpm_restriction_policy_h camera_policy_handle = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
 	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
 	int radio_num = sizeof(radio_text) / sizeof(radio_text[0]);
@@ -40,6 +38,7 @@ int set_camera_state_handler(struct dpm_toolkit_entity *self)
 	camera_policy_handle = dpm_context_acquire_restriction_policy(handle);
 	if (camera_policy_handle == NULL) {
 		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create camera policy handle");
+		dpm_context_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
@@ -57,8 +56,8 @@ int set_camera_state_handler(struct dpm_toolkit_entity *self)
 int get_camera_state_handler(struct dpm_toolkit_entity *self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "get_camera_state_handler");
-	dpm_context_h handle;
-	dpm_restriction_policy_h camera_policy_handle;
+	dpm_context_h handle = NULL;
+	dpm_restriction_policy_h camera_policy_handle = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
 	int state = 1;
 	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
@@ -72,6 +71,7 @@ int get_camera_state_handler(struct dpm_toolkit_entity *self)
 	camera_policy_handle = dpm_context_acquire_restriction_policy(handle);
 	if (camera_policy_handle == NULL) {
 		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create camera policy handle");
+		dpm_context_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
@@ -90,8 +90,8 @@ int get_camera_state_handler(struct dpm_toolkit_entity *self)
 int set_microphone_state_handler(struct dpm_toolkit_entity *self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_microphone_state_handler");
-	dpm_context_h handle;
-	dpm_restriction_policy_h mic_policy_handle;
+	dpm_context_h handle = NULL;
+	dpm_restriction_policy_h mic_policy_handle = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
 	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
 	int radio_num = sizeof(radio_text) / sizeof(radio_text[0]);
@@ -124,6 +124,7 @@ int set_microphone_state_handler(struct dpm_toolkit_entity *self)
 	mic_policy_handle = dpm_context_acquire_restriction_policy(handle);
 	if (mic_policy_handle == NULL) {
 		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create microphone policy handle");
+		dpm_context_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
@@ -141,8 +142,8 @@ int set_microphone_state_handler(struct dpm_toolkit_entity *self)
 int get_microphone_state_handler(struct dpm_toolkit_entity *self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "get_microphone_state_handler");
-	dpm_context_h handle;
-	dpm_restriction_policy_h mic_policy_handle;
+	dpm_context_h handle = NULL;
+	dpm_restriction_policy_h mic_policy_handle = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
 	int state = 1;
 	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
@@ -156,6 +157,7 @@ int get_microphone_state_handler(struct dpm_toolkit_entity *self)
 	mic_policy_handle = dpm_context_acquire_restriction_policy(handle);
 	if (mic_policy_handle == NULL) {
 		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create microphone policy handle");
+		dpm_context_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
@@ -176,8 +178,8 @@ int set_location_state_handler(struct dpm_toolkit_entity *self)
 	dpm_context_h ctx = NULL;
 	dpm_restriction_policy_h handle = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
-	int enable = -1;
-	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
+	int enable = 1;
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
 	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
 
 	handler_display_radio_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *)"desc"),
@@ -198,10 +200,10 @@ int set_location_state_handler(struct dpm_toolkit_entity *self)
 
 	switch (selected_policy->radio_index) {
 	case 0:
-		enable = 0;
+		enable = 1;
 		break;
 	case 1:
-		enable = 1;
+		enable = 0;
 		break;
 	default:
 		break;
@@ -224,8 +226,8 @@ int get_location_state_handler(struct dpm_toolkit_entity *self)
 	dpm_context_h ctx = NULL;
 	dpm_restriction_policy_h handle = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
-	int location_status = -1;
-	char input[PATH_MAX] = "\0";
+	int state = -1;
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
 
 	ctx = dpm_context_create();
 	if (ctx == NULL) {
@@ -240,8 +242,8 @@ int get_location_state_handler(struct dpm_toolkit_entity *self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	dpm_restriction_get_location_state(handle, &location_status);
-	if (location_status < 0) {
+	dpm_restriction_get_location_state(handle, &state);
+	if (state < 0) {
 		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to get location status");
 		dpm_context_release_restriction_policy(ctx, handle);
 		dpm_context_destroy(ctx);
@@ -251,9 +253,344 @@ int get_location_state_handler(struct dpm_toolkit_entity *self)
 	dpm_context_release_restriction_policy(ctx, handle);
 	dpm_context_destroy(ctx);
 
-	snprintf(input, PATH_MAX, "Location Allow status : %d", location_status);
-	display_result_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *)"desc"), input);
-	return POLICY_RESULT_SUCCESS;
+	display_result_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *)"desc"), state_text[state]);
+	return POLICY_RESULT_NONE;
+}
+
+/* clipboard toolkit handler */
+int set_clipboard_state_handler(struct dpm_toolkit_entity *self)
+{
+
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+	int ret;
+	int get_value = 0;
+	int set_value = 0;
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
+
+	handler_display_radio_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self, radio_text_quality, radio_num);
+	switch (self->radio_index) {
+	case 0:
+		set_value = 1;
+		break;
+	case 1:
+		set_value = 0;
+		break;
+	}
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_context_create()");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_context_acquire_restriction_policy()");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	ret = POLICY_RESULT_SUCCESS;
+	if (dpm_restriction_set_clipboard_state(policy, set_value) != 0) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_restriction_set_clipboard_state()");
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	}
+
+	if (dpm_restriction_get_clipboard_state(policy, &get_value) < 0) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_restriction_get_clipboard_state()");
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	}
+
+	if (set_value != get_value) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to set value of restriction");
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	} else {
+		if (set_value == 1)
+			display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "ON");
+		else
+			display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "OFF");
+	}
+out:
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	if (ret == POLICY_RESULT_FAIL)
+		return ret;
+	else
+		return POLICY_RESULT_NONE;
+}
+
+int get_clipboard_state_handler(struct dpm_toolkit_entity *self)
+{
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+	int ret;
+	int enable = -1;
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		printf("Failed to create client context\n");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		printf("Failed to get datashare policy interface\n");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	ret = POLICY_RESULT_SUCCESS;
+	if (dpm_restriction_get_clipboard_state(policy, &enable) < 0) {
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	}
+
+	if (enable == 1)
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "ON");
+	else if (enable == 0)
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "OFF");
+	else
+		ret = POLICY_RESULT_FAIL;
+
+out:
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	if (ret == POLICY_RESULT_FAIL)
+		return ret;
+	else
+		return POLICY_RESULT_NONE;
+}
+
+/* settings changes toolkit handler */
+int set_settings_changes_restriction_handler(struct dpm_toolkit_entity *self)
+{
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+	int ret;
+	int get_value = 0;
+	int set_value = 0;
+
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
+
+	handler_display_radio_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self, radio_text_quality, radio_num);
+	switch (self->radio_index) {
+	case 0:
+		set_value = 1;
+		break;
+	case 1:
+		set_value = 0;
+		break;
+	}
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_context_create()");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_context_acquire_restriction_policy()");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	ret = POLICY_RESULT_SUCCESS;
+	if (dpm_restriction_set_settings_changes_state(policy, set_value) != 0) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_restriction_set_settings_changes_state()");
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	}
+
+	if (dpm_restriction_get_settings_changes_state(policy, &get_value) < 0) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_restriction_get_settings_changes_state()");
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	}
+
+	if (set_value != get_value) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to set value of restriction");
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	} else {
+		if (set_value == 1)
+			display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "ON");
+		else
+			display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "OFF");
+	}
+
+out:
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	if (ret == POLICY_RESULT_FAIL)
+		return ret;
+	else
+		return POLICY_RESULT_NONE;
+}
+
+int get_settings_changes_restriction_handler(struct dpm_toolkit_entity *self)
+{
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+	int ret;
+	int enable = 0;
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_context_create()");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_context_acquire_restriction_policy()");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	ret = POLICY_RESULT_SUCCESS;
+	if (dpm_restriction_get_settings_changes_state(policy, &enable) < 0) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_restriction_get_settings_changes_state()");
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	}
+
+	if (enable == 1)
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "ON");
+	else if (enable == 0)
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "OFF");
+	else
+		ret = POLICY_RESULT_FAIL;
+
+out:
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	if (ret == POLICY_RESULT_FAIL)
+		return ret;
+	else
+		return POLICY_RESULT_NONE;
+}
+
+/* usb debugging toolkit handler */
+int set_usb_debugging_state_handler(struct dpm_toolkit_entity *self)
+{
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+	int ret;
+	int get_value = 0;
+	int set_value = 0;
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
+
+	handler_display_radio_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self, radio_text_quality, radio_num);
+	switch (self->radio_index) {
+	case 0:
+		set_value = 1;
+		break;
+	case 1:
+		set_value = 0;
+		break;
+	}
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_context_create()");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_context_acquire_restriction_policy()");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	ret = POLICY_RESULT_SUCCESS;
+	if (dpm_restriction_set_usb_debugging_state(policy, set_value) != 0) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_restriction_set_usb_debugging_state()");
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	}
+
+	if (dpm_restriction_get_usb_debugging_state(policy, &get_value) < 0) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_restriction_get_usb_debugging_state()");
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	}
+
+	if (set_value != get_value) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to set value of restriction");
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	} else {
+		if (set_value == 1)
+			display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "ON");
+		else
+			display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "OFF");
+	}
+
+out:
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	if (ret == POLICY_RESULT_FAIL)
+		return ret;
+	else
+		return POLICY_RESULT_NONE;
+}
+
+int get_usb_debugging_state_handler(struct dpm_toolkit_entity *self)
+{
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+	int ret;
+	int enable = 0;
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_context_create()");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_context_acquire_restriction_policy()");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	ret = POLICY_RESULT_SUCCESS;
+	if (dpm_restriction_get_usb_debugging_state(policy, &enable) < 0) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed in dpm_restriction_get_usb_debugging_state()");
+		ret = POLICY_RESULT_FAIL;
+		goto out;
+	}
+
+	if (enable == 1)
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "ON");
+	else if (enable == 0)
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "OFF");
+	else
+		ret = POLICY_RESULT_FAIL;
+
+out:
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	if (ret == POLICY_RESULT_FAIL)
+		return ret;
+	else
+		return POLICY_RESULT_NONE;
 }
 
 dpm_toolkit_entity_t dpm_toolkit_restriction_policy[] = {
@@ -280,6 +617,30 @@ dpm_toolkit_entity_t dpm_toolkit_restriction_policy[] = {
 	{
 	 .id = "GET_LOCATION_STATE",
 	 .handler = get_location_state_handler
+	},
+	{
+	 .id = "SET_CLIPBOARD_RESTRICTION",
+	 .handler = set_clipboard_state_handler
+	},
+	{
+	 .id = "GET_CLIPBOARD_RESTRICTION",
+	 .handler = get_clipboard_state_handler
+	},
+	{
+	 .id = "SET_SETTINGS_CHANGES_RESTRICTION",
+	 .handler = set_settings_changes_restriction_handler
+	},
+	{
+	 .id = "GET_SETTINGS_CHANGES_RESTRICTION",
+	 .handler = get_settings_changes_restriction_handler
+	},
+	{
+	 .id = "SET_USB_DEBUGGING_RESTRICTION",
+	 .handler = set_usb_debugging_state_handler
+	},
+	{
+	 .id = "GET_USB_DEBUGGING_RESTRICTION",
+	 .handler = get_usb_debugging_state_handler
 	}
 };
 
@@ -299,5 +660,4 @@ void __CONSTRUCTOR__ dpm_toolkit_restriction_policy_constructor()
 	ret = dpm_toolkit_add_policy_group(&global_dpm_policy_group_list, &restriction_policy_group);
 	if (ret < 0)
 		dlog_print(DLOG_ERROR, LOG_TAG, "add restriction group fail");
-
 }
