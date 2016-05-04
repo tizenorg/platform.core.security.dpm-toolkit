@@ -563,6 +563,148 @@ out:
 		return POLICY_RESULT_NONE;
 }
 
+int set_wifi_state_handler(struct dpm_toolkit_entity *self)
+{
+	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	dpm_restriction_policy_h policy;
+	dpm_context_h context;
+	int ret;
+
+	dlog_print(DLOG_DEBUG, LOG_TAG, __func__);
+
+	handler_display_radio_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"),
+		self, radio_text, sizeof(radio_text) / sizeof(char) / MAX_RADIO_TEXT_LEN);
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to create client context");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+
+	if (policy == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get restiction policy interface");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	ret = dpm_restriction_set_wifi_state(policy, self->radio_index);
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	return (ret == DPM_ERROR_NONE) ? POLICY_RESULT_SUCCESS : POLICY_RESULT_FAIL;
+}
+
+int get_wifi_state_handler(struct dpm_toolkit_entity *self)
+{
+	dpm_restriction_policy_h policy;
+	dpm_context_h context;
+	int state, ret;
+
+	dlog_print(DLOG_DEBUG, LOG_TAG, __func__);
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to create client context");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+
+	if (policy == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get wifi policy interface");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	ret = dpm_restriction_get_wifi_state(policy, &state);
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	if (ret == DPM_ERROR_NONE) {
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"),
+			state? "DISABLE":"ENABLE");
+
+		return POLICY_RESULT_NONE;
+	}
+
+	return POLICY_RESULT_FAIL;
+}
+
+int set_wifi_hotspot_state_handler(struct dpm_toolkit_entity *self)
+{
+	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	dpm_restriction_policy_h policy;
+	dpm_context_h context;
+	int ret;
+
+	dlog_print(DLOG_DEBUG, LOG_TAG, __func__);
+
+	handler_display_radio_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"),
+		self, radio_text, sizeof(radio_text) / sizeof(char) / MAX_RADIO_TEXT_LEN);
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to create client context");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+
+	if (policy == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get restriction policy interface");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	ret = dpm_restriction_set_wifi_hotspot_state(policy, self->radio_index);
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	return (ret == DPM_ERROR_NONE) ? POLICY_RESULT_SUCCESS : POLICY_RESULT_FAIL;
+}
+
+int get_wifi_hotspot_state_handler(struct dpm_toolkit_entity *self)
+{
+	dpm_restriction_policy_h policy;
+	dpm_context_h context;
+	int state, ret;
+
+	dlog_print(DLOG_DEBUG, LOG_TAG, __func__);
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to create client context");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+
+	if (policy == NULL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get wifi policy interface");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	ret = dpm_restriction_get_wifi_hotspot_state(policy, &state);
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	if (ret == DPM_ERROR_NONE) {
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"),
+			state? "DISABLE":"ENABLE");
+
+		return POLICY_RESULT_NONE;
+	}
+
+	return POLICY_RESULT_FAIL;
+}
+
 dpm_toolkit_entity_t dpm_toolkit_restriction_policy[] = {
 	{
 	 .id = "SET_CAMERA_STATE",
@@ -611,6 +753,22 @@ dpm_toolkit_entity_t dpm_toolkit_restriction_policy[] = {
 	{
 	 .id = "GET_USB_DEBUGGING_STATE",
 	 .handler = get_usb_debugging_state_handler
+	},
+	{
+	 .id = "SET_WIFI_STATE",
+	 .handler = set_wifi_state_handler
+	},
+	{
+	 .id = "GET_WIFI_STATE",
+	 .handler = get_wifi_state_handler
+	},
+	{
+	 .id = "SET_WIFI_HOTSPOT_STATE",
+	 .handler = set_wifi_hotspot_state_handler
+	},
+	{
+	 .id = "GET_WIFI_HOTSPOT_STATE",
+	 .handler = get_wifi_hotspot_state_handler
 	}
 };
 
