@@ -52,9 +52,17 @@
 	</policy-group>
 
 	<policy-group id="WIFI">
-		<policy id="SET_ALLOW_WIFI" desc="Set Allow WIFI" status="ON">
+		<policy id="WIFI_SET_PROFILE_CHANGE_RESTRICTION" desc="Set Profile change" status="ON">
 		</policy>
-		<policy id="GET_ALLOW_WIFI" desc="Get Allow WIFI" status="ON">
+		<policy id="WIFI_IS_PROFILE_CHANGE_RESTRICTED" desc="Get Profile change" status="ON">
+		</policy>
+		<policy id="WIFI_SET_NETWORK_ACCESS_RESTRICTION" desc="Set Network Access" status="ON">
+		</policy>
+		<policy id="WIFI_IS_NETWORK_ACCESS_RESTRICTED" desc="Get Network Access" status="ON">
+		</policy>
+		<policy id="WIFI_ADD_SSID_TO_BLOCKLIST" desc="Add SSID to blocklist" status="ON">
+		</policy>
+		<policy id="WIFI_REMOVE_SSID_FROM_BLOCKLIST" desc="Remove SSID from blocklist" status="ON">
 		</policy>
 	</policy-group>
 
@@ -82,6 +90,13 @@
 		<policy id="SET_USB_DEBUGGING_STATE" desc="Set USB Debugging State" status="ON">
 		</policy>
 		<policy id="GET_USB_DEBUGGING_STATE" desc="Get USB Debugging State" status="ON">
+		<policy id="WIFI_SET_WIFI_STATE" desc="Set Wifi State" status="ON">
+		</policy>
+		<policy id="WIFI_IS_WIFI_STATE" desc="Get Wifi State" status="ON">
+		</policy>
+		<policy id="WIFI_SET_WIFI_HOTSPOT_STATE" desc="Set Wifi Hotspot State" status="ON">
+		</policy>
+		<policy id="WIFI_IS_WIFI_HOTSPOT_STATE" desc="Get Wifi Hotspot State" status="ON">
 		</policy>
 	</policy-group>
 
