@@ -74,5 +74,6 @@ void display_result_popup(const char* title, const char* popup_message);
 void display_input_popup(const char* title, dpm_toolkit_entity_t* selected_policy);
 void display_radio_popup(const char* title, dpm_toolkit_entity_t* selected_policy, char radio_text[][MAX_RADIO_TEXT_LEN], int array_row);
 
+char* get_now_zone(void);
 
 #endif /* __DPM_TOOLKIT_H__ */
