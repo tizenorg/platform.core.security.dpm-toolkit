@@ -100,9 +100,9 @@ void display_result_popup(const char* title, const char* popup_message)
 void display_input_popup(const char* title, dpm_toolkit_entity_t* selected_policy)
 {
 	Evas_Object* popup = NULL, * entry = NULL, * btn = NULL;
-
 	global_popup.popup_flag = 1;
 	global_popup.policy = selected_policy;
+	char* default_text = NULL;
 
 	popup = elm_popup_add(global_ad->nf);
 	elm_popup_align_set(popup, ELM_NOTIFY_ALIGN_FILL, 1.0);
@@ -121,6 +121,13 @@ void display_input_popup(const char* title, dpm_toolkit_entity_t* selected_polic
 	evas_object_size_hint_align_set(entry, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	elm_object_style_set(entry, "center");
 	elm_object_part_content_set(popup, "elm.swallow.content", entry);
+
+	default_text = (char*)xmlGetProp(selected_policy->model, (xmlChar *) "default");
+	if (default_text != NULL) {
+		elm_entry_entry_set(entry, default_text);
+		free(default_text);
+	} else
+		elm_object_part_text_set(entry, "guide", "Enter value");
 
 	btn = elm_button_add(popup);
 	elm_object_text_set(btn, "set");
