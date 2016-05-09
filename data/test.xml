@@ -41,7 +41,7 @@
 	</policy-group>
 
 	<policy-group id="SECURITY">
-		<policy id="LOCK_NOW" desc="Force Lock" status="ON">
+		<policy id="LOCK_NOW" desc="Force Lock" status="ON" default="Input default">
 		</policy>
 		<policy id="WIPE_DATA" desc="Wipe Data" status="ON">
 		</policy>

@@ -1,9 +1,13 @@
 #include "dpm-toolkit.h"
 
-int rock_now_handler(struct dpm_toolkit_entity* self)
+int lock_now_handler(struct dpm_toolkit_entity* self)
 {
-	dlog_print(DLOG_DEBUG, LOG_TAG, "rock_now_handler");
-	return POLICY_RESULT_SUCCESS;
+	dlog_print(DLOG_DEBUG, LOG_TAG, "lock_now_handler");
+
+	handler_display_input_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self);
+
+	display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self->entry_input);
+	return POLICY_RESULT_NONE;
 }
 
 int wipe_data_handler(struct dpm_toolkit_entity* self)
@@ -27,7 +31,7 @@ int power_off_device_handler(struct dpm_toolkit_entity* self)
 dpm_toolkit_entity_t dpm_toolkit_security_policy[] = {
 	{
 	 .id = "LOCK_NOW",
-	 .handler = rock_now_handler
+	 .handler = lock_now_handler
 	},
 	{
 	 .id = "WIPE_DATA",
