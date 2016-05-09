@@ -113,17 +113,17 @@
 	</policy-group>
 
 	<policy-group id="BLUETOOTH">
-		<policy id="ADD_DEVICE_TO_BLACKLIST" desc="Add device MAC address to blacklist" status="ON">
+		<policy id="ADD_DEVICE_TO_BLACKLIST" desc="Add device MAC address to blacklist" status="ON" default="e8:11:32:30:78:9c">
 		</policy>
-		<policy id="REMOVE_DEVICE_FROM_BLACKLIST" desc="Remove device MAC address from blacklist" status="ON">
+		<policy id="REMOVE_DEVICE_FROM_BLACKLIST" desc="Remove device MAC address from blacklist" status="ON" default="e8:11:32:30:78:9c">
 		</policy>
 		<policy id="SET_DEVICE_RESTRICTION" desc="Set device restriction" status="ON">
 		</policy>
 		<policy id="IS_DEVICE_RESTRICTED" desc="Check device restriction" status="ON">
 		</policy>
-		<policy id="ADD_UUID_TO_BLACKLIST" desc="Add uuid to blacklist" status="ON">
+		<policy id="ADD_UUID_TO_BLACKLIST" desc="Add uuid to blacklist" status="ON" default="0030290f-0300-1000-8001-00805f9b34fb">
 		</policy>
-		<policy id="REMOVE_UUID_FROM_BLACKLIST" desc="Remove uuid from blacklist" status="ON">
+		<policy id="REMOVE_UUID_FROM_BLACKLIST" desc="Remove uuid from blacklist" status="ON" default="0030290f-0300-1000-8001-00805f9b34fb">
 		</policy>
 		<policy id="SET_UUID_RESTRICTION" desc="Set uuid restriction" status="ON">
 		</policy>
