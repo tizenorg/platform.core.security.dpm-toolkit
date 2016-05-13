@@ -139,26 +139,6 @@ void dpm_parser_free_policy_list(void)
 
 }
 
-char* get_now_zone(void) {
-    struct passwd pwd, *result;
-    int bufsize;
-
-    bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
-    if (bufsize == -1)
-        bufsize = 16384;
-
-    char *buf = malloc(bufsize * sizeof(char));
-
-    getpwuid_r(getuid(), &pwd, buf, bufsize, &result);
-    if (result == NULL) {
-        free(buf);
-        return NULL;
-    }
-    free(buf);
-    return strdup(result->pw_name);
-
-}
-
 static void win_delete_request_cb(void* data, Evas_Object* obj, void* event_info)
 {
 	/* To make your application go to background,
