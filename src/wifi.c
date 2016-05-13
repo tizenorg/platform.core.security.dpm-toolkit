@@ -8,7 +8,6 @@ int wifi_set_profile_change_restriction_handler(struct dpm_toolkit_entity* self)
 {
 	dpm_wifi_policy_h policy;
 	dpm_context_h context;
-        char *zone;
 	int ret;
 
 	dlog_print(DLOG_DEBUG, LOG_TAG, __func__);
@@ -21,10 +20,7 @@ int wifi_set_profile_change_restriction_handler(struct dpm_toolkit_entity* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-        zone = get_now_zone();
-	policy = dpm_context_acquire_wifi_policy(context, zone);
-        free(zone);
-
+	policy = dpm_context_acquire_wifi_policy(context);
 	if (policy == NULL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get wifi policy interface");
 		dpm_context_destroy(context);
@@ -42,7 +38,6 @@ int wifi_set_profile_change_restriction_handler(struct dpm_toolkit_entity* self)
 int wifi_is_profile_change_restricted_handler(struct dpm_toolkit_entity* self)
 {	dpm_wifi_policy_h policy;
 	dpm_context_h context;
-        char *zone;
 	int state, ret;
 
 	dlog_print(DLOG_DEBUG, LOG_TAG, __func__);
@@ -53,10 +48,7 @@ int wifi_is_profile_change_restricted_handler(struct dpm_toolkit_entity* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-        zone = get_now_zone();
-	policy = dpm_context_acquire_wifi_policy(context, zone);
-        free(zone);
-
+	policy = dpm_context_acquire_wifi_policy(context);
 	if (policy == NULL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get wifi policy interface");
 		dpm_context_destroy(context);
@@ -81,7 +73,6 @@ int wifi_set_network_access_restriction_handler(struct dpm_toolkit_entity* self)
 {
 	dpm_wifi_policy_h policy;
 	dpm_context_h context;
-        char *zone;
 	int ret;
 
 	dlog_print(DLOG_DEBUG, LOG_TAG, __func__);
@@ -94,10 +85,7 @@ int wifi_set_network_access_restriction_handler(struct dpm_toolkit_entity* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-        zone = get_now_zone();
-	policy = dpm_context_acquire_wifi_policy(context, zone);
-        free(zone);
-
+	policy = dpm_context_acquire_wifi_policy(context);
 	if (policy == NULL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get wifi policy interface");
 		dpm_context_destroy(context);
@@ -116,7 +104,6 @@ int wifi_is_network_access_restricted_handler(struct dpm_toolkit_entity* self)
 {
 	dpm_wifi_policy_h policy;
 	dpm_context_h context;
-        char *zone;
 	int state, ret;
 
 	dlog_print(DLOG_DEBUG, LOG_TAG, __func__);
@@ -127,9 +114,7 @@ int wifi_is_network_access_restricted_handler(struct dpm_toolkit_entity* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-        zone = get_now_zone();
-	policy = dpm_context_acquire_wifi_policy(context, zone);
-        free(zone);
+	policy = dpm_context_acquire_wifi_policy(context);
 
 	if (policy == NULL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get wifi policy interface");
@@ -155,7 +140,6 @@ int wifi_add_ssid_to_blocklist_handler(struct dpm_toolkit_entity* self)
 {
 	dpm_wifi_policy_h policy;
 	dpm_context_h context;
-        char *zone;
 	int ret;
 
 	dlog_print(DLOG_DEBUG, LOG_TAG, __func__);
@@ -168,10 +152,7 @@ int wifi_add_ssid_to_blocklist_handler(struct dpm_toolkit_entity* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-        zone = get_now_zone();
-	policy = dpm_context_acquire_wifi_policy(context, zone);
-        free(zone);
-
+	policy = dpm_context_acquire_wifi_policy(context);
 	if (policy == NULL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get wifi policy interface");
 		dpm_context_destroy(context);
@@ -190,7 +171,6 @@ int wifi_remove_ssid_from_blocklist_handler(struct dpm_toolkit_entity* self)
 {
 	dpm_wifi_policy_h policy;
 	dpm_context_h context;
-        char *zone;
 	int ret;
 
 	dlog_print(DLOG_DEBUG, LOG_TAG, __func__);
@@ -203,10 +183,7 @@ int wifi_remove_ssid_from_blocklist_handler(struct dpm_toolkit_entity* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-        zone = get_now_zone();
-	policy = dpm_context_acquire_wifi_policy(context, zone);
-        free(zone);
-
+	policy = dpm_context_acquire_wifi_policy(context);
 	if (policy == NULL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to get wifi policy interface");
 		dpm_context_destroy(context);
