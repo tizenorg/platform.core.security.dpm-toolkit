@@ -103,6 +103,10 @@
 		</policy>
 		<policy id="GET_BLUETOOTH_TETHERING_STATE" desc="Get Bluetooth Tethering State" status="ON">
 		</policy>
+		<policy id="SET_USB_TETHERING_STATE" desc="Set USB Tethering State" status="ON">
+		</policy>
+		<policy id="GET_USB_TETHERING_STATE" desc="Get USB Tethering State" status="ON">
+		</policy>
 	</policy-group>
 
 	<policy-group id="ZONE">
