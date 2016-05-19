@@ -45,6 +45,7 @@ make %{?jobs:-j%jobs}
 
 %post
 /sbin/ldconfig
+cp %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/sampleapp.tpk /opt/data/dpm/
 
 %postun
 /sbin/ldconfig
@@ -55,6 +56,7 @@ make %{?jobs:-j%jobs}
 %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/bin/*
 %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/res/*
 %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/test.xml
+%{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/sampleapp.tpk
 %{TZ_SYS_RO_PACKAGES}/org.tizen.dpm-toolkit.xml
 %{TZ_SYS_RW_ICONS}/default/small/org.tizen.dpm-toolkit.png
 
