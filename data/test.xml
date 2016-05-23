@@ -107,6 +107,10 @@
 		</policy>
 		<policy id="GET_USB_TETHERING_STATE" desc="Get USB Tethering State" status="ON">
 		</policy>
+		<policy id="SET_BLUETOOTH_MODE_CHANGE_STATE" desc="Set Bluetooth Mode Change State" status="ON">
+		</policy>
+		<policy id="GET_BLUETOOTH_MODE_CHANGE_STATE" desc="Get Bluetooth Mode Change State" status="ON">
+		</policy>
 	</policy-group>
 
 	<policy-group id="ZONE">
