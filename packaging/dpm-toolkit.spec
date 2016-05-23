@@ -26,9 +26,12 @@ Device Policy Manager test toolkit pakcage
 %setup -q
 
 %build
+%{!?profile:%define profile "mobile"}
+
 cmake . -DCMAKE_INSTALL_PREFIX="%{TZ_SYS_RO_APP}" \
-       -DCMAKE_DESKTOP_ICON_DIR="%{TZ_SYS_RW_ICONS}/default/small" \
-       -DCMAKE_APP_SHARE_PACKAGES_DIR="%{TZ_SYS_RO_PACKAGES}" \
+        -DCMAKE_DESKTOP_ICON_DIR="%{TZ_SYS_RW_ICONS}/default/small" \
+        -DCMAKE_APP_SHARE_PACKAGES_DIR="%{TZ_SYS_RO_PACKAGES}" \
+        -DTIZEN_PROFILE_NAME=%{profile}
 
 make %{?jobs:-j%jobs}
 

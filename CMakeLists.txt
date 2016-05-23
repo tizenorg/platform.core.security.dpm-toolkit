@@ -29,22 +29,16 @@ PKG_CHECK_MODULES(test_pkgs REQUIRED
 INCLUDE_DIRECTORIES(${test_pkgs_INCLUDE_DIRS} include)
 LINK_DIRECTORIES(${test_pkgs_LIBRARY_DIRS})
 
-SET(PKG_SRCS src/dpm-toolkit.c
-			 src/dpm-toolkit-popup.c
-			 src/password.c
-			 src/security.c
-			 src/wifi.c
-			 src/restriction.c
-			 src/zone.c
-             src/bluetooth.c)
+SET(BASE_SRCS src/dpm-toolkit.c src/dpm-toolkit-popup.c)
 
+INCLUDE("${TIZEN_PROFILE_NAME}.cmake")
 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -fPIE")
 SET(CMAKE_C_FLAGS_DEBUG "-O0 -g -Wp,-U_FORTIFY_SOURCE")
 SET(CMAKE_C_FLAGS_RELEASE "-O2")
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--as-needed -pie")
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${PKG_SRCS})
+ADD_EXECUTABLE(${PROJECT_NAME} ${BASE_SRCS} ${TESTCASES})
 INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/bin)
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${test_pkgs_LIBRARIES})
