@@ -39,7 +39,7 @@ typedef struct appdata {
 	char* edj_path;
 } appdata_s;
 
-appdata_s* global_ad;
+extern appdata_s* global_ad;
 
 typedef struct dpm_toolkit_entity {
 	char* id;
@@ -62,10 +62,10 @@ typedef struct popup_data {
 	int radio_index;
 } popup_data_t;
 
-popup_data_t global_popup;
+extern popup_data_t global_popup;
 
-GList* global_dpm_policy_group_list;
-GList* effective_dpm_policy_group_list;
+extern GList* global_dpm_policy_group_list;
+extern GList* effective_dpm_policy_group_list;
 
 int dpm_toolkit_add_policy_group(GList** Grouplist , dpm_toolkit_policy_group_t* group);
 int dpm_toolkit_init_policy(GList** policies, dpm_toolkit_entity_t* policy, int policyNum);

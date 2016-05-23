@@ -5,6 +5,11 @@
 static Elm_Genlist_Item_Class* itc_policy_group, * itc_policy, * itc_policy_entry;
 static xmlDoc* dpmDoc = NULL;
 
+popup_data_t global_popup;
+appdata_s* global_ad;
+GList* global_dpm_policy_group_list;
+GList* effective_dpm_policy_group_list;
+
 xmlNodePtr evaluate_xmlNode(xmlDoc* dpmDoc, char* policy_group, char* policy_id)
 {
 	char* xpath = NULL;
@@ -548,4 +553,3 @@ int main(int argc, char* argv[])
 
 	return ret;
 }
-
