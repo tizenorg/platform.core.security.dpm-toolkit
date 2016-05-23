@@ -828,6 +828,87 @@ int get_usb_tethering_state_handler(struct xtk_policy *self)
 	return POLICY_RESULT_FAIL;
 }
 
+int set_bluetooth_mode_change_state_handler(struct xtk_policy *self)
+{
+	int state;
+	int allow;
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+
+	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
+		return POLICY_RESULT_FAIL;
+	}
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_set_bluetooth_mode_change_state(policy, allow) != 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_get_bluetooth_mode_change_state(policy, &state) != 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (state == allow) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
+		return POLICY_RESULT_NONE;
+	}
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	return POLICY_RESULT_FAIL;
+}
+
+int get_bluetooth_mode_change_state_handler(struct xtk_policy *self)
+{
+	int state;
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_get_bluetooth_mode_change_state(policy, &state) == 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
+		return POLICY_RESULT_NONE;
+	}
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	return POLICY_RESULT_FAIL;
+}
+
 xtk_policy_t xtk_restriction_policy[] = {
 	{
 		.id = "SET_CAMERA_STATE",
@@ -908,6 +989,14 @@ xtk_policy_t xtk_restriction_policy[] = {
 	{
 		.id = "GET_USB_TETHERING_STATE",
 		.handler = get_usb_tethering_state_handler
+	},
+	{
+		.id = "SET_BLUETOOTH_MODE_CHANGE_STATE",
+		.handler = set_bluetooth_mode_change_state_handler
+	},
+	{
+		.id = "GET_BLUETOOTH_MODE_CHANGE_STATE",
+		.handler = get_bluetooth_mode_change_state_handler
 	}
 };
 
