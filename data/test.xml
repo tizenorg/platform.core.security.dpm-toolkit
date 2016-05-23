@@ -115,6 +115,10 @@
 		</policy>
 		<policy id="GET_BLUETOOTH_DESKTOP_CONNECTIVITY_STATE" desc="Get Bluetooth Desktop Connectivity State" status="ON">
 		</policy>
+		<policy id="SET_BLUETOOTH_PAIRING_STATE" desc="Set Bluetooth Pairing State" status="ON">
+		</policy>
+		<policy id="GET_BLUETOOTH_PAIRING_STATE" desc="Get Bluetooth Pairing State" status="ON">
+		</policy>
 	</policy-group>
 
 	<policy-group id="ZONE">
