@@ -1,30 +1,42 @@
+/*
+ *  Copyright (c) 2015 Samsung Electronics Co., Ltd All Rights Reserved
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License
+ */
+
 #include "dpm-toolkit.h"
 
-void _popup_hide_cb(void* data, Evas_Object* obj, void* event_info)
+static void _popup_hide_cb(void* data, Evas_Object* obj, void* event_info)
 {
-	global_popup.popup_flag = 0;
 	evas_object_del(obj);
 }
 
-void _popup_hide_finished_cb(void* data, Evas_Object* obj, void* event_info)
+static void _popup_hide_finished_cb(void* data, Evas_Object* obj, void* event_info)
 {
-	global_popup.popup_flag = 0;
 	evas_object_del(obj);
 }
 
-void _popup_block_clicked_cb(void* data, Evas_Object* obj, void* event_info)
+static void _popup_block_clicked_cb(void* data, Evas_Object* obj, void* event_info)
 {
-	global_popup.popup_flag = 0;
 	evas_object_del(obj);
 }
 
-void _response_cb(void* data, Evas_Object* obj, void* event_info)
+static void _response_cb(void* data, Evas_Object* obj, void* event_info)
 {
-	global_popup.popup_flag = 0;
 	evas_object_del(data);
 }
 
-void _set_btn_response_cb(void *data, Evas_Object *obj, void *event_info)
+static void _set_btn_response_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	char* input = NULL;
 	int ret;
@@ -68,36 +80,7 @@ void _radio_set_btn_response_cb(void *data, Evas_Object *obj, void *event_info)
 
 }
 
-
-void display_result_popup(const char* title, const char* popup_message)
-{
-	Evas_Object* popup = NULL;
-	Evas_Object* btn = NULL;
-
-	if (title == NULL || popup_message == NULL)
-		dlog_print(DLOG_ERROR, LOG_TAG, "Invalid parameters");
-
-	popup = elm_popup_add(global_ad->nf);
-	elm_popup_align_set(popup, ELM_NOTIFY_ALIGN_FILL, 1.0);
-	evas_object_size_hint_weight_set(popup, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	elm_object_part_text_set(popup, "title,text", title);
-	elm_object_text_set(popup, popup_message);
-
-	eext_object_event_callback_add(popup, EEXT_CALLBACK_BACK, _popup_hide_cb, NULL);
-	evas_object_smart_callback_add(popup, "dismissed", _popup_hide_finished_cb, NULL);
-	evas_object_smart_callback_add(popup, "block,clicked", _popup_block_clicked_cb, NULL);
-
-	btn = elm_button_add(popup);
-	elm_object_text_set(btn, "OK");
-	elm_object_style_set(btn, "bottom");
-	elm_object_part_content_set(popup, "button1", btn);
-	evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_smart_callback_add(btn, "clicked", _response_cb, popup);
-	evas_object_show(popup);
-
-}
-
-void display_input_popup(const char* title, dpm_toolkit_entity_t* selected_policy)
+void display_input_popup(const char* title, xtk_policy_t* selected_policy)
 {
 	Evas_Object* popup = NULL, * entry = NULL, * btn = NULL;
 	global_popup.popup_flag = 1;
@@ -148,14 +131,12 @@ void display_input_popup(const char* title, dpm_toolkit_entity_t* selected_polic
 
 void radio_changed_cb(void* data, Evas_Object* obj, void* evas_info)
 {
-	int value = 0;
-	SLOGD("Selected Radio : %d ", (int)data);
-	value = elm_radio_value_get(obj);
-	global_popup.radio_index = value;
-	SLOGD("selected value for the group : %d", value);
+	int *value = (int *)data;
+	*value = elm_radio_value_get(obj);
+	SLOGD("selected value for the group : %d", *value);
 }
 
-void display_radio_popup(const char* title, dpm_toolkit_entity_t* selected_policy, char radio_text[][MAX_RADIO_TEXT_LEN], int array_row)
+void display_radio_popup(const char* title, xtk_policy_t* selected_policy, char radio_text[][MAX_RADIO_TEXT_LEN], int array_row)
 {
 	Evas_Object* popup = NULL, * radio = NULL, * radio_group = NULL, * btn = NULL;
 	Evas_Object* box = NULL;

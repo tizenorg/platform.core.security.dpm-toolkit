@@ -2,8 +2,6 @@
 <manifest>
 	<policy-version>0.1.0</policy-version>
 	<policy-group id="PASSWORD">
-		<policy id="SET_PASSWORD_QUALITY" desc="Set Password Quality" status="ON">
-		</policy>
 		<policy id="SET_PASSWORD_MIN_LENGTH" desc="Set Password Minimum Length" status="ON">
 		</policy>
 		<policy id="SET_PASSWORD_MIN_COMPLEX_CHARS" desc="Set Password Minimum Complex Characters" status="ON">

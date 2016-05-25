@@ -1,14 +1,30 @@
+/*
+ *  Copyright (c) 2015 Samsung Electronics Co., Ltd All Rights Reserved
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License
+ */
+
 #include "dpm-toolkit.h"
 #include <stdlib.h>
 #include <dpm/password.h>
 
 /* dpm integration test & radio popup test */
-int set_password_quality_handler(struct dpm_toolkit_entity* self)
+int set_password_quality_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_password_quality_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char radio_text[][MAX_RADIO_TEXT_LEN] = {"UNSPECIFIED", "SIMPLE_PASSWORD", "SOMETHING", "NUMERIC", "ALPHABETIC", "ALPHANUMERIC"};
 	int radio_num = sizeof(radio_text) / sizeof(radio_text[0]);
 	dpm_password_quality_e quality;
@@ -66,12 +82,12 @@ int set_password_quality_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int set_password_min_length_handler(struct dpm_toolkit_entity* self)
+int set_password_min_length_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_password_min_length_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* input;
 	int min_length;
 
@@ -107,12 +123,12 @@ int set_password_min_length_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int set_password_min_complex_chars_handler(struct dpm_toolkit_entity* self)
+int set_password_min_complex_chars_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_password_min_complex_chars_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* input;
 	int min_complex_chars;
 
@@ -148,12 +164,12 @@ int set_password_min_complex_chars_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int set_password_max_failed_attempts_for_wipe_handler(struct dpm_toolkit_entity* self)
+int set_password_max_failed_attempts_for_wipe_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_password_max_failed_attempts_for_wipe_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* input;
 	int max_failed_attempts;
 
@@ -189,12 +205,12 @@ int set_password_max_failed_attempts_for_wipe_handler(struct dpm_toolkit_entity*
 	return POLICY_RESULT_FAIL;
 }
 
-int set_password_expires_handler(struct dpm_toolkit_entity* self)
+int set_password_expires_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_password_expires_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* input;
 	int expired_day;
 
@@ -230,12 +246,12 @@ int set_password_expires_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int set_password_history_handler(struct dpm_toolkit_entity* self)
+int set_password_history_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_password_history_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* input;
 	int history;
 
@@ -271,12 +287,12 @@ int set_password_history_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int set_password_pattern_handler(struct dpm_toolkit_entity* self)
+int set_password_pattern_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_password_pattern_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* input;
 
 	handler_display_input_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"),selected_policy);
@@ -309,12 +325,12 @@ int set_password_pattern_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int reset_password_handler(struct dpm_toolkit_entity* self)
+int reset_password_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "reset_password_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* input;
 
 	handler_display_input_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *) "desc"),selected_policy);
@@ -347,7 +363,7 @@ int reset_password_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int enforce_password_change_handler(struct dpm_toolkit_entity* self)
+int enforce_password_change_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "enforce_password_change_handler");
 	dpm_context_h handle;
@@ -376,12 +392,12 @@ int enforce_password_change_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int set_max_inactivity_time_device_lock_handler(struct dpm_toolkit_entity* self)
+int set_max_inactivity_time_device_lock_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_max_inactivity_time_device_lock_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* input;
 	int max_inactivity_time;
 
@@ -417,12 +433,12 @@ int set_max_inactivity_time_device_lock_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int get_max_inactivity_time_device_lock_handler(struct dpm_toolkit_entity* self)
+int get_max_inactivity_time_device_lock_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "get_max_inactivity_time_device_lock_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char num_text[10];
 	int max_inactivity_time;
 
@@ -451,12 +467,12 @@ int get_max_inactivity_time_device_lock_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int set_password_status_handler(struct dpm_toolkit_entity* self)
+int set_password_status_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_password_status_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* input;
 	int status;
 
@@ -492,7 +508,7 @@ int set_password_status_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int delete_password_pattern_handler(struct dpm_toolkit_entity* self)
+int delete_password_pattern_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "delete_password_pattern_handler");
 	dpm_context_h handle;
@@ -521,12 +537,12 @@ int delete_password_pattern_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int get_password_pattern_handler(struct dpm_toolkit_entity* self)
+int get_password_pattern_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "get_password_pattern_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* password_pattern;
 
 	handle = dpm_context_create();
@@ -556,12 +572,12 @@ int get_password_pattern_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int set_max_char_occurrences_handler(struct dpm_toolkit_entity* self)
+int set_max_char_occurrences_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_max_char_occurrences_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* input;
 	int max_char_occur;
 
@@ -597,12 +613,12 @@ int set_max_char_occurrences_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int get_max_char_occurrences_handler(struct dpm_toolkit_entity* self)
+int get_max_char_occurrences_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "get_max_char_occurrences_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char num_text[10];
 	int max_char_occur;
 
@@ -631,12 +647,12 @@ int get_max_char_occurrences_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int set_max_numeric_sequence_length_handler(struct dpm_toolkit_entity* self)
+int set_max_numeric_sequence_length_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "set_max_numeric_sequence_length_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char* input;
 	int max_numeric_seq_length;
 
@@ -672,12 +688,12 @@ int set_max_numeric_sequence_length_handler(struct dpm_toolkit_entity* self)
 	return POLICY_RESULT_FAIL;
 }
 
-int get_max_numeric_sequence_length_handler(struct dpm_toolkit_entity* self)
+int get_max_numeric_sequence_length_handler(struct xtk_policy* self)
 {
 	dlog_print(DLOG_DEBUG, LOG_TAG, "get_max_numeric_sequence_length_handler");
 	dpm_context_h handle;
 	dpm_password_policy_h password_policy_handle;
-	dpm_toolkit_entity_t* selected_policy = self;
+	xtk_policy_t* selected_policy = self;
 	char num_text[10];
 	int max_numeric_seq_length;
 
@@ -707,95 +723,94 @@ int get_max_numeric_sequence_length_handler(struct dpm_toolkit_entity* self)
 }
 
 
-dpm_toolkit_entity_t dpm_toolkit_password_policy[] = {
+xtk_policy_t xtk_password_policy[] = {
 	{
-	 .id = "SET_PASSWORD_QUALITY",
-	 .handler = set_password_quality_handler
+		.id = "SET_PASSWORD_QUALITY",
+		.handler = set_password_quality_handler
 	},
 	{
-	 .id = "SET_PASSWORD_MIN_LENGTH",
-	 .handler = set_password_min_length_handler
+		.id = "SET_PASSWORD_MIN_LENGTH",
+		.handler = set_password_min_length_handler
 	},
 	{
-	 .id = "SET_PASSWORD_MIN_COMPLEX_CHARS",
-	 .handler = set_password_min_complex_chars_handler
+		.id = "SET_PASSWORD_MIN_COMPLEX_CHARS",
+		.handler = set_password_min_complex_chars_handler
 	},
 	{
-	 .id = "SET_PASSWORD_MAX_FAILED_ATTEMPTS_FOR_WIPE",
-	 .handler = set_password_max_failed_attempts_for_wipe_handler
+		.id = "SET_PASSWORD_MAX_FAILED_ATTEMPTS_FOR_WIPE",
+		.handler = set_password_max_failed_attempts_for_wipe_handler
 	},
 	{
-	 .id = "SET_PASSWORD_EXPIRES",
-	 .handler = set_password_expires_handler
+		.id = "SET_PASSWORD_EXPIRES",
+		.handler = set_password_expires_handler
 	},
 	{
-	 .id = "SET_PASSWORD_HISTORY",
-	 .handler = set_password_history_handler
+		.id = "SET_PASSWORD_HISTORY",
+		.handler = set_password_history_handler
 	},
 	{
-	 .id = "SET_PASSWORD_PATTERN",
-	 .handler = set_password_pattern_handler
+		.id = "SET_PASSWORD_PATTERN",
+		.handler = set_password_pattern_handler
 	},
 	{
-	 .id = "RESET_PASSWORD",
-	 .handler = reset_password_handler
+		.id = "RESET_PASSWORD",
+		.handler = reset_password_handler
 	},
 	{
-	 .id = "ENFORCE_PASSWORD_CHANGE",
-	 .handler = enforce_password_change_handler
+		.id = "ENFORCE_PASSWORD_CHANGE",
+		.handler = enforce_password_change_handler
 	},
 	{
-	 .id = "SET_MAX_INACTIVITY_TIME_DEVICE_LOCK",
-	 .handler = set_max_inactivity_time_device_lock_handler
+		.id = "SET_MAX_INACTIVITY_TIME_DEVICE_LOCK",
+		.handler = set_max_inactivity_time_device_lock_handler
 	},
 	{
-	 .id = "GET_MAX_INACTIVITY_TIME_DEVICE_LOCK",
-	 .handler = get_max_inactivity_time_device_lock_handler
+		.id = "GET_MAX_INACTIVITY_TIME_DEVICE_LOCK",
+		.handler = get_max_inactivity_time_device_lock_handler
 	},
 	{
-	 .id = "SET_PASSWORD_STATUS",
-	 .handler = set_password_status_handler
+		.id = "SET_PASSWORD_STATUS",
+		.handler = set_password_status_handler
 	},
 	{
-	 .id = "DELETE_PASSWORD_PATTERN",
-	 .handler = delete_password_pattern_handler
+		.id = "DELETE_PASSWORD_PATTERN",
+		.handler = delete_password_pattern_handler
 	},
 	{
-	 .id = "GET_PASSWORD_PATTERN",
-	 .handler = get_password_pattern_handler
+		.id = "GET_PASSWORD_PATTERN",
+		.handler = get_password_pattern_handler
 	},
 	{
-	 .id = "SET_MAX_CHAR_OCCURRENCES",
-	 .handler = set_max_char_occurrences_handler
+		.id = "SET_MAX_CHAR_OCCURRENCES",
+		.handler = set_max_char_occurrences_handler
 	},
 	{
-	 .id = "GET_MAX_CHAR_OCCURRENCES",
-	 .handler = get_max_char_occurrences_handler
+		.id = "GET_MAX_CHAR_OCCURRENCES",
+		.handler = get_max_char_occurrences_handler
 	},
 	{
-	 .id = "SET_MAX_NUMERIC_SEQUENCE_LENGTH",
-	 .handler = set_max_numeric_sequence_length_handler
+		.id = "SET_MAX_NUMERIC_SEQUENCE_LENGTH",
+		.handler = set_max_numeric_sequence_length_handler
 	},
 	{
-	 .id = "GET_MAX_NUMERIC_SEQUENCE_LENGTH",
-	 .handler = get_max_numeric_sequence_length_handler
+		.id = "GET_MAX_NUMERIC_SEQUENCE_LENGTH",
+		.handler = get_max_numeric_sequence_length_handler
 	}
 };
 
-dpm_toolkit_policy_group_t password_policy_group = {
+xtk_policy_group_t password_policy_group = {
 	.id = "PASSWORD"
 };
 
-void __CONSTRUCTOR__ dpm_toolkit_password_policy_constructor()
+void __CONSTRUCTOR__ xtk_password_policy_constructor()
 {
 	int ret = 0;
+
 	dlog_print(DLOG_DEBUG, LOG_TAG, "password policy constructor");
 
-	int policyNum = sizeof(dpm_toolkit_password_policy) / sizeof(dpm_toolkit_password_policy[0]);
-	ret = dpm_toolkit_init_policy(&(password_policy_group.policies), dpm_toolkit_password_policy, policyNum);
-	if (ret < 0)
+	int nr = ARRAY_SIZE(xtk_password_policy);
+	ret = xtk_init_policy(&password_policy_group, xtk_password_policy, nr);
+	if (ret < 0) {
 		dlog_print(DLOG_ERROR, LOG_TAG, "password policy initialization fail");
-	ret = dpm_toolkit_add_policy_group(&global_dpm_policy_group_list, &password_policy_group);
-	if (ret < 0)
-		dlog_print(DLOG_ERROR, LOG_TAG, "add password group fail");
+	}
 }
