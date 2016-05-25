@@ -38,17 +38,10 @@ make %{?jobs:-j%jobs}
 %install
 %make_install
 
-#for package signing step
-#%define signature_list %{TZ_USER_APP}/org.tizen.dpm-toolkit;
-#%define tizen_sign 1
-#%define tizen_sign_base %{signature_list}
-#%define tizen_sign_level platform
-#%define tizen_author_sign 1
-#%define tizen_dist_sign 1
-
 %post
 /sbin/ldconfig
 cp %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/sampleapp.tpk /opt/data/dpm/
+ln -sf %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/bin/org.tizen.dpm-toolkit /usr/bin/dpm-toolkit
 
 %postun
 /sbin/ldconfig
@@ -58,8 +51,7 @@ cp %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/sampleapp.tpk /opt/data/dpm/
 %defattr(-,root,root,-)
 %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/bin/*
 %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/res/*
-%{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/test.xml
+%{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/dpm-toolkit.xml
 %{TZ_SYS_RO_APP}/org.tizen.dpm-toolkit/sampleapp.tpk
 %{TZ_SYS_RO_PACKAGES}/org.tizen.dpm-toolkit.xml
 %{TZ_SYS_RW_ICONS}/default/small/org.tizen.dpm-toolkit.png
-

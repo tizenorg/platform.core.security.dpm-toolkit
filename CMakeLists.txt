@@ -1,3 +1,19 @@
+#
+# Copyright (c) 2015 Samsung Electronics Co., Ltd All Rights Reserved
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(org.tizen.dpm-toolkit C)
 
@@ -6,7 +22,7 @@ SET(VERSION "${VERSION_MAJOR}.1.0")
 SET(PREFIX ${CMAKE_INSTALL_PREFIX})
 
 IF(NOT CMAKE_BUILD_TYPE)
-        SET(CMAKE_BUILD_TYPE "DEBUG")
+    SET(CMAKE_BUILD_TYPE "DEBUG")
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
 ADD_DEFINITIONS("-DUG_WAYLAND")
@@ -29,7 +45,7 @@ PKG_CHECK_MODULES(test_pkgs REQUIRED
 INCLUDE_DIRECTORIES(${test_pkgs_INCLUDE_DIRS} include)
 LINK_DIRECTORIES(${test_pkgs_LIBRARY_DIRS})
 
-SET(BASE_SRCS src/dpm-toolkit.c src/dpm-toolkit-popup.c)
+SET(BASE_SRCS src/dpm-toolkit.c src/dpm-toolkit-cli.c src/dpm-toolkit-gui.c)
 
 INCLUDE("${TIZEN_PROFILE_NAME}.cmake")
 
@@ -55,5 +71,5 @@ INSTALL(FILES ${CMAKE_BINARY_DIR}/org.tizen.dpm-toolkit.edj DESTINATION ${CMAKE_
 #Install app data
 INSTALL(FILES res/${PROJECT_NAME}.png DESTINATION ${CMAKE_DESKTOP_ICON_DIR})
 INSTALL(FILES ${PROJECT_NAME}.xml DESTINATION ${CMAKE_APP_SHARE_PACKAGES_DIR})
-INSTALL(FILES data/test.xml DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})
+INSTALL(FILES data/dpm-toolkit.xml DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})
 INSTALL(FILES data/sampleapp.tpk DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})

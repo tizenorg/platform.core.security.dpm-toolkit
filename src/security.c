@@ -1,68 +1,88 @@
+/*
+ *  Copyright (c) 2015 Samsung Electronics Co., Ltd All Rights Reserved
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License
+ */
+
 #include "dpm-toolkit.h"
 
-int lock_now_handler(struct dpm_toolkit_entity* self)
+int lock_now_handler(struct xtk_policy* self)
 {
-	dlog_print(DLOG_DEBUG, LOG_TAG, "lock_now_handler");
+	char *entry;
+	if (xtk_open_entry_popup(self, "Enter name", &entry) == XTK_EVENT_CANCEL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
+		return POLICY_RESULT_FAIL;
+	};
 
-	handler_display_input_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self);
+	xtk_open_message_popup(self, entry);
 
-	display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self->entry_input);
-	return POLICY_RESULT_NONE;
-}
-
-int wipe_data_handler(struct dpm_toolkit_entity* self)
-{
-	dlog_print(DLOG_DEBUG, LOG_TAG, "wipe_data_handler");
 	return POLICY_RESULT_SUCCESS;
 }
 
-int reboot_handler(struct dpm_toolkit_entity* self)
+int wipe_data_handler(struct xtk_policy* self)
 {
-	dlog_print(DLOG_DEBUG, LOG_TAG, "reboot_handler");
 	return POLICY_RESULT_SUCCESS;
 }
 
-int power_off_device_handler(struct dpm_toolkit_entity* self)
+int reboot_handler(struct xtk_policy* self)
 {
-	dlog_print(DLOG_DEBUG, LOG_TAG, "power_off_device_handler");
 	return POLICY_RESULT_SUCCESS;
 }
 
-dpm_toolkit_entity_t dpm_toolkit_security_policy[] = {
+int power_off_device_handler(struct xtk_policy* self)
+{
+	int index;
+	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &index) == XTK_EVENT_CANCEL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Selection canceled");
+		return POLICY_RESULT_FAIL;
+	}
+
+	dlog_print(DLOG_DEBUG, LOG_TAG, "Selected: %d", index);
+	return POLICY_RESULT_SUCCESS;
+}
+
+xtk_policy_t xtk_security_policy[] = {
 	{
-	 .id = "LOCK_NOW",
-	 .handler = lock_now_handler
+		.id = "LOCK_NOW",
+		.handler = lock_now_handler
 	},
 	{
-	 .id = "WIPE_DATA",
-	 .handler = wipe_data_handler
+		.id = "WIPE_DATA",
+		.handler = wipe_data_handler
 	},
 	{
-	 .id = "REBOOT",
-	 .handler = reboot_handler
+		.id = "REBOOT",
+		.handler = reboot_handler
 	},
 	{
-	 .id = "POWER_OFF_DEVICE",
-	 .handler = power_off_device_handler
+		.id = "POWER_OFF_DEVICE",
+		.handler = power_off_device_handler
 	}
 };
 
-dpm_toolkit_policy_group_t security_policy_group = {
+xtk_policy_group_t security_policy_group = {
 	.id = "SECURITY"
 };
 
-void __CONSTRUCTOR__ dpm_toolkit_security_policy_constructor()
+void __CONSTRUCTOR__ xtk_security_policy_constructor()
 {
 	int ret = 0;
+
 	dlog_print(DLOG_DEBUG, LOG_TAG, "security policy constructor");
 
-	int policyNum = sizeof(dpm_toolkit_security_policy) / sizeof(dpm_toolkit_security_policy[0]);
-	ret = dpm_toolkit_init_policy(&(security_policy_group.policies), dpm_toolkit_security_policy, policyNum);
-	if (ret < 0)
+	int nr = ARRAY_SIZE(xtk_security_policy);
+	ret = xtk_init_policy(&security_policy_group, xtk_security_policy, nr);
+	if (ret < 0) {
 		dlog_print(DLOG_ERROR, LOG_TAG, "security policy initialization fail");
-	ret = dpm_toolkit_add_policy_group(&global_dpm_policy_group_list, &security_policy_group);
-	if (ret < 0)
-		dlog_print(DLOG_ERROR, LOG_TAG, "add security group fail");
-
+	}
 }
-
