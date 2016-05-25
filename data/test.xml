@@ -52,13 +52,13 @@
 	</policy-group>
 
 	<policy-group id="WIFI">
-		<policy id="WIFI_SET_PROFILE_CHANGE_RESTRICTION" desc="Set Profile change" status="ON">
+		<policy id="WIFI_SET_PROFILE_CHANGE_STATE" desc="Set Profile Change State" status="ON">
 		</policy>
-		<policy id="WIFI_IS_PROFILE_CHANGE_RESTRICTED" desc="Get Profile change" status="ON">
+		<policy id="WIFI_GET_PROFILE_CHANGE_STATE" desc="Get Profile Change State" status="ON">
 		</policy>
-		<policy id="WIFI_SET_NETWORK_ACCESS_RESTRICTION" desc="Set Network Access" status="ON">
+		<policy id="WIFI_SET_NETWORK_ACCESS_RESTRICTION" desc="Set Network Access Restriction" status="ON">
 		</policy>
-		<policy id="WIFI_IS_NETWORK_ACCESS_RESTRICTED" desc="Get Network Access" status="ON">
+		<policy id="WIFI_IS_NETWORK_ACCESS_RESTRICTED" desc="Check Network Access Restriction" status="ON">
 		</policy>
 		<policy id="WIFI_ADD_SSID_TO_BLOCKLIST" desc="Add SSID to blocklist" status="ON">
 		</policy>
@@ -83,9 +83,9 @@
 		</policy>
 		<policy id="GET_CLIPBOARD_STATE" desc="Get Clipboard State" status="ON">
 		</policy>
-		<policy id="SET_SETTINGS_CHANGES_RESTRICTION" desc="Set Settings Changes Restriction" status="ON">
+		<policy id="SET_SETTINGS_CHANGES_STATE" desc="Set Settings Changes State" status="ON">
 		</policy>
-		<policy id="GET_SETTINGS_CHANGES_RESTRICTION" desc="Get Settings Changes Restriction" status="ON">
+		<policy id="GET_SETTINGS_CHANGES_STATE" desc="Get Settings Changes State" status="ON">
 		</policy>
 		<policy id="SET_USB_DEBUGGING_STATE" desc="Set USB Debugging State" status="ON">
 		</policy>
@@ -121,13 +121,13 @@
 	</policy-group>
 
 	<policy-group id="BLUETOOTH">
-		<policy id="SET_DEVICE_RESTRICTION" desc="Set device restriction" status="ON">
+		<policy id="SET_DEVICE_RESTRICTION" desc="Set Device Restriction" status="ON">
 		</policy>
-		<policy id="IS_DEVICE_RESTRICTED" desc="Check device restriction" status="ON">
+		<policy id="IS_DEVICE_RESTRICTED" desc="Check Device Restriction" status="ON">
 		</policy>
-		<policy id="SET_UUID_RESTRICTION" desc="Set uuid restriction" status="ON">
+		<policy id="SET_UUID_RESTRICTION" desc="Set UUID Restriction" status="ON">
 		</policy>
-		<policy id="IS_UUID_RESTRICTED" desc="Check uuid restriction" status="ON">
+		<policy id="IS_UUID_RESTRICTED" desc="Check UUID Restriction" status="ON">
 		</policy>
 	</policy-group>
 </manifest>

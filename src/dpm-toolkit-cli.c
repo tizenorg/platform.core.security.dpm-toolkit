@@ -14,22 +14,23 @@
  *  limitations under the License
  */
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <getopt.h>
+#include <stdio.h>
+
 #include "dpm-toolkit.h"
 
-#define handler_display_input_popup(title, selected_policy) \
-if (global_popup.popup_flag == 0) {						\
-	display_input_popup(title, selected_policy);			\
-	return POLICY_RESULT_NONE;						\
-}													\
-else													\
-	global_popup.popup_flag = 0;
+int xtk_cli_main(int argc, char* argv[])
+{
+	if (xtk_rebuild_policy_group(POLICY_XML_FILE_PATH) != 0) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to rebuild policy group");
+		xtk_free_policy_list();
+		return EXIT_FAILURE;
+	}
 
-#define handler_display_radio_popup(title, selected_policy, radio_text, row) \
-if (global_popup.popup_flag == 0) {										\
-	display_radio_popup(title, selected_policy, radio_text, row);			\
-	return POLICY_RESULT_NONE;									\
-}																\
-else	{															\
-	global_popup.popup_flag = 0;									\
-	global_popup.radio_index = -1;								\
+	xtk_free_policy_list();
+
+	return EXIT_SUCCESS;
 }
