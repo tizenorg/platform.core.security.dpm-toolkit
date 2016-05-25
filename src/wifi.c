@@ -2,7 +2,8 @@
 
 #include "dpm-toolkit.h"
 
-static char radio_text[][MAX_RADIO_TEXT_LEN] = {"Allow", "Disallow"};
+static char radio_text[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
+static char radio_text_enable[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
 
 int wifi_set_profile_change_restriction_handler(struct dpm_toolkit_entity* self)
 {
@@ -27,7 +28,10 @@ int wifi_set_profile_change_restriction_handler(struct dpm_toolkit_entity* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	ret = dpm_wifi_set_profile_change_restriction(policy, self->radio_index);
+	if (self->radio_index == 0)
+		ret = dpm_wifi_set_profile_change_restriction(policy, true);
+	else
+		ret = dpm_wifi_set_profile_change_restriction(policy, false);
 
 	dpm_context_release_wifi_policy(context, policy);
 	dpm_context_destroy(context);
@@ -61,7 +65,7 @@ int wifi_is_profile_change_restricted_handler(struct dpm_toolkit_entity* self)
 	dpm_context_destroy(context);
 
 	if (ret == DPM_ERROR_NONE) {
-        	display_result_popup("Restriction state", state? "Disallowed":"Allowed");
+        	display_result_popup("Restriction state", state? "ALLOWED" : "DISALLOWED");
 
 		return POLICY_RESULT_NONE;
 	}
@@ -77,7 +81,7 @@ int wifi_set_network_access_restriction_handler(struct dpm_toolkit_entity* self)
 
 	dlog_print(DLOG_DEBUG, LOG_TAG, __func__);
 
-	handler_display_radio_popup("Restriction", self, radio_text, sizeof(radio_text) / sizeof(char) / MAX_RADIO_TEXT_LEN);
+	handler_display_radio_popup("Restriction", self, radio_text_enable, sizeof(radio_text_enable) / sizeof(char) / MAX_RADIO_TEXT_LEN);
 
 	context = dpm_context_create();
 	if (context == NULL) {
@@ -92,7 +96,10 @@ int wifi_set_network_access_restriction_handler(struct dpm_toolkit_entity* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	ret = dpm_wifi_set_network_access_restriction(policy, self->radio_index);
+	if (self->radio_index == 0)
+		ret = dpm_wifi_set_network_access_restriction(policy, true);
+	else
+		ret = dpm_wifi_set_network_access_restriction(policy, false);
 
 	dpm_context_release_wifi_policy(context, policy);
 	dpm_context_destroy(context);
@@ -128,7 +135,7 @@ int wifi_is_network_access_restricted_handler(struct dpm_toolkit_entity* self)
 	dpm_context_destroy(context);
 
 	if (ret == DPM_ERROR_NONE) {
-        	display_result_popup("Restriction state", state? "Disallowed":"Allowed");
+        	display_result_popup("Restriction state", state? "ENABLED" : "DISABLED");
 
 		return POLICY_RESULT_NONE;
 	}
@@ -243,4 +250,3 @@ void __CONSTRUCTOR__ dpm_toolkit_wifi_policy_constructor()
 		dlog_print(DLOG_ERROR, LOG_TAG, "add wifi group fail");
 
 }
-

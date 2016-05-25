@@ -6,7 +6,7 @@ int set_camera_state_handler(struct dpm_toolkit_entity *self)
 	dpm_context_h context = NULL;
 	dpm_restriction_policy_h policy = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
-	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
 	int radio_num = sizeof(radio_text) / sizeof(radio_text[0]);
 	int enable = 1;
 
@@ -53,7 +53,7 @@ int get_camera_state_handler(struct dpm_toolkit_entity *self)
 	dpm_restriction_policy_h policy = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
 	int state = 1;
-	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISALLOWED", "ALLOWED"};
 
 	context = dpm_context_create();
 	if (context == NULL) {
@@ -85,7 +85,7 @@ int set_microphone_state_handler(struct dpm_toolkit_entity *self)
 	dpm_context_h context = NULL;
 	dpm_restriction_policy_h policy = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
-	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
 	int radio_num = sizeof(radio_text) / sizeof(radio_text[0]);
 	int enable = 1;
 
@@ -132,7 +132,7 @@ int get_microphone_state_handler(struct dpm_toolkit_entity *self)
 	dpm_restriction_policy_h policy = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
 	int state = 1;
-	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISALLOWED", "ALLOWED"};
 
 	context = dpm_context_create();
 	if (context == NULL) {
@@ -165,7 +165,7 @@ int set_location_state_handler(struct dpm_toolkit_entity *self)
 	dpm_restriction_policy_h policy = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
 	int enable = 1;
-	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
 	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
 
 	handler_display_radio_popup((char *)xmlGetProp(selected_policy->model, (xmlChar *)"desc"),
@@ -213,7 +213,7 @@ int get_location_state_handler(struct dpm_toolkit_entity *self)
 	dpm_restriction_policy_h policy = NULL;
 	dpm_toolkit_entity_t *selected_policy = self;
 	int state = 0;
-	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISALLOWED", "ALLOWED"};
 
 	context = dpm_context_create();
 	if (context == NULL) {
@@ -251,9 +251,9 @@ int set_clipboard_state_handler(struct dpm_toolkit_entity *self)
 	int ret = POLICY_RESULT_SUCCESS;
 	int get_value = 0;
 	int set_value = 0;
-	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
 	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
-	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISALLOWED", "ALLOWED"};
 
 	handler_display_radio_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self, radio_text_quality, radio_num);
 	switch (self->radio_index) {
@@ -313,7 +313,7 @@ int get_clipboard_state_handler(struct dpm_toolkit_entity *self)
 	dpm_restriction_policy_h policy = NULL;
 	int ret = POLICY_RESULT_SUCCESS;
 	int enable = 0;
-	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISALLOWED", "ALLOWED"};
 
 	context = dpm_context_create();
 	if (context == NULL) {
@@ -357,9 +357,9 @@ int set_settings_changes_restriction_handler(struct dpm_toolkit_entity *self)
 	int ret = POLICY_RESULT_SUCCESS;
 	int get_value = 0;
 	int set_value = 0;
-	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
 	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
-	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISALLOWED", "ALLOWED"};
 
 	handler_display_radio_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self, radio_text_quality, radio_num);
 	switch (self->radio_index) {
@@ -420,7 +420,7 @@ int get_settings_changes_restriction_handler(struct dpm_toolkit_entity *self)
 	dpm_restriction_policy_h policy = NULL;
 	int ret = POLICY_RESULT_SUCCESS;
 	int enable = 0;
-	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISALLOWED", "ALLOWED"};
 
 	context = dpm_context_create();
 	if (context == NULL) {
@@ -464,9 +464,9 @@ int set_usb_debugging_state_handler(struct dpm_toolkit_entity *self)
 	int ret = POLICY_RESULT_SUCCESS;
 	int get_value = 0;
 	int set_value = 0;
-	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
 	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
-	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISALLOWED", "ALLOWED"};
 
 	handler_display_radio_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self, radio_text_quality, radio_num);
 	switch (self->radio_index) {
@@ -527,7 +527,7 @@ int get_usb_debugging_state_handler(struct dpm_toolkit_entity *self)
 	dpm_restriction_policy_h policy = NULL;
 	int ret = POLICY_RESULT_SUCCESS;
 	int enable = 0;
-	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISABLE", "ENABLE"};
+	char state_text[2][MAX_RADIO_TEXT_LEN] = {"DISALLOWED", "ALLOWED"};
 
 	context = dpm_context_create();
 	if (context == NULL) {
@@ -565,7 +565,7 @@ out:
 
 int set_wifi_state_handler(struct dpm_toolkit_entity *self)
 {
-	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
 	dpm_restriction_policy_h policy;
 	dpm_context_h context;
 	int ret;
@@ -589,7 +589,10 @@ int set_wifi_state_handler(struct dpm_toolkit_entity *self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	ret = dpm_restriction_set_wifi_state(policy, self->radio_index);
+	if (self->radio_index == 0)
+		ret = dpm_restriction_set_wifi_state(policy, true);
+	else
+		ret = dpm_restriction_set_wifi_state(policy, false);
 
 	dpm_context_release_restriction_policy(context, policy);
 	dpm_context_destroy(context);
@@ -626,7 +629,7 @@ int get_wifi_state_handler(struct dpm_toolkit_entity *self)
 
 	if (ret == DPM_ERROR_NONE) {
 		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"),
-			state? "DISABLE":"ENABLE");
+			state == true ? "ALLOWED" : "DISALLOWED");
 
 		return POLICY_RESULT_NONE;
 	}
@@ -636,7 +639,7 @@ int get_wifi_state_handler(struct dpm_toolkit_entity *self)
 
 int set_wifi_hotspot_state_handler(struct dpm_toolkit_entity *self)
 {
-	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
+	char radio_text[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
 	dpm_restriction_policy_h policy;
 	dpm_context_h context;
 	int ret;
@@ -660,7 +663,10 @@ int set_wifi_hotspot_state_handler(struct dpm_toolkit_entity *self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	ret = dpm_restriction_set_wifi_hotspot_state(policy, self->radio_index);
+	if (self->radio_index == 0)
+		ret = dpm_restriction_set_wifi_hotspot_state(policy, true);
+	else
+		ret = dpm_restriction_set_wifi_hotspot_state(policy, false);
 
 	dpm_context_release_restriction_policy(context, policy);
 	dpm_context_destroy(context);
@@ -697,7 +703,7 @@ int get_wifi_hotspot_state_handler(struct dpm_toolkit_entity *self)
 
 	if (ret == DPM_ERROR_NONE) {
 		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"),
-			state? "DISABLE":"ENABLE");
+			state == true ? "ALLOWED" : "DISALLOWED");
 
 		return POLICY_RESULT_NONE;
 	}
@@ -731,7 +737,10 @@ int set_bluetooth_tethering_state_handler(struct dpm_toolkit_entity *self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	ret = dpm_restriction_set_bluetooth_tethering_state(policy, self->radio_index);
+	if (self->radio_index == 0)
+		ret = dpm_restriction_set_bluetooth_tethering_state(policy, true);
+	else
+		ret = dpm_restriction_set_bluetooth_tethering_state(policy, false);
 
 	dpm_context_release_restriction_policy(context, policy);
 	dpm_context_destroy(context);
@@ -767,7 +776,8 @@ int get_bluetooth_tethering_state_handler(struct dpm_toolkit_entity *self)
 	dpm_context_destroy(context);
 
 	if (ret == DPM_ERROR_NONE) {
-		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), state ? "DISALLOWED" : "ALLOWED");
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"),
+			state == true ? "ALLOWED" : "DISALLOWED");
 
 		return POLICY_RESULT_NONE;
 	}
@@ -801,7 +811,10 @@ int set_usb_tethering_state_handler(struct dpm_toolkit_entity *self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	ret = dpm_restriction_set_usb_tethering_state(policy, self->radio_index);
+	if (self->radio_index == 0)
+		ret = dpm_restriction_set_usb_tethering_state(policy, true);
+	else
+		ret = dpm_restriction_set_usb_tethering_state(policy, false);
 
 	dpm_context_release_restriction_policy(context, policy);
 	dpm_context_destroy(context);
@@ -837,7 +850,8 @@ int get_usb_tethering_state_handler(struct dpm_toolkit_entity *self)
 	dpm_context_destroy(context);
 
 	if (ret == DPM_ERROR_NONE) {
-		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), state ? "DISALLOWED" : "ALLOWED");
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"),
+			state == true ? "ALLOWED" : "DISALLOWED");
 
 		return POLICY_RESULT_NONE;
 	}

@@ -21,7 +21,7 @@ int set_device_restriction_handler(struct dpm_toolkit_entity *self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
 	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
 	handler_display_radio_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self, radio_text_quality, radio_num);
 
@@ -67,19 +67,19 @@ int is_device_restricted_handler(struct dpm_toolkit_entity *self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	int allowed = false;
-	if (dpm_bluetooth_is_device_restricted(policy, &allowed) != DPM_ERROR_NONE) {
+	int enabled = false;
+	if (dpm_bluetooth_is_device_restricted(policy, &enabled) != DPM_ERROR_NONE) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to check device restriction");
 		dpm_context_release_bluetooth_policy(context, policy);
 		dpm_context_destroy(context);
 		return POLICY_RESULT_FAIL;
 	}
-	dlog_print(DLOG_DEBUG, LOG_TAG, "allow state. (allow: %d)", allowed);
+	dlog_print(DLOG_DEBUG, LOG_TAG, "state. (enabled: %d)", enabled);
 
-	if (allowed == true)
-		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "ALLOW");
+	if (enabled == true)
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "ENABLED");
 	else
-		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "DISALLOW");
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "DISABLED");
 
 	dpm_context_release_bluetooth_policy(context, policy);
 	dpm_context_destroy(context);
@@ -105,7 +105,7 @@ int set_uuid_restriction_handler(struct dpm_toolkit_entity *self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ALLOW", "DISALLOW"};
+	char radio_text_quality[][MAX_RADIO_TEXT_LEN] = {"ENABLE", "DISABLE"};
 	int radio_num = sizeof(radio_text_quality) / sizeof(radio_text_quality[0]);
 	handler_display_radio_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), self, radio_text_quality, radio_num);
 
@@ -148,19 +148,19 @@ int is_uuid_restricted_handler(struct dpm_toolkit_entity *self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	int allowed = false;
-	if (dpm_bluetooth_is_uuid_restricted(policy, &allowed) != DPM_ERROR_NONE) {
+	int enabled = false;
+	if (dpm_bluetooth_is_uuid_restricted(policy, &enabled) != DPM_ERROR_NONE) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Failed to check uuid restriction");
 		dpm_context_release_bluetooth_policy(context, policy);
 		dpm_context_destroy(context);
 		return POLICY_RESULT_FAIL;
 	}
-	dlog_print(DLOG_DEBUG, LOG_TAG, "allow state. (allow: %d)", allowed);
+	dlog_print(DLOG_DEBUG, LOG_TAG, "state. (enabled: %d)", enabled);
 
-	if (allowed == true)
-		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "ALLOW");
+	if (enabled == true)
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "ENABLED");
 	else
-		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "DISALLOW");
+		display_result_popup((char *)xmlGetProp(self->model, (xmlChar *) "desc"), "DISABLED");
 
 	dpm_context_release_bluetooth_policy(context, policy);
 	dpm_context_destroy(context);
