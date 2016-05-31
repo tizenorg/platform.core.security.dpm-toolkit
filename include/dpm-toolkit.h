@@ -45,7 +45,7 @@
 #define POLICY_RESULT_FAIL		-1
 #define POLICY_RESULT_NONE		100
 
-#define POLICY_XML_FILE_PATH "/usr/apps/org.tizen.dpm-toolkit/test.xml"
+#define POLICY_XML_FILE_PATH "/usr/apps/org.tizen.dpm-toolkit/dpm-toolkit.xml"
 
 typedef struct xtk_policy {
 	const char* id;
