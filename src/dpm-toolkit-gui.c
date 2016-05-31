@@ -83,7 +83,7 @@ static Evas_Object* create_basic_popup(Evas_Object* parent, const char* title, v
 	return popup;
 }
 
-static Evas_Object* create_entry_box(Evas_Object* parent, const char* msg)
+static Evas_Object* create_entry_box(Evas_Object* parent, const char* msg, const char* guide)
 {
 	Evas_Object* entry = elm_entry_add(parent);
 	elm_entry_single_line_set(entry, EINA_TRUE);
@@ -95,6 +95,8 @@ static Evas_Object* create_entry_box(Evas_Object* parent, const char* msg)
 
 	if (msg != NULL) {
 		elm_entry_entry_set(entry, msg);
+	} else if (guide != NULL) {
+		elm_object_part_text_set(entry, "guide", guide);
 	} else {
 		elm_object_part_text_set(entry, "guide", "Enter value");
 	}
@@ -165,14 +167,14 @@ static void create_button_group(Evas_Object* parent, int mask, void* data)
 	}
 }
 
-static int open_entry_popup(const char* title, const char* msg, char** value)
+static int open_entry_popup(const char* title, const char* msg, const char* guide, char** value)
 {
 	int done = 0;
 	Evas_Object* popup = NULL;
 	Evas_Object* entry = NULL;
 
 	popup = create_basic_popup(naviframe, title, (void *)&done);
-	entry = create_entry_box(popup, msg);
+	entry = create_entry_box(popup, msg, guide);
 	create_button_group(popup, BUTTON_SET | BUTTON_CANCEL, (void *)&done);
 	evas_object_show(popup);
 

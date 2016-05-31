@@ -19,7 +19,7 @@
 int lock_now_handler(struct xtk_policy* self)
 {
 	char *entry;
-	if (xtk_open_entry_popup(self, "Enter name", &entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, NULL, "Enter name", &entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};

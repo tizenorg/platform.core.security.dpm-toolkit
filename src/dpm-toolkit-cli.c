@@ -69,7 +69,7 @@ inline void error_message(const char *msg, int code)
 	fancy_text(RED, BOLD, "\n%s(%d)\n", msg, code);
 }
 
-static int open_entry_popup(const char* title, const char* msg, char** value)
+static int open_entry_popup(const char* title, const char* msg, const char* guide, char** value)
 {
 	text_header(title, msg);
 	section_separator();

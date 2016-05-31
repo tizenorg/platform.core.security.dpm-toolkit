@@ -31,7 +31,7 @@ int create_zone_handler(struct xtk_policy* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (xtk_open_entry_popup(self, "Zone name", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, NULL, "Zone name", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		free(wizappid);
 		return POLICY_RESULT_FAIL;
@@ -71,7 +71,7 @@ int destroy_zone_handler(struct xtk_policy* self)
 	dpm_zone_policy_h policy;
 
 	char *input_entry = NULL;
-	if (xtk_open_entry_popup(self, "Zone name", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, NULL, "Zone name", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};

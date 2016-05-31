@@ -91,7 +91,7 @@ int set_password_min_length_handler(struct xtk_policy* self)
 	dpm_password_policy_h policy;
 
 	char *input_entry;
-	if (xtk_open_entry_popup(self, "", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
@@ -127,7 +127,7 @@ int set_password_min_complex_chars_handler(struct xtk_policy* self)
 	dpm_password_policy_h policy;
 
 	char *input_entry;
-	if (xtk_open_entry_popup(self, "", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
@@ -163,7 +163,7 @@ int set_password_max_failed_attempts_for_wipe_handler(struct xtk_policy* self)
 	dpm_password_policy_h policy;
 
 	char *input_entry;
-	if (xtk_open_entry_popup(self, "", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
@@ -199,7 +199,7 @@ int set_password_expires_handler(struct xtk_policy* self)
 	dpm_password_policy_h policy;
 
 	char *input_entry;
-	if (xtk_open_entry_popup(self, "", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
@@ -235,7 +235,7 @@ int set_password_history_handler(struct xtk_policy* self)
 	dpm_password_policy_h policy;
 
 	char *input_entry;
-	if (xtk_open_entry_popup(self, "", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
@@ -271,7 +271,7 @@ int reset_password_handler(struct xtk_policy* self)
 	dpm_password_policy_h policy;
 
 	char *input_entry;
-	if (xtk_open_entry_popup(self, "", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
@@ -337,7 +337,7 @@ int set_max_inactivity_time_device_lock_handler(struct xtk_policy* self)
 	int max_inactivity_time, test_max_inactivity_time;
 
 	char *input_entry;
-	if (xtk_open_entry_popup(self, "", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
@@ -421,7 +421,7 @@ int set_password_status_handler(struct xtk_policy* self)
 	dpm_password_policy_h policy;
 
 	char *input_entry;
-	if (xtk_open_entry_popup(self, "", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
@@ -458,7 +458,7 @@ int set_password_pattern_handler(struct xtk_policy* self)
 	char *test_pw_pattern;
 
 	char *input_entry;
-	if (xtk_open_entry_popup(self, "", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
@@ -571,7 +571,7 @@ int set_max_char_occurrences_handler(struct xtk_policy* self)
 	int max_char_occur, test_max_char_occur;
 
 	char *input_entry;
-	if (xtk_open_entry_popup(self, "", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
@@ -656,7 +656,7 @@ int set_max_numeric_sequence_length_handler(struct xtk_policy* self)
 	int max_num_seq_length, test_max_num_seq_length;
 
 	char *input_entry;
-	if (xtk_open_entry_popup(self, "", &input_entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};

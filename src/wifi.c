@@ -185,7 +185,7 @@ int wifi_add_ssid_to_blocklist_handler(struct xtk_policy* self)
 	dpm_context_h context = NULL;
 	dpm_wifi_policy_h policy = NULL;
 
-	if (xtk_open_entry_popup(self, "SSID", &entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, NULL, "SSID", &entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
@@ -227,7 +227,7 @@ int wifi_remove_ssid_from_blocklist_handler(struct xtk_policy* self)
 	dpm_context_h context = NULL;
 	dpm_wifi_policy_h policy = NULL;
 
-	if (xtk_open_entry_popup(self, "SSID", &entry) == XTK_EVENT_CANCEL) {
+	if (xtk_open_entry_popup(self, NULL, "SSID", &entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 	};
 

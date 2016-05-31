@@ -44,12 +44,12 @@ const char restriction_mode_results[2][16] = {
 	"Disabled"
 };
 
-int xtk_open_entry_popup(xtk_policy_t* policy, const char* msg, char** entry)
+int xtk_open_entry_popup(xtk_policy_t* policy, const char* msg, const char* guide, char** entry)
 {
 	const char *title = policy_get_title(policy);
 	const char *init = policy_get_default_value(policy);
 
-	return xtk_context_get_current()->entry_popup(title, msg ? msg : init, entry);
+	return xtk_context_get_current()->entry_popup(title, msg ? msg : init, guide, entry);
 }
 
 int xtk_open_radio_popup(xtk_policy_t* policy, const char* text[], int nr, int* index)

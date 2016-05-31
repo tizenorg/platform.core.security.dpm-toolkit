@@ -65,7 +65,7 @@ typedef struct xtk_policy_group {
 typedef struct xtk_context {
 	int (*message_popup)(const char* title, const char* message);
 	int (*confirm_popup)(const char* title, const char* message);
-	int (*entry_popup)(const char* title, const char* message, char** value);
+	int (*entry_popup)(const char* title, const char* message, const char* guide, char** value);
 	int (*radio_popup)(const char* title, const char* text[], int nr, int* index);
 } xtk_context_t;
 
@@ -129,7 +129,7 @@ int xtk_rebuild_policy_group(const char *xmlFilePath);
 
 int xtk_open_message_popup(xtk_policy_t* policy, const char* message);
 int xtk_open_confirm_popup(xtk_policy_t* policy, const char *message);
-int xtk_open_entry_popup(xtk_policy_t* policy, const char* message, char** entry);
+int xtk_open_entry_popup(xtk_policy_t* policy, const char* message, const char* guide, char** entry);
 int xtk_open_radio_popup(xtk_policy_t* policy, const char* text[], int nr, int* index);
 
 char* get_now_zone(void);
