@@ -2,132 +2,76 @@
 <manifest>
 	<policy-version>0.1.0</policy-version>
 	<policy-group id="PASSWORD" desc="Password Policy">
-		<policy id="SET_PASSWORD_QUALITY" desc="Set Password Quality" status="ON">
-		</policy>
-		<policy id="SET_PASSWORD_MIN_LENGTH" desc="Set Password Minimum Length" status="ON">
-		</policy>
-		<policy id="SET_PASSWORD_MIN_COMPLEX_CHARS" desc="Set Password Minimum Complex Characters" status="ON">
-		</policy>
-		<policy id="SET_PASSWORD_MAX_FAILED_ATTEMPTS_FOR_WIPE" desc="Set Password Maximum number of failed attempts before device is wiped" status="ON">
-		</policy>
-		<policy id="SET_PASSWORD_EXPIRES" desc="Set the number of days after which the password expires" status="ON">
-		</policy>
-		<policy id="SET_PASSWORD_HISTORY" desc="Set the number of previous passwords" status="ON">
-		</policy>
-		<policy id="SET_PASSWORD_PATTERN" desc="Set Password Pattern" status="ON">
-		</policy>
-		<policy id="RESET_PASSWORD" desc="Reset Password" status="ON">
-		</policy>
-		<policy id="ENFORCE_PASSWORD_CHANGE" desc="Enforce Password Change" status="ON">
-		</policy>
-		<policy id="SET_MAX_INACTIVITY_TIME_DEVICE_LOCK" desc="Set Maximum Inactivity Time Device Lock" status="ON">
-		</policy>
-		<policy id="GET_MAX_INACTIVITY_TIME_DEVICE_LOCK" desc="Get Maximum Inactivity Time Device Lock" status="ON">
-		</policy>
-		<policy id="SET_PASSWORD_STATUS" desc="Set Password Status" status="ON">
-		</policy>
-		<policy id="DELETE_PASSWORD_PATTERN" desc="Delete Password Pattern" status="ON">
-		</policy>
-		<policy id="GET_PASSWORD_PATTERN" desc="Get Password Pattern" status="ON">
-		</policy>
-		<policy id="SET_MAX_CHAR_OCCURRENCES" desc="Set Maximum Character Occurrences" status="ON">
-		</policy>
-		<policy id="GET_MAX_CHAR_OCCURRENCES" desc="Get Maximum Character Occurrences" status="ON">
-		</policy>
-		<policy id="SET_MAX_NUMERIC_SEQUENCE_LENGTH" desc="Set Maximum Numeric Sequence Length" status="ON">
-		</policy>
-		<policy id="GET_MAX_NUMERIC_SEQUENCE_LENGTH" desc="Get Maximum Numeric Sequence Length" status="ON">
-		</policy>
+		<policy id="SET_PASSWORD_QUALITY" desc="Set Password Quality" status="ON"/>
+		<policy id="SET_PASSWORD_MIN_LENGTH" desc="Set Password Minimum Length" status="ON"/>
+		<policy id="SET_PASSWORD_MIN_COMPLEX_CHARS" desc="Set Password Minimum Complex Characters" status="ON"/>
+		<policy id="SET_PASSWORD_MAX_FAILED_ATTEMPTS_FOR_WIPE" desc="Set Password Maximum number of failed attempts before device is wiped" status="ON"/>
+		<policy id="SET_PASSWORD_EXPIRES" desc="Set the number of days after which the password expires" status="ON"/>
+		<policy id="SET_PASSWORD_HISTORY" desc="Set the number of previous passwords" status="ON"/>
+		<policy id="SET_PASSWORD_PATTERN" desc="Set Password Pattern" status="ON"/>
+		<policy id="RESET_PASSWORD" desc="Reset Password" status="ON"/>
+		<policy id="ENFORCE_PASSWORD_CHANGE" desc="Enforce Password Change" status="ON"/>
+		<policy id="SET_MAX_INACTIVITY_TIME_DEVICE_LOCK" desc="Set Maximum Inactivity Time Device Lock" status="ON"/>
+		<policy id="GET_MAX_INACTIVITY_TIME_DEVICE_LOCK" desc="Get Maximum Inactivity Time Device Lock" status="ON"/>
+		<policy id="SET_PASSWORD_STATUS" desc="Set Password Status" status="ON"/>
+		<policy id="DELETE_PASSWORD_PATTERN" desc="Delete Password Pattern" status="ON"/>
+		<policy id="GET_PASSWORD_PATTERN" desc="Get Password Pattern" status="ON"/>
+		<policy id="SET_MAX_CHAR_OCCURRENCES" desc="Set Maximum Character Occurrences" status="ON"/>
+		<policy id="GET_MAX_CHAR_OCCURRENCES" desc="Get Maximum Character Occurrences" status="ON"/>
+		<policy id="SET_MAX_NUMERIC_SEQUENCE_LENGTH" desc="Set Maximum Numeric Sequence Length" status="ON"/>
+		<policy id="GET_MAX_NUMERIC_SEQUENCE_LENGTH" desc="Get Maximum Numeric Sequence Length" status="ON"/>
 	</policy-group>
 
 	<policy-group id="SECURITY" desc="Security Policy">
-		<policy id="LOCK_NOW" desc="Force Lock" status="ON" default="Input default">
-		</policy>
-		<policy id="WIPE_DATA" desc="Wipe Data" status="ON">
-		</policy>
-		<policy id="REBOOT" desc="Reboot" status="ON">
-		</policy>
-		<policy id="POWER_OFF_DEVICE" desc="Power Off Device" status="ON">
-		</policy>
+		<policy id="LOCK_NOW" desc="Force Lock" status="ON" default="Input default"/>
+		<policy id="WIPE_DATA" desc="Wipe Data" status="ON"/>
+		<policy id="REBOOT" desc="Reboot" status="ON"/>
+		<policy id="POWER_OFF_DEVICE" desc="Power Off Device" status="ON"/>
 	</policy-group>
 
 	<policy-group id="WIFI" desc="Wi-Fi Policy">
-		<policy id="WIFI_SET_PROFILE_CHANGE_STATE" desc="Set Profile Change State" status="ON">
-		</policy>
-		<policy id="WIFI_GET_PROFILE_CHANGE_STATE" desc="Get Profile Change State" status="ON">
-		</policy>
-		<policy id="WIFI_SET_NETWORK_ACCESS_RESTRICTION" desc="Set Network Access Restriction" status="ON">
-		</policy>
-		<policy id="WIFI_IS_NETWORK_ACCESS_RESTRICTED" desc="Check Network Access Restriction" status="ON">
-		</policy>
-		<policy id="WIFI_ADD_SSID_TO_BLOCKLIST" desc="Add SSID to blocklist" status="ON">
-		</policy>
-		<policy id="WIFI_REMOVE_SSID_FROM_BLOCKLIST" desc="Remove SSID from blocklist" status="ON">
-		</policy>
+		<policy id="WIFI_SET_PROFILE_CHANGE_STATE" desc="Set Profile Change State" status="ON"/>
+		<policy id="WIFI_GET_PROFILE_CHANGE_STATE" desc="Get Profile Change State" status="ON"/>
+		<policy id="WIFI_SET_NETWORK_ACCESS_RESTRICTION" desc="Set Network Access Restriction" status="ON"/>
+		<policy id="WIFI_IS_NETWORK_ACCESS_RESTRICTED" desc="Check Network Access Restriction" status="ON"/>
+		<policy id="WIFI_ADD_SSID_TO_BLOCKLIST" desc="Add SSID to blocklist" status="ON"/>
+		<policy id="WIFI_REMOVE_SSID_FROM_BLOCKLIST" desc="Remove SSID from blocklist" status="ON"/>
 	</policy-group>
 
-	<policy-group id="RESTRICTION" desc="Restriction Policy">
-		<policy id="SET_CAMERA_STATE" desc="Set Camera State" status="ON">
-		</policy>
-		<policy id="GET_CAMERA_STATE" desc="Get Camera State" status="ON">
-		</policy>
-		<policy id="SET_MICROPHONE_STATE" desc="Set Microphone State" status="ON">
-		</policy>
-		<policy id="GET_MICROPHONE_STATE" desc="Get Microphone State" status="ON">
-		</policy>
-		<policy id="SET_LOCATION_STATE" desc="Set Location State" status="ON">
-		</policy>
-		<policy id="GET_LOCATION_STATE" desc="Get Location State" status="ON">
-		</policy>
-		<policy id="SET_CLIPBOARD_STATE" desc="Set Clipboard State" status="ON">
-		</policy>
-		<policy id="GET_CLIPBOARD_STATE" desc="Get Clipboard State" status="ON">
-		</policy>
-		<policy id="SET_SETTINGS_CHANGES_STATE" desc="Set Settings Changes State" status="ON">
-		</policy>
-		<policy id="GET_SETTINGS_CHANGES_STATE" desc="Get Settings Changes State" status="ON">
-		</policy>
-		<policy id="SET_USB_DEBUGGING_STATE" desc="Set USB Debugging State" status="ON">
-		</policy>
-		<policy id="GET_USB_DEBUGGING_STATE" desc="Get USB Debugging State" status="ON">
-		</policy>
-		<policy id="SET_WIFI_STATE" desc="Set Wifi State" status="ON">
-		</policy>
-		<policy id="GET_WIFI_STATE" desc="Get Wifi State" status="ON">
-		</policy>
-		<policy id="SET_WIFI_HOTSPOT_STATE" desc="Set Wifi Hotspot State" status="ON">
-		</policy>
-		<policy id="GET_WIFI_HOTSPOT_STATE" desc="Get Wifi Hotspot State" status="ON">
-		</policy>
-		<policy id="SET_BLUETOOTH_TETHERING_STATE" desc="Set Bluetooth Tethering State" status="ON">
-		</policy>
-		<policy id="GET_BLUETOOTH_TETHERING_STATE" desc="Get Bluetooth Tethering State" status="ON">
-		</policy>
-		<policy id="SET_USB_TETHERING_STATE" desc="Set USB Tethering State" status="ON">
-		</policy>
-		<policy id="GET_USB_TETHERING_STATE" desc="Get USB Tethering State" status="ON">
-		</policy>
+	<policy-group id="RESTRICTION" desc="Restriction Policy"/>
+		<policy id="SET_CAMERA_STATE" desc="Set Camera State" status="ON"/>
+		<policy id="GET_CAMERA_STATE" desc="Get Camera State" status="ON"/>
+		<policy id="SET_MICROPHONE_STATE" desc="Set Microphone State" status="ON"/>
+		<policy id="GET_MICROPHONE_STATE" desc="Get Microphone State" status="ON"/>
+		<policy id="SET_LOCATION_STATE" desc="Set Location State" status="ON"/>
+		<policy id="GET_LOCATION_STATE" desc="Get Location State" status="ON"/>
+		<policy id="SET_CLIPBOARD_STATE" desc="Set Clipboard State" status="ON"/>
+		<policy id="GET_CLIPBOARD_STATE" desc="Get Clipboard State" status="ON"/>
+		<policy id="SET_SETTINGS_CHANGES_STATE" desc="Set Settings Changes State" status="ON"/>
+		<policy id="GET_SETTINGS_CHANGES_STATE" desc="Get Settings Changes State" status="ON"/>
+		<policy id="SET_USB_DEBUGGING_STATE" desc="Set USB Debugging State" status="ON"/>
+		<policy id="GET_USB_DEBUGGING_STATE" desc="Get USB Debugging State" status="ON"/>
+		<policy id="SET_WIFI_STATE" desc="Set Wifi State" status="ON"/>
+		<policy id="GET_WIFI_STATE" desc="Get Wifi State" status="ON"/>
+		<policy id="SET_WIFI_HOTSPOT_STATE" desc="Set Wifi Hotspot State" status="ON"/>
+		<policy id="GET_WIFI_HOTSPOT_STATE" desc="Get Wifi Hotspot State" status="ON"/>
+		<policy id="SET_BLUETOOTH_TETHERING_STATE" desc="Set Bluetooth Tethering State" status="ON"/>
+		<policy id="GET_BLUETOOTH_TETHERING_STATE" desc="Get Bluetooth Tethering State" status="ON"/>
+		<policy id="SET_USB_TETHERING_STATE" desc="Set USB Tethering State" status="ON"/>
+		<policy id="GET_USB_TETHERING_STATE" desc="Get USB Tethering State" status="ON"/>
 	</policy-group>
 
 	<policy-group id="ZONE" desc="Zone Policy">
-		<policy id="CREATE_ZONE" desc="Create zone" status="ON" wizappid="org.tizen.zone-setup-wizard">
-		</policy>
-		<policy id="DESTROY_ZONE" desc="Destroy zone" status="ON">
-		</policy>
-		<policy id="GET_ZONE_LIST" desc="Get zones list" status="ON">
-		</policy>
-		<policy id="GET_ZONE_STATE" desc="Get zone state" status="ON">
-		</policy>
+		<policy id="CREATE_ZONE" desc="Create zone" status="ON" wizappid="org.tizen.zone-setup-wizard"/>
+		<policy id="DESTROY_ZONE" desc="Destroy zone" status="ON"/>
+		<policy id="GET_ZONE_LIST" desc="Get zones list" status="ON"/>
+		<policy id="GET_ZONE_STATE" desc="Get zone state" status="ON"/>
 	</policy-group>
 
 	<policy-group id="BLUETOOTH">
-		<policy id="SET_DEVICE_RESTRICTION" desc="Set Device Restriction" status="ON">
-		</policy>
-		<policy id="IS_DEVICE_RESTRICTED" desc="Check Device Restriction" status="ON">
-		</policy>
-		<policy id="SET_UUID_RESTRICTION" desc="Set UUID Restriction" status="ON">
-		</policy>
-		<policy id="IS_UUID_RESTRICTED" desc="Check UUID Restriction" status="ON">
-		</policy>
+		<policy id="SET_DEVICE_RESTRICTION" desc="Set Device Restriction" status="ON"/>
+		<policy id="IS_DEVICE_RESTRICTED" desc="Check Device Restriction" status="ON"/>
+		<policy id="SET_UUID_RESTRICTION" desc="Set UUID Restriction" status="ON"/>
+		<policy id="IS_UUID_RESTRICTED" desc="Check UUID Restriction" status="ON"/>
 	</policy-group>
 </manifest>
