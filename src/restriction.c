@@ -828,6 +828,76 @@ int get_usb_tethering_state_handler(struct xtk_policy *self)
 	return POLICY_RESULT_FAIL;
 }
 
+int set_external_storage_state_handler(struct xtk_policy *self)
+{
+	int index, state;
+	dpm_context_h context = NULL;
+	const char* text[] = {
+		"Disallow External Storage",
+		"Allow External Storage"
+	};
+
+	if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
+		return POLICY_RESULT_FAIL;
+	}
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		xtk_open_message_popup(self, "Failed to create device policy manager");
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_set_external_storage_state(context, index) != DPM_ERROR_NONE) {
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, "Failed to enforce policy");
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_get_external_storage_state(context, &state) != DPM_ERROR_NONE) {
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, "Failed to query policy");
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (state != index) {
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, "Policy was not setted properly");;
+		return POLICY_RESULT_NONE;
+	}
+
+	xtk_open_message_popup(self, state ? "External Storage Allowed"
+									   : "External Storage Disallowed");
+
+	dpm_context_destroy(context);
+
+	return POLICY_RESULT_FAIL;
+}
+
+int get_external_storage_state_handler(struct xtk_policy *self)
+{
+    int state;
+    dpm_context_h context = NULL;
+
+    context = dpm_context_create();
+    if (context == NULL) {
+		xtk_open_message_popup(self, "Failed to create device policy manager");
+        return POLICY_RESULT_FAIL;
+    }
+
+    if (dpm_restriction_get_external_storage_state(context, &state) != DPM_ERROR_NONE) {
+        dpm_context_destroy(context);
+		xtk_open_message_popup(self, "Failed to query policy");
+        return POLICY_RESULT_NONE;
+    }
+
+	xtk_open_message_popup(self, state ? "External Storage Allowed"
+									   : "External Storage Disallowed");
+
+    dpm_context_destroy(context);
+
+    return POLICY_RESULT_FAIL;
+}
+
 xtk_policy_t xtk_restriction_policy[] = {
 	{
 		.id = "SET_CAMERA_STATE",
@@ -908,7 +978,15 @@ xtk_policy_t xtk_restriction_policy[] = {
 	{
 		.id = "GET_USB_TETHERING_STATE",
 		.handler = get_usb_tethering_state_handler
-	}
+	},
+    {
+        .id = "SET_EXTERNAL_STORAGE_STATE",
+        .handler = set_external_storage_state_handler
+    },
+    {
+        .id = "GET_EXTERNAL_STORAGE_STATE",
+        .handler = get_external_storage_state_handler
+    }
 };
 
 xtk_policy_group_t restriction_policy_group = {
