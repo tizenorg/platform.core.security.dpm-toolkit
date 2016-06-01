@@ -27,26 +27,25 @@ int create_zone_handler(struct xtk_policy* self)
 
 	wizappid = (char *)xmlGetProp(self->model, (xmlChar*) "wizappid");
 	if (wizappid == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "wizappid parameter not found");
+                xtk_open_message_popup(self, "wizappid parameter not found");
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (xtk_open_entry_popup(self, NULL, "Zone name", &input_entry) == XTK_EVENT_CANCEL) {
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		free(wizappid);
 		return POLICY_RESULT_FAIL;
 	};
 
 	context = dpm_context_create();
 	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		xtk_open_message_popup(self, "Failed to create device policy context handle");
 		free(wizappid);
 		return POLICY_RESULT_FAIL;
 	}
 
 	policy = dpm_context_acquire_zone_policy(context);
 	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create zone policy handle");
+		xtk_open_message_popup(self, "Failed to create zone policy handle");
 		dpm_context_destroy(context);
 		free(wizappid);
 		return POLICY_RESULT_FAIL;
@@ -59,6 +58,7 @@ int create_zone_handler(struct xtk_policy* self)
 		return POLICY_RESULT_SUCCESS;
 	}
 
+	xtk_open_message_popup(self, "Failed to create the zone");
 	dpm_context_release_zone_policy(context, policy);
 	dpm_context_destroy(context);
 	free(wizappid);
@@ -72,19 +72,18 @@ int destroy_zone_handler(struct xtk_policy* self)
 
 	char *input_entry = NULL;
 	if (xtk_open_entry_popup(self, NULL, "Zone name", &input_entry) == XTK_EVENT_CANCEL) {
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
 		return POLICY_RESULT_FAIL;
 	};
 
 	context = dpm_context_create();
 	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		xtk_open_message_popup(self, "Failed to create device policy context handle");
 		return POLICY_RESULT_FAIL;
 	}
 
 	policy = dpm_context_acquire_zone_policy(context);
 	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create zone policy handle");
+		xtk_open_message_popup(self, "Failed to create zone policy handle");
 		dpm_context_destroy(context);
 		return POLICY_RESULT_FAIL;
 	}
@@ -95,6 +94,7 @@ int destroy_zone_handler(struct xtk_policy* self)
 		return POLICY_RESULT_SUCCESS;
 	}
 
+	xtk_open_message_popup(self, "Failed to destroy the zone");
 	dpm_context_release_zone_policy(context, policy);
 	dpm_context_destroy(context);
 	return POLICY_RESULT_FAIL;
@@ -108,8 +108,46 @@ int get_zone_list_handler(struct xtk_policy* self)
 
 int get_zone_state_handler(struct xtk_policy* self)
 {
-	dlog_print(DLOG_DEBUG, LOG_TAG, "get_zone_state_handler");
-	return POLICY_RESULT_SUCCESS;
+	dpm_zone_state_e state;
+        const char *zone_state;
+	dpm_context_h context = NULL;
+	dpm_zone_policy_h policy = NULL;
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		xtk_open_message_popup(self, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+
+	char *input_entry = NULL;
+	if (xtk_open_entry_popup(self, NULL, "Zone name", &input_entry) == XTK_EVENT_CANCEL) {
+		return POLICY_RESULT_FAIL;
+	};
+
+	policy = dpm_context_acquire_zone_policy(context);
+	if (policy == NULL) {
+		xtk_open_message_popup(self, "Failed to create zone policy handle");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_zone_get_state(policy, input_entry, &state) == 0) {
+		dpm_context_release_zone_policy(context, policy);
+		dpm_context_destroy(context);
+
+                if (state & DPM_ZONE_STATE_RUNNING) {
+                    zone_state = "Running";
+                } else if (state & DPM_ZONE_STATE_LOCKED) {
+                    zone_state = "Locked";
+                }
+                
+		xtk_open_message_popup(self, zone_state);
+		return POLICY_RESULT_NONE;
+	}
+
+	dpm_context_release_zone_policy(context, policy);
+	dpm_context_destroy(context);
+	return POLICY_RESULT_NONE;
 }
 
 xtk_policy_t xtk_zone_policy[] = {
