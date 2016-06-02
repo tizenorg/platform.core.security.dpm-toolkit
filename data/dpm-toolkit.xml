@@ -3,11 +3,17 @@
 	<policy-version>0.1.0</policy-version>
 	<policy-group id="PASSWORD" desc="Password Policy">
 		<policy id="SET_PASSWORD_QUALITY" desc="Set Password Quality" status="ON"/>
+		<policy id="GET_PASSWORD_QUALITY" desc="Get Password Quality" status="ON"/>
 		<policy id="SET_PASSWORD_MIN_LENGTH" desc="Set Password Minimum Length" status="ON"/>
+		<policy id="GET_PASSWORD_MIN_LENGTH" desc="Get Password Minimum Length" status="ON"/>
 		<policy id="SET_PASSWORD_MIN_COMPLEX_CHARS" desc="Set Password Minimum Complex Characters" status="ON"/>
+		<policy id="GET_PASSWORD_MIN_COMPLEX_CHARS" desc="Get Password Minimum Complex Characters" status="ON"/>
 		<policy id="SET_PASSWORD_MAX_FAILED_ATTEMPTS_FOR_WIPE" desc="Set Password Maximum number of failed attempts before device is wiped" status="ON"/>
+		<policy id="GET_PASSWORD_MAX_FAILED_ATTEMPTS_FOR_WIPE" desc="Get Password Maximum number of failed attempts before device is wiped" status="ON"/>
 		<policy id="SET_PASSWORD_EXPIRES" desc="Set the number of days after which the password expires" status="ON"/>
+		<policy id="GET_PASSWORD_EXPIRES" desc="Get the number of days after which the password expires" status="ON"/>
 		<policy id="SET_PASSWORD_HISTORY" desc="Set the number of previous passwords" status="ON"/>
+		<policy id="GET_PASSWORD_HISTORY" desc="Get the number of previous passwords" status="ON"/>
 		<policy id="SET_PASSWORD_PATTERN" desc="Set Password Pattern" status="ON"/>
 		<policy id="RESET_PASSWORD" desc="Reset Password" status="ON"/>
 		<policy id="ENFORCE_PASSWORD_CHANGE" desc="Enforce Password Change" status="ON"/>
