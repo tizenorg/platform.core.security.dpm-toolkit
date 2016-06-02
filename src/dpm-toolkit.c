@@ -89,7 +89,7 @@ xmlNodePtr evaluate_xml_node(xmlDoc* dpmDoc, const char* policy_group, const cha
 	xmlNodePtr xNode = NULL;
 	xmlNodeSet* nodeset = NULL;
 
-	xpath_size = strlen(policy_group) + strlen(policy_id) + strlen("//policy-group[@id='%s']/policy[@id='%s']") + 1;
+	xpath_size = strlen(policy_group) + strlen(policy_id) + strlen("/manifest/policy-group[@id='%s']/policy[@id='%s']") + 1;
 	xpath = (char*)malloc(xpath_size);
 
 	if (xpath == NULL) {
@@ -97,7 +97,7 @@ xmlNodePtr evaluate_xml_node(xmlDoc* dpmDoc, const char* policy_group, const cha
 		return NULL;
 	}
 
-	snprintf(xpath, xpath_size, "//policy-group[@id='%s']/policy[@id='%s']", policy_group, policy_id);
+	snprintf(xpath, xpath_size, "/manifest/policy-group[@id='%s']/policy[@id='%s']", policy_group, policy_id);
 	dlog_print(DLOG_DEBUG, LOG_TAG, "xPath: %s \n", xpath);
 
 	context = xmlXPathNewContext(dpmDoc);
@@ -211,10 +211,12 @@ int xtk_rebuild_policy_group(const char *xmlFilePath)
 
 			xmlNodePtr model = evaluate_xml_node(dpmDoc, group->id, policy->id);
 			if (!model) {
+				printf("Policy %s removed\n", policy->id);
 				policy_list = g_list_remove(group->policies, policy);
 				continue;
 			}
 
+			printf("Policy %s added\n", policy->id);
 			policy->description = (const char*)xmlGetProp(model, (xmlChar*)"desc");
 			policy->model = model;
 		}
