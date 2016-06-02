@@ -51,17 +51,16 @@ int create_zone_handler(struct xtk_policy* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_zone_create(policy, input_entry, wizappid) == 0) {
-		dpm_context_release_zone_policy(context, policy);
-		dpm_context_destroy(context);
-		free(wizappid);
+	int ret = dpm_zone_create(policy, input_entry, wizappid);
+	dpm_context_release_zone_policy(context, policy);
+	dpm_context_destroy(context);
+	free(wizappid);
+
+	if (ret == DPM_ERROR_NONE) {
 		return POLICY_RESULT_SUCCESS;
 	}
 
 	xtk_open_message_popup(self, "Failed to create the zone");
-	dpm_context_release_zone_policy(context, policy);
-	dpm_context_destroy(context);
-	free(wizappid);
 	return POLICY_RESULT_FAIL;
 }
 
@@ -88,15 +87,15 @@ int destroy_zone_handler(struct xtk_policy* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_zone_destroy(policy, input_entry) == 0) {
-		dpm_context_release_zone_policy(context, policy);
-		dpm_context_destroy(context);
+	int ret = dpm_zone_destroy(policy, input_entry);
+	dpm_context_release_zone_policy(context, policy);
+	dpm_context_destroy(context);
+
+	if (ret == DPM_ERROR_NONE) {
 		return POLICY_RESULT_SUCCESS;
 	}
 
 	xtk_open_message_popup(self, "Failed to destroy the zone");
-	dpm_context_release_zone_policy(context, policy);
-	dpm_context_destroy(context);
 	return POLICY_RESULT_FAIL;
 }
 
@@ -138,7 +137,7 @@ int get_zone_list_handler(struct xtk_policy* self)
 	if (iter != NULL) {
 		do  {
 			dpm_zone_iterator_next(iter, &zone_name);
-                        if (zone_name !NULL) {
+                        if (zone_name != NULL) {
 				xtk_open_message_popup(self, zone_name);
 			}
 		} while (zone_name != NULL);
@@ -181,10 +180,12 @@ int get_zone_state_handler(struct xtk_policy* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_zone_get_state(policy, input_entry, &state) == 0) {
-		dpm_context_release_zone_policy(context, policy);
-		dpm_context_destroy(context);
+	int ret = dpm_zone_get_state(policy, input_entry, &state);
+	dpm_context_release_zone_policy(context, policy);
+	dpm_context_destroy(context);
 
+	switch (ret) {
+	case DPM_ERROR_NONE:
                 if (state & DPM_ZONE_STATE_RUNNING) {
                     zone_state = "Running";
                 } else if (state & DPM_ZONE_STATE_LOCKED) {
@@ -193,11 +194,12 @@ int get_zone_state_handler(struct xtk_policy* self)
 
 		xtk_open_message_popup(self, zone_state);
 		return POLICY_RESULT_NONE;
+	case DPM_ERROR_NO_DATA:
+		xtk_open_message_popup(self, "Not exists");
+		return POLICY_RESULT_NONE;
 	}
 
-        xtk_open_message_popup(self, "Not exists");
-	dpm_context_release_zone_policy(context, policy);
-	dpm_context_destroy(context);
+        xtk_open_message_popup(self, "Failed to get zone state");
 	return POLICY_RESULT_NONE;
 }
 
