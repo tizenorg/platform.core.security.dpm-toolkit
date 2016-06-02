@@ -102,8 +102,58 @@ int destroy_zone_handler(struct xtk_policy* self)
 
 int get_zone_list_handler(struct xtk_policy* self)
 {
-	dlog_print(DLOG_DEBUG, LOG_TAG, "get_zone_list_handler");
-	return POLICY_RESULT_SUCCESS;
+        int selected;
+        const char *zone_name;
+	dpm_context_h context = NULL;
+	dpm_zone_policy_h policy = NULL;
+	dpm_zone_iterator_h iter = NULL;
+
+	const char* zone_states[2] = {
+		"Locked",
+		"Running"
+	};
+        dpm_zone_state_e states[] = {
+		DPM_ZONE_STATE_LOCKED,
+		DPM_ZONE_STATE_RUNNING
+        };
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		xtk_open_message_popup(self, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_zone_policy(context);
+	if (policy == NULL) {
+		xtk_open_message_popup(self, "Failed to create zone policy handle");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (xtk_open_radio_popup(self, zone_states, ARRAY_SIZE(zone_states), &selected) == XTK_EVENT_CANCEL) {
+		return POLICY_RESULT_FAIL;
+	}
+
+        iter = dpm_zone_create_iterator(policy, states[selected]);
+	if (iter != NULL) {
+		do  {
+			dpm_zone_iterator_next(iter, &zone_name);
+                        if (zone_name !NULL) {
+				xtk_open_message_popup(self, zone_name);
+			}
+		} while (zone_name != NULL);
+
+                dpm_zone_destroy_iterator(iter);
+		dpm_context_release_zone_policy(context, policy);
+		dpm_context_destroy(context);
+		return POLICY_RESULT_NONE;
+	}
+
+        xtk_open_message_popup(self, "Failed to get the list");
+	dpm_context_release_zone_policy(context, policy);
+	dpm_context_destroy(context);
+	return POLICY_RESULT_NONE;
+
 }
 
 int get_zone_state_handler(struct xtk_policy* self)
@@ -140,7 +190,7 @@ int get_zone_state_handler(struct xtk_policy* self)
                 } else if (state & DPM_ZONE_STATE_LOCKED) {
                     zone_state = "Locked";
                 }
-                
+
 		xtk_open_message_popup(self, zone_state);
 		return POLICY_RESULT_NONE;
 	}
