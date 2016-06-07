@@ -18,13 +18,74 @@
 
 #include "dpm-toolkit.h"
 
-int set_installation_mode_handler(struct xtk_policy* self)
+int install_package_handler(struct xtk_policy* self)
 {
+	char* pkgpath;
+	dpm_context_h context;
+
+	if (xtk_open_entry_popup(self, "/opt/data/dpm/sampleapp.tpk",
+								   "Enter package path",
+								   &pkgpath) == XTK_EVENT_CANCEL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
+		return POLICY_RESULT_NONE;
+	};
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		xtk_open_message_popup(self, "Failed to create device policy manager");
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_application_install_package(context, pkgpath) != DPM_ERROR_NONE) {
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, "Failed to enforce policy");
+		return POLICY_RESULT_FAIL;
+	}
+
+	xtk_open_message_popup(self, "Package installed");
+	dpm_context_destroy(context);
+
+	return POLICY_RESULT_SUCCESS;
+}
+
+int uninstall_package_handler(struct xtk_policy* self)
+{
+	char* pkgid;
+	dpm_context_h context;
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		xtk_open_message_popup(self, "Failed to create device policy manager");
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (xtk_open_entry_popup(self, "org.tizen.sampleapp",
+								   "Enter package id",
+								   &pkgid) == XTK_EVENT_CANCEL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
+		return POLICY_RESULT_NONE;
+	};
+
+	if (dpm_application_uninstall_package(context, pkgid) != DPM_ERROR_NONE) {
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, "Failed to enforce policy");
+		return POLICY_RESULT_FAIL;
+	}
+
+	xtk_open_message_popup(self, "Package uninstalled");
+	dpm_context_destroy(context);
+
+	return POLICY_RESULT_SUCCESS;
+}
+
+int set_mode_restriction_handler(struct xtk_policy* self)
+{
+	char* msg;
 	int state, index;
 	dpm_context_h context;
 	const char *text[] = {
-		"Disable Package Installation Mode",
-		"Enable Package Installation Mode"
+		"Disable package installation",
+		"Disable package uninstallation"
 	};
 
 	if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
@@ -38,64 +99,52 @@ int set_installation_mode_handler(struct xtk_policy* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_set_installation_mode(context, index) != DPM_ERROR_NONE) {
+	switch (index) {
+	case 0 : index = DPM_PACKAGE_RESTRICTION_MODE_INSTALL; break;
+	case 1 : index = DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL; break;
+	}
+
+	if (dpm_application_set_mode_restriction(context, index) != DPM_ERROR_NONE) {
 		dpm_context_destroy(context);
 		xtk_open_message_popup(self, "Failed to enforce policy");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_get_installation_mode(context, &state) != DPM_ERROR_NONE) {
-		char buf[128];
-		snprintf(buf, 128, "Err: %d", state);
+	if (dpm_application_get_mode_restriction(context, &state) != DPM_ERROR_NONE) {
 		dpm_context_destroy(context);
-		xtk_open_message_popup(self, buf);
+		xtk_open_message_popup(self, "Failed to query policy");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (index != state) {
+	if (index != (state & index)) {
 		dpm_context_destroy(context);
 		xtk_open_message_popup(self, "Policy was not setted properly");
 		return POLICY_RESULT_FAIL;
 	}
 
 	dpm_context_destroy(context);
-	xtk_open_message_popup(self, state ? "Installation Mode Enabled"
-									   : "Installation Mode Disabled");
+	switch (index) {
+	case DPM_PACKAGE_RESTRICTION_MODE_INSTALL:
+		msg = "All package installation will not be allowed";
+		break;
+	case DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL:
+		msg = "All package uninstallation will not be allowed";
+		break;
+	}
+
+	xtk_open_message_popup(self, msg);
 
 	return POLICY_RESULT_SUCCESS;
 }
 
-int get_installation_mode_handler(struct xtk_policy* self)
+int unset_mode_restriction_handler(struct xtk_policy* self)
 {
-	int state;
-	dpm_context_h context;
-
-	context = dpm_context_create();
-	if (context == NULL) {
-		xtk_open_message_popup(self, "Failed to create device policy manager");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_application_get_installation_mode(context, &state) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to query installation mode");
-		return POLICY_RESULT_FAIL;
-	}
-
-	dpm_context_destroy(context);
-	xtk_open_message_popup(self, state ? "Installation Mode Enabled"
-									   : "Installation Mode Disabled");
-
-	return POLICY_RESULT_SUCCESS;
-}
-
-int set_uninstallation_mode_handler(struct xtk_policy* self)
-{
-	int index, state;
+	char* msg;
+	int state, index;
 	dpm_context_h context;
 	const char *text[] = {
-		"Disable Package Uninstallation Mode",
-		"Enable Package Uninstallation Mode"
+		"Enable package installation",
+		"Enable package uninstallation"
 	};
 
 	if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
@@ -109,34 +158,48 @@ int set_uninstallation_mode_handler(struct xtk_policy* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_set_uninstallation_mode(context, index) != DPM_ERROR_NONE) {
+	switch (index) {
+	case 0 : index = DPM_PACKAGE_RESTRICTION_MODE_INSTALL; break;
+	case 1 : index = DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL; break;
+	}
+
+	if (dpm_application_unset_mode_restriction(context, index) != DPM_ERROR_NONE) {
 		dpm_context_destroy(context);
 		xtk_open_message_popup(self, "Failed to enforce policy");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_get_uninstallation_mode(context, &state) != DPM_ERROR_NONE) {
+	if (dpm_application_get_mode_restriction(context, &state) != DPM_ERROR_NONE) {
 		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to query uninstallation mode");
+		xtk_open_message_popup(self, "Failed to query policy");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (index != state) {
+	if ((state & index) == index) {
 		dpm_context_destroy(context);
 		xtk_open_message_popup(self, "Policy was not setted properly");
 		return POLICY_RESULT_FAIL;
 	}
 
-	xtk_open_message_popup(self, state ? "Uninstallation Mode Enabled"
-									   : "Uninstallation Mode Disabled");
+	switch (index) {
+	case DPM_PACKAGE_RESTRICTION_MODE_INSTALL:
+		msg = "All package installation is disabled";
+		break;
+	case DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL:
+		msg = "All package uninstallation is disabled";
+		break;
+	}
+
+	xtk_open_message_popup(self, msg);
 	dpm_context_destroy(context);
 
 	return POLICY_RESULT_SUCCESS;
 }
 
-int get_uninstallation_mode_handler(struct xtk_policy* self)
+int get_mode_restriction_handler(struct xtk_policy* self)
 {
 	int state;
+	char msg[128];
 	dpm_context_h context;
 
 	context = dpm_context_create();
@@ -145,225 +208,18 @@ int get_uninstallation_mode_handler(struct xtk_policy* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_get_uninstallation_mode(context, &state) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to query uninstallation mode");
-		return POLICY_RESULT_FAIL;
-	}
-
-	xtk_open_message_popup(self, state ? "Uninstallation Mode Enabled"
-									   : "Uninstallation Mode Disabled");
-	dpm_context_destroy(context);
-
-	return POLICY_RESULT_SUCCESS;
-}
-
-int set_package_state_handler(struct xtk_policy* self)
-{
-	char *pkgid;
-	int index, state;
-	dpm_context_h context;
-	const char* text[] = {
-		"Allow package installation"
-		"Disallow package installation"
-	};
-
-	if (xtk_open_entry_popup(self, "", "Enter package id", &pkgid) == XTK_EVENT_CANCEL) {
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
-		return POLICY_RESULT_NONE;
-	};
-
-
-	if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Selection canceled");
-		free(pkgid);
-		return POLICY_RESULT_NONE;
-	}
-
-	context = dpm_context_create();
-	if (context == NULL) {
-		free(pkgid);
-		xtk_open_message_popup(self, "Failed to create device policy manager");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_application_set_package_state(context, pkgid, index) != DPM_ERROR_NONE) {
-		free(pkgid);
+	if (dpm_application_get_mode_restriction(context, &state) != DPM_ERROR_NONE) {
 		dpm_context_destroy(context);
 		xtk_open_message_popup(self, "Failed to enforce policy");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_get_package_state(context, pkgid, &state) != DPM_ERROR_NONE) {
-		free(pkgid);
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to query uninstallation mode");
-		return POLICY_RESULT_FAIL;
-	}
-
-	free(pkgid);
-
-	if (index != state) {
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Policy was not setted properly");
-		return POLICY_RESULT_FAIL;
-	}
-
-	xtk_open_message_popup(self, state ? "Package was enabled"
-									   : "Package was disabled");
-
 	dpm_context_destroy(context);
+	snprintf(msg, 128, "Package installation is %s, Package uninstallation is %s",
+			(state & DPM_PACKAGE_RESTRICTION_MODE_INSTALL) ? "DISABLED" : "ENABLED",
+		 	(state & DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL) ? "DISABLED" : "ENABLED");
 
-	return POLICY_RESULT_SUCCESS;
-}
-
-int get_package_state_handler(struct xtk_policy* self)
-{
-	int state;
-	char *pkgid;
-	dpm_context_h context;
-
-	if (xtk_open_entry_popup(self, "", "Enter package id", &pkgid) == XTK_EVENT_CANCEL) {
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
-		return POLICY_RESULT_NONE;
-	};
-
-	context = dpm_context_create();
-	if (context == NULL) {
-		xtk_open_message_popup(self, "Failed to create device policy manager");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_application_get_package_state(context, pkgid, &state) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to query uninstallation mode");
-		return POLICY_RESULT_FAIL;
-	}
-
-	xtk_open_message_popup(self, state ? "Package was enabled"
-									   : "Package was disabled");
-	dpm_context_destroy(context);
-
-	return POLICY_RESULT_SUCCESS;
-}
-
-int add_package_to_blacklist_handler(struct xtk_policy* self)
-{
-	int state;
-	char *pkgid;
-	dpm_context_h context;
-
-	if (xtk_open_entry_popup(self, "", "Enter package id", &pkgid) == XTK_EVENT_CANCEL) {
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
-		return POLICY_RESULT_NONE;
-	};
-
-	context = dpm_context_create();
-	if (context == NULL) {
-		xtk_open_message_popup(self, "Failed to create device policy manager");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_application_add_package_to_blacklist(context, pkgid) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to enforce policy");
-		return POLICY_RESULT_FAIL;
-	}
-
-    if (dpm_application_check_package_is_blacklisted(context, pkgid, &state) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to query package blacklist");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (!state) {
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Adding package to blacklist was failed");
-		return POLICY_RESULT_FAIL;
-	}
-
-	xtk_open_message_popup(self, "Package is added to blacklist");
-	dpm_context_destroy(context);
-
-	return POLICY_RESULT_SUCCESS;
-}
-
-int remove_package_from_blacklist_handler(struct xtk_policy* self)
-{
-	int state;
-	char *pkgid;
-	dpm_context_h context;
-
-	if (xtk_open_entry_popup(self, "", "Enter package id", &pkgid) == XTK_EVENT_CANCEL) {
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
-		return POLICY_RESULT_NONE;
-	};
-
-	context = dpm_context_create();
-	if (context == NULL) {
-		free(pkgid);
-		xtk_open_message_popup(self, "Failed to create device policy manager");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_application_remove_package_from_blacklist(context, pkgid) != DPM_ERROR_NONE) {
-		free(pkgid);
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to enforce policy");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_application_check_package_is_blacklisted(context, pkgid, &state) != DPM_ERROR_NONE) {
-		free(pkgid);
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to query package blacklist");
-		return POLICY_RESULT_FAIL;
-	}
-
-	free(pkgid);
-
-	if (state) {
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Removing package to blacklist was failed");
-		return POLICY_RESULT_FAIL;
-	}
-
-	xtk_open_message_popup(self, "Package is removed from blacklist");
-	dpm_context_destroy(context);
-
-	return POLICY_RESULT_SUCCESS;
-}
-
-int check_package_is_blacklisted_handler(struct xtk_policy* self)
-{
-	int state;
-	char *pkgid;
-	dpm_context_h context;
-
-	if (xtk_open_entry_popup(self, "", "Enter package id", &pkgid) == XTK_EVENT_CANCEL) {
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
-		return POLICY_RESULT_NONE;
-	};
-
-	context = dpm_context_create();
-	if (context == NULL) {
-		free(pkgid);
-		xtk_open_message_popup(self, "Failed to create device policy manager");
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_application_check_package_is_blacklisted(context, pkgid, &state) != DPM_ERROR_NONE) {
-		free(pkgid);
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to query package blacklist");
-		return POLICY_RESULT_FAIL;
-	}
-
-	free(pkgid);
-
-	xtk_open_message_popup(self, state ? "Package was blacklisted"
-									   : "Package was not blacklisted");
-	dpm_context_destroy(context);
+	xtk_open_message_popup(self, msg);
 
 	return POLICY_RESULT_SUCCESS;
 }
@@ -525,40 +381,24 @@ int check_privilege_is_blacklisted_handler(struct xtk_policy* self)
 
 xtk_policy_t xtk_application_policy[] = {
 	{
-		.id = "SET_INSTALL_MODE",
-		.handler = set_installation_mode_handler
+		.id = "INSTALL_PACKAGE",
+		.handler = install_package_handler
 	},
 	{
-		.id = "GET_INSTALL_MODE",
-		.handler = get_installation_mode_handler
+		.id = "UNINSTALL_PACKAGE",
+		.handler = uninstall_package_handler
 	},
 	{
-		.id = "SET_UNINSTALL_MODE",
-		.handler = set_uninstallation_mode_handler
+		.id = "SET_MODE_RESTRICTION",
+		.handler = set_mode_restriction_handler
 	},
 	{
-		.id = "GET_UNINSTALL_MODE",
-		.handler = get_uninstallation_mode_handler
+		.id = "UNSET_MODE_RESTRICTION",
+		.handler = unset_mode_restriction_handler
 	},
 	{
-		.id = "SET_PACKAGE_STATE",
-		.handler = set_package_state_handler
-	},
-	{
-		.id = "GET_PACKAGE_STATE",
-		.handler = get_package_state_handler
-	},
-	{
-		.id = "ADD_PACKAGE_TO_BLACKLIST",
-		.handler = add_package_to_blacklist_handler
-	},
-	{
-		.id = "REMOVE_PACKAGE_FROM_BLACKLIST",
-		.handler = remove_package_from_blacklist_handler
-	},
-	{
-		.id = "CHECK_PACKAGE_IS_BLACKLISTED",
-		.handler = check_package_is_blacklisted_handler
+		.id = "GET_MODE_RESTRICTION",
+		.handler = get_mode_restriction_handler
 	},
 	{
 		.id = "ADD_PRIVILEGE_TO_BLACKLIST",
