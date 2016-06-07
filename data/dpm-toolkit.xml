@@ -2,15 +2,11 @@
 <manifest>
 	<policy-version>0.1.0</policy-version>
 	<policy-group id="APPLICATION" desc="Application Policy">
-		<policy id="SET_INSTALL_MODE" desc="Set Package Installation mode" status="ON"/>
-		<policy id="GET_INSTALL_MODE" desc="Get Package Installation mode" status="ON"/>
-		<policy id="SET_UNINSTALL_MODE" desc="Set Package Uninstallation Mode" status="ON"/>
-		<policy id="GET_UNINSTALL_MODE" desc="Get Package Uninstallation Mode" status="ON"/>
-		<policy id="SET_PACKAGE_STATE" desc="Set Package Stage" status="ON"/>
-		<policy id="GET_PACKAGE_STATE" desc="Get Package Stage" status="ON"/>
-		<policy id="ADD_PACKAGE_TO_BLACKLIST" desc="Add Package to Blacklist" status="ON"/>
-		<policy id="CHECK_PACKAGE_IS_BLACKLISTED" desc="Check Package is Blacklisted" status="ON"/>
-		<policy id="REMOVE_PACKAGE_FROM_BLACKLIST" desc="Remove Package from Blacklist" status="ON"/>
+		<policy id="INSTALL_PACKAGE" desc="Install Package" status="ON"/>
+		<policy id="UNINSTALL_PACKAGE" desc="Uninstall Package" status="ON"/>
+		<policy id="SET_MODE_RESTRICTION" desc="Disable package installation/uninstallation" status="ON"/>
+		<policy id="UNSET_MODE_RESTRICTION" desc="Enable package installation/uninstallation" status="ON"/>
+		<policy id="GET_MODE_RESTRICTION" desc="Get package installation/uninstallation restriction state" status="ON"/>
 		<policy id="ADD_PRIVILEGE_TO_BLACKLIST" desc="Add Privilege to Blacklist" status="ON"/>
 		<policy id="CHECK_PRIVILEGE_IS_BLACKLISTED" desc="Check Privilege is Blacklisted" status="ON"/>
 		<policy id="REMOVE_PRIVILEGE_FROM_BLACKLIST" desc="Remove Privilege from Blacklist" status="ON"/>
