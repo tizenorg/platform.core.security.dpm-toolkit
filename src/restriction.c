@@ -1141,6 +1141,249 @@ int get_bluetooth_pairing_state_handler(struct xtk_policy *self)
 	return POLICY_RESULT_FAIL;
 }
 
+int set_popimap_email_state_handler(struct xtk_policy *self)
+{
+	int state;
+	int allow;
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+
+	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
+		return POLICY_RESULT_FAIL;
+	}
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_set_popimap_email_state(policy, allow) != 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_get_popimap_email_state(policy, &state) != 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (state == allow) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
+		return POLICY_RESULT_NONE;
+	}
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	return POLICY_RESULT_FAIL;
+}
+
+int get_popimap_email_state_handler(struct xtk_policy *self)
+{
+	int state;
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_get_popimap_email_state(policy, &state) == 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
+		return POLICY_RESULT_NONE;
+	}
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	return POLICY_RESULT_FAIL;
+}
+
+int set_messaging_state_handler(struct xtk_policy *self)
+{
+	int state;
+	int allow;
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+
+	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
+		return POLICY_RESULT_FAIL;
+	}
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_set_messaging_state(policy, allow) != 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_get_messaging_state(policy, &state) != 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (state == allow) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
+		return POLICY_RESULT_NONE;
+	}
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	return POLICY_RESULT_FAIL;
+}
+
+int get_messaging_state_handler(struct xtk_policy *self)
+{
+	int state;
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_get_messaging_state(policy, &state) == 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
+		return POLICY_RESULT_NONE;
+	}
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	return POLICY_RESULT_FAIL;
+}
+
+int set_browser_state_handler(struct xtk_policy *self)
+{
+	int state;
+	int allow;
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+
+	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
+		return POLICY_RESULT_FAIL;
+	}
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_set_browser_state(policy, allow) != 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_get_browser_state(policy, &state) != 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (state == allow) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
+		return POLICY_RESULT_NONE;
+	}
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	return POLICY_RESULT_FAIL;
+}
+
+int get_browser_state_handler(struct xtk_policy *self)
+{
+	int state;
+	dpm_context_h context = NULL;
+	dpm_restriction_policy_h policy = NULL;
+
+	context = dpm_context_create();
+	if (context == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+		return POLICY_RESULT_FAIL;
+	}
+
+	policy = dpm_context_acquire_restriction_policy(context);
+	if (policy == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_restriction_get_browser_state(policy, &state) == 0) {
+		dpm_context_release_restriction_policy(context, policy);
+		dpm_context_destroy(context);
+		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
+		return POLICY_RESULT_NONE;
+	}
+
+	dpm_context_release_restriction_policy(context, policy);
+	dpm_context_destroy(context);
+
+	return POLICY_RESULT_FAIL;
+}
+
 xtk_policy_t xtk_restriction_policy[] = {
 	{
 		.id = "SET_CAMERA_STATE",
@@ -1253,6 +1496,30 @@ xtk_policy_t xtk_restriction_policy[] = {
 	{
 		.id = "GET_BLUETOOTH_PAIRING_STATE",
 		.handler = get_bluetooth_pairing_state_handler
+	},
+	{
+		.id = "SET_POPIMAP_EMAIL_STATE",
+		.handler = set_popimap_email_state_handler
+	},
+	{
+		.id = "GET_POPIMAP_EMAIL_STATE",
+		.handler = get_popimap_email_state_handler
+	},
+	{
+		.id = "SET_MESSAGING_STATE",
+		.handler = set_messaging_state_handler
+	},
+	{
+		.id = "GET_MESSAGING_STATE",
+		.handler = get_messaging_state_handler
+	},
+	{
+		.id = "SET_BROWSER_STATE",
+		.handler = set_browser_state_handler
+	},
+	{
+		.id = "GET_BROWSER_STATE",
+		.handler = get_browser_state_handler
 	}
 };
 

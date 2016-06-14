@@ -84,6 +84,12 @@
 		<policy id="GET_BLUETOOTH_DESKTOP_CONNECTIVITY_STATE" desc="Get Bluetooth Desktop Connectivity State" status="ON"/>
 		<policy id="SET_BLUETOOTH_PAIRING_STATE" desc="Set Bluetooth Pairing State" status="ON"/>
 		<policy id="GET_BLUETOOTH_PAIRING_STATE" desc="Get Bluetooth Pairing State" status="ON"/>
+		<policy id="SET_POPIMAP_EMAIL_STATE" desc="Set POP/IMAP EMail State" status="ON"/>
+		<policy id="GET_POPIMAP_EMAIL_STATE" desc="Get POP/IMAP EMail State" status="ON"/>
+		<policy id="SET_MESSAGING_STATE" desc="Set Text Messaging State" status="ON"/>
+		<policy id="GET_MESSAGING_STATE" desc="Get Text Messaging  State" status="ON"/>
+		<policy id="SET_BROWSER_STATE" desc="Set Browser State" status="ON"/>
+		<policy id="GET_BROWSER_STATE" desc="Get Browser State" status="ON"/>
 	</policy-group>
 
 	<policy-group id="ZONE" desc="Zone Policy">
