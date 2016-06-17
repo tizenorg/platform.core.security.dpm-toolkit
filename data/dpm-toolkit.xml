@@ -41,6 +41,8 @@
 
 	<policy-group id="SECURITY" desc="Security Policy">
 		<policy id="LOCK_NOW" desc="Force Lock" status="ON" default="Input default"/>
+		<policy id="ENCRYPT_DEVICE" desc="Encrypt Device" status="ON"/>
+		<policy id="DECRYPT_DEVICE" desc="Decrypt Device" status="ON"/>
 		<policy id="WIPE_DATA" desc="Wipe Data" status="ON"/>
 		<policy id="REBOOT" desc="Reboot" status="ON"/>
 		<policy id="POWER_OFF_DEVICE" desc="Power Off Device" status="ON"/>

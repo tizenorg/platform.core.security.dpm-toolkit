@@ -14,6 +14,8 @@
  *  limitations under the License
  */
 
+#include <dpm/security.h>
+
 #include "dpm-toolkit.h"
 
 int lock_now_handler(struct xtk_policy* self)
@@ -28,6 +30,91 @@ int lock_now_handler(struct xtk_policy* self)
 	xtk_open_confirm_popup(self, entry);
 
 	return POLICY_RESULT_SUCCESS;
+}
+
+int encrypt_device_handler(struct xtk_policy* self)
+{
+    int index;
+    dpm_context_h context;
+    const char *text[] = {
+        "Encrypt Internal Storage",
+        "Encrypt External Storage"
+    };
+
+    if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
+        dlog_print(DLOG_DEBUG, LOG_TAG, "Selection canceled");
+        return POLICY_RESULT_NONE;
+    }
+
+    context = dpm_context_create();
+    if (context == NULL) {
+        xtk_open_message_popup(self, "Failed to create device policy manager");
+        return POLICY_RESULT_FAIL;
+    }
+
+    if (index == 0) {
+        if (dpm_security_set_internal_storage_encryption(context, TRUE) != DPM_ERROR_NONE) {
+            dpm_context_destroy(context);
+            xtk_open_message_popup(self, "Failed to enforce policy");
+            return POLICY_RESULT_FAIL;
+        }
+    } else if (index == 1) {
+        if (dpm_security_set_external_storage_encryption(context, TRUE) != DPM_ERROR_NONE) {
+            dpm_context_destroy(context);
+            xtk_open_message_popup(self, "Failed to enforce policy");
+            return POLICY_RESULT_FAIL;
+        }
+    }
+
+    dpm_context_destroy(context);
+
+    xtk_open_message_popup(self, "Operation successfully triggerred, "
+                                 "but product must provide encryption backend");
+
+    return POLICY_RESULT_SUCCESS;
+}
+
+int decrypt_device_handler(struct xtk_policy* self)
+{
+    int index;
+    dpm_context_h context;
+    const char *text[] = {
+        "Decrypt Internal Storage",
+        "Decrypt External Storage"
+    };
+
+    if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
+        dlog_print(DLOG_DEBUG, LOG_TAG, "Selection canceled");
+        return POLICY_RESULT_NONE;
+    }
+
+    context = dpm_context_create();
+    if (context == NULL) {
+        xtk_open_message_popup(self, "Failed to create device policy manager");
+        return POLICY_RESULT_FAIL;
+    }
+
+    if (index == 0) {
+        if (dpm_security_set_internal_storage_encryption(context, FALSE) != DPM_ERROR_NONE) {
+            dpm_context_destroy(context);
+            xtk_open_message_popup(self, "Failed to enforce policy");
+            return POLICY_RESULT_FAIL;
+        }
+    } else if (index == 1) {
+        if (dpm_security_set_external_storage_encryption(context, FALSE) != DPM_ERROR_NONE) {
+            dpm_context_destroy(context);
+            xtk_open_message_popup(self, "Failed to enforce policy");
+            return POLICY_RESULT_FAIL;
+        }
+    }
+
+    dpm_context_destroy(context);
+
+    xtk_open_message_popup(self, "Operation successfully triggerred, "
+                                 "but product must provide decryption backend");
+
+    return POLICY_RESULT_SUCCESS;
+
 }
 
 int wipe_data_handler(struct xtk_policy* self)
@@ -56,6 +143,14 @@ xtk_policy_t xtk_security_policy[] = {
 	{
 		.id = "LOCK_NOW",
 		.handler = lock_now_handler
+	},
+	{
+		.id = "ENCRYPT_DEVICE",
+		.handler = encrypt_device_handler
+	},
+	{
+		.id = "DECRYPT_DEVICE",
+		.handler = decrypt_device_handler
 	},
 	{
 		.id = "WIPE_DATA",
