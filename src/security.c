@@ -20,14 +20,25 @@
 
 int lock_now_handler(struct xtk_policy* self)
 {
-	char *entry;
-	if (xtk_open_entry_popup(self, NULL, "Enter name", &entry) == XTK_EVENT_CANCEL) {
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
+	dpm_context_h context;
+
+	if (xtk_open_confirm_popup(self,"This operation will lockout the screen") == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	};
 
-	xtk_open_message_popup(self, entry);
-	xtk_open_confirm_popup(self, entry);
+	context = dpm_context_create();
+	if (context == NULL) {
+		xtk_open_message_popup(self, "Failed to create device policy manager");
+		return POLICY_RESULT_FAIL;
+	}
+
+	if (dpm_security_lockout_screen(context) != DPM_ERROR_NONE) {
+		xtk_open_message_popup(self, "Failed to lockout screen");
+		dpm_context_destroy(context);
+		return POLICY_RESULT_FAIL;
+	}
+
+	dpm_context_destroy(context);
 
 	return POLICY_RESULT_SUCCESS;
 }
