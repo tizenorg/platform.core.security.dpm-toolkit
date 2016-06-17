@@ -133,23 +133,6 @@ int wipe_data_handler(struct xtk_policy* self)
 	return POLICY_RESULT_SUCCESS;
 }
 
-int reboot_handler(struct xtk_policy* self)
-{
-	return POLICY_RESULT_SUCCESS;
-}
-
-int power_off_device_handler(struct xtk_policy* self)
-{
-	int index;
-	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &index) == XTK_EVENT_CANCEL) {
-		dlog_print(DLOG_DEBUG, LOG_TAG, "Selection canceled");
-		return POLICY_RESULT_FAIL;
-	}
-
-	dlog_print(DLOG_DEBUG, LOG_TAG, "Selected: %d", index);
-	return POLICY_RESULT_SUCCESS;
-}
-
 xtk_policy_t xtk_security_policy[] = {
 	{
 		.id = "LOCK_NOW",
@@ -166,14 +149,6 @@ xtk_policy_t xtk_security_policy[] = {
 	{
 		.id = "WIPE_DATA",
 		.handler = wipe_data_handler
-	},
-	{
-		.id = "REBOOT",
-		.handler = reboot_handler
-	},
-	{
-		.id = "POWER_OFF_DEVICE",
-		.handler = power_off_device_handler
 	}
 };
 

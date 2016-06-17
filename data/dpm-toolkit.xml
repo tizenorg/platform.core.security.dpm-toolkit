@@ -44,17 +44,6 @@
 		<policy id="ENCRYPT_DEVICE" desc="Encrypt Device" status="ON"/>
 		<policy id="DECRYPT_DEVICE" desc="Decrypt Device" status="ON"/>
 		<policy id="WIPE_DATA" desc="Wipe Data" status="ON"/>
-		<policy id="REBOOT" desc="Reboot" status="ON"/>
-		<policy id="POWER_OFF_DEVICE" desc="Power Off Device" status="ON"/>
-	</policy-group>
-
-	<policy-group id="WIFI" desc="Wi-Fi Policy">
-		<policy id="WIFI_SET_PROFILE_CHANGE_STATE" desc="Set Profile Change State" status="ON"/>
-		<policy id="WIFI_GET_PROFILE_CHANGE_STATE" desc="Get Profile Change State" status="ON"/>
-		<policy id="WIFI_SET_NETWORK_ACCESS_RESTRICTION" desc="Set Network Access Restriction" status="ON"/>
-		<policy id="WIFI_IS_NETWORK_ACCESS_RESTRICTED" desc="Check Network Access Restriction" status="ON"/>
-		<policy id="WIFI_ADD_SSID_TO_BLOCKLIST" desc="Add SSID to blocklist" status="ON"/>
-		<policy id="WIFI_REMOVE_SSID_FROM_BLOCKLIST" desc="Remove SSID from blocklist" status="ON"/>
 	</policy-group>
 
 	<policy-group id="RESTRICTION" desc="Restriction Policy">
@@ -99,12 +88,5 @@
 		<policy id="DESTROY_ZONE" desc="Destroy zone" status="ON"/>
 		<policy id="GET_ZONE_LIST" desc="Get zones list" status="ON"/>
 		<policy id="GET_ZONE_STATE" desc="Get zone state" status="ON"/>
-	</policy-group>
-
-	<policy-group id="BLUETOOTH">
-		<policy id="SET_DEVICE_RESTRICTION" desc="Set Device Restriction" status="ON"/>
-		<policy id="IS_DEVICE_RESTRICTED" desc="Check Device Restriction" status="ON"/>
-		<policy id="SET_UUID_RESTRICTION" desc="Set UUID Restriction" status="ON"/>
-		<policy id="IS_UUID_RESTRICTED" desc="Check UUID Restriction" status="ON"/>
 	</policy-group>
 </manifest>
