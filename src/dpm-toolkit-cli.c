@@ -172,18 +172,21 @@ static int xtk_cli_select_policy(xtk_policy_group_t* group)
 		while (!done) {
 			fancy_text(YELLOW, NONE, "> Select policy to test: ");
 			scanf("%d", &code);
-			if ((code > maxid) && (code != 99) && (code != -1)) {
-				fancy_text(RED, BOLD, "\n***INVALID POLICY ID (%d)\n", code);
-				continue;
-			}
 
 			if (code == 99 || code == -1) {
 				return code;
 			}
 
+			if (code <= maxid && code >= 0) {
+				fancy_text(RED, BOLD, "\n***INVALID POLICY ID (%d)\n", code);
+				continue;
+			}
+
 			printf("Start handler\n");
-			policy_map[code]->handler(policy_map[code]);
-			done = 1;
+			if (code >= 0 && code < 64) {
+				policy_map[code]->handler(policy_map[code]);
+				done = 1;
+			}
 		}
 	}
 
