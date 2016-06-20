@@ -182,8 +182,10 @@ static int xtk_cli_select_policy(xtk_policy_group_t* group)
 			}
 
 			printf("Start handler\n");
-			policy_map[code]->handler(policy_map[code]);
-			done = 1;
+			if (code >= 0 && code < 64) {
+				policy_map[code]->handler(policy_map[code]);
+				done = 1;
+			}
 		}
 	}
 
