@@ -284,7 +284,7 @@ static void _gl_policy_group_select(void* data, Evas_Object* obj, void* event_in
 	elm_genlist_mode_set(genlist, ELM_LIST_COMPRESS);
 
 	itc = elm_genlist_item_class_new();
-	itc->item_style = "1line";
+	itc->item_style = "type1";
 	itc->func.text_get = _gl_policy_label_get;
 	itc->func.state_get = NULL;
 	itc->func.del = NULL;
@@ -314,7 +314,7 @@ static Evas_Object* create_genlist(Evas_Object* naviframe)
 	GList* policy_group_list = NULL;
 
 	itc = elm_genlist_item_class_new();
-	itc->item_style = "1line";
+	itc->item_style = "type1";
 	itc->func.text_get = _gl_policy_group_label_get;
 	itc->func.state_get = NULL;
 	itc->func.del = NULL;
