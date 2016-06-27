@@ -15,13 +15,13 @@
  */
 
 #include "dpm-toolkit.h"
+
 #include <dpm/password.h>
 
 int set_password_quality_handler(struct xtk_policy *self)
 {
 	int index;
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	dpm_password_quality_e quality;
 
 	const char *text[] = {
@@ -61,35 +61,25 @@ int set_password_quality_handler(struct xtk_policy *self)
 		break;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_set_quality(policy, quality) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_set_quality(handle, quality) == 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_SUCCESS;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int get_password_quality_handler(struct xtk_policy *self)
 {
 	int index;
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	dpm_password_quality_e quality;
 
 	const char *text[] = {
@@ -101,22 +91,14 @@ int get_password_quality_handler(struct xtk_policy *self)
 		"ALPHANUMERIC"
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_get_quality(policy, &quality) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_quality(handle, &quality) == 0) {
+		dpm_manager_destroy(handle);
 		switch (quality) {
 		case DPM_PASSWORD_QUALITY_UNSPECIFIED:
 			index = 0;
@@ -144,15 +126,13 @@ int get_password_quality_handler(struct xtk_policy *self)
 		return POLICY_RESULT_SUCCESS;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int set_password_min_length_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 
 	char *input_entry;
 	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
@@ -160,68 +140,48 @@ int set_password_min_length_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_set_minimum_length(policy, atoi(input_entry)) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_set_minimum_length(handle, atoi(input_entry)) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, input_entry);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int get_password_min_length_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	int min_length;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_get_minimum_length(policy, &min_length) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_minimum_length(handle, &min_length) == 0) {
+		dpm_manager_destroy(handle);
 		char num_text[10] = {0, };
 		snprintf(num_text, sizeof(num_text), "%d", min_length);
 		xtk_open_message_popup(self, num_text);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int set_password_min_complex_chars_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 
 	char *input_entry;
 	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
@@ -229,68 +189,48 @@ int set_password_min_complex_chars_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_set_min_complex_chars(policy, atoi(input_entry)) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_set_min_complex_chars(handle, atoi(input_entry)) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, input_entry);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int get_password_min_complex_chars_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	int min_complex_chars;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_get_min_complex_chars(policy, &min_complex_chars) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_min_complex_chars(handle, &min_complex_chars) == 0) {
+		dpm_manager_destroy(handle);
 		char num_text[10] = {0, };
 		snprintf(num_text, sizeof(num_text), "%d", min_complex_chars);
 		xtk_open_message_popup(self, num_text);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int set_password_max_failed_attempts_for_wipe_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 
 	char *input_entry;
 	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
@@ -298,68 +238,48 @@ int set_password_max_failed_attempts_for_wipe_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_set_maximum_failed_attempts_for_wipe(policy, atoi(input_entry)) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_set_maximum_failed_attempts_for_wipe(handle, atoi(input_entry)) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, input_entry);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int get_password_max_failed_attempts_for_wipe_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	int max_failed_attempts;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_get_maximum_failed_attempts_for_wipe(policy, &max_failed_attempts) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_maximum_failed_attempts_for_wipe(handle, &max_failed_attempts) == 0) {
+		dpm_manager_destroy(handle);
 		char num_text[10] = {0, };
 		snprintf(num_text, sizeof(num_text), "%d", max_failed_attempts);
 		xtk_open_message_popup(self, num_text);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int set_password_expires_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 
 	char *input_entry;
 	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
@@ -367,68 +287,48 @@ int set_password_expires_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_set_expires(policy, atoi(input_entry)) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_set_expires(handle, atoi(input_entry)) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, input_entry);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int get_password_expires_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	int expires;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_get_expires(policy, &expires) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_expires(handle, &expires) == 0) {
+		dpm_manager_destroy(handle);
 		char num_text[10] = {0, };
 		snprintf(num_text, sizeof(num_text), "%d", expires);
 		xtk_open_message_popup(self, num_text);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int set_password_history_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 
 	char *input_entry;
 	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
@@ -436,68 +336,48 @@ int set_password_history_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_set_history(policy, atoi(input_entry)) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_set_history(handle, atoi(input_entry)) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, input_entry);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int get_password_history_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	int history;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_get_history(policy, &history) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_history(handle, &history) == 0) {
+		dpm_manager_destroy(handle);
 		char num_text[10] = {0, };
 		snprintf(num_text, sizeof(num_text), "%d", history);
 		xtk_open_message_popup(self, num_text);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int reset_password_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 
 	char *input_entry;
 	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
@@ -505,64 +385,44 @@ int reset_password_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_reset(policy, input_entry) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_reset(handle, input_entry) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, input_entry);
 		return POLICY_RESULT_SUCCESS;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int enforce_password_change_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_enforce_change(policy) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_enforce_change(handle) == 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_SUCCESS;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int set_max_inactivity_time_device_lock_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	int max_inactivity_time, test_max_inactivity_time;
 
 	char *input_entry;
@@ -571,83 +431,61 @@ int set_max_inactivity_time_device_lock_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
 	max_inactivity_time = atoi(input_entry);
 	test_max_inactivity_time = 0;
 
-	if (dpm_password_set_max_inactivity_time_device_lock(policy, max_inactivity_time) != 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_set_max_inactivity_time_device_lock(handle, max_inactivity_time) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_password_get_max_inactivity_time_device_lock(policy, &test_max_inactivity_time) != 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_max_inactivity_time_device_lock(handle, &test_max_inactivity_time) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (max_inactivity_time == test_max_inactivity_time) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, input_entry);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int get_max_inactivity_time_device_lock_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	int max_inactivity_time;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_get_max_inactivity_time_device_lock(policy, &max_inactivity_time) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_max_inactivity_time_device_lock(handle, &max_inactivity_time) == 0) {
+		dpm_manager_destroy(handle);
 		char num_text[10] = {0, };
 		snprintf(num_text, sizeof(num_text), "%d", max_inactivity_time);
 		xtk_open_message_popup(self, num_text);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int set_password_status_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 
 	char *input_entry;
 	if (xtk_open_entry_popup(self, "", "", &input_entry) == XTK_EVENT_CANCEL) {
@@ -655,35 +493,25 @@ int set_password_status_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_set_status(policy, atoi(input_entry)) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_set_status(handle, atoi(input_entry)) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, input_entry);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int set_password_pattern_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	char *test_pw_pattern;
 
 	char *input_entry;
@@ -692,111 +520,79 @@ int set_password_pattern_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
+	if (dpm_password_set_pattern(handle, input_entry) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_password_set_pattern(policy, input_entry) != 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_get_pattern(policy, &test_pw_pattern) != 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_pattern(handle, &test_pw_pattern) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (strcmp(input_entry, test_pw_pattern) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, input_entry);
 		free(test_pw_pattern);
 		return POLICY_RESULT_NONE;
 	}
 
 	free(test_pw_pattern);
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int get_password_pattern_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 
 	char *pw_pattern;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_get_pattern(policy, &pw_pattern) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_pattern(handle, &pw_pattern) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, pw_pattern);
 		free(pw_pattern);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int delete_password_pattern_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_delete_pattern(policy) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_delete_pattern(handle) == 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int set_max_char_occurrences_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	int max_char_occur, test_max_char_occur;
 
 	char *input_entry;
@@ -805,83 +601,61 @@ int set_max_char_occurrences_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
 	max_char_occur = atoi(input_entry);
 	test_max_char_occur = 0;
 
-	if (dpm_password_set_maximum_character_occurrences(policy, max_char_occur) != 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_set_maximum_character_occurrences(handle, max_char_occur) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_password_get_maximum_character_occurrences(policy, &test_max_char_occur) != 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_maximum_character_occurrences(handle, &test_max_char_occur) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (max_char_occur == test_max_char_occur) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, input_entry);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int get_max_char_occurrences_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	int max_char_occur;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_get_maximum_character_occurrences(policy, &max_char_occur) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_maximum_character_occurrences(handle, &max_char_occur) == 0) {
+		dpm_manager_destroy(handle);
 		char num_text[10] = {0, };
 		snprintf(num_text, sizeof(num_text), "%d", max_char_occur);
 		xtk_open_message_popup(self, num_text);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int set_max_numeric_sequence_length_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	int max_num_seq_length, test_max_num_seq_length;
 
 	char *input_entry;
@@ -890,80 +664,59 @@ int set_max_numeric_sequence_length_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
 	max_num_seq_length = atoi(input_entry);
 	test_max_num_seq_length = 0;
 
-	if (dpm_password_set_maximum_numeric_sequence_length(policy, max_num_seq_length) != 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_set_maximum_numeric_sequence_length(handle, max_num_seq_length) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_password_get_maximum_numeric_sequence_length(policy, &test_max_num_seq_length) != 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_maximum_numeric_sequence_length(handle, &test_max_num_seq_length) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (max_num_seq_length == test_max_num_seq_length) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, input_entry);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
 int get_max_numeric_sequence_length_handler(struct xtk_policy *self)
 {
-	dpm_context_h context;
-	dpm_password_policy_h policy;
+	device_policy_manager_h handle;
 	int max_num_seq_length;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_password_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create password policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_password_get_maximum_numeric_sequence_length(policy, &max_num_seq_length) == 0) {
-		dpm_context_release_password_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_password_get_maximum_numeric_sequence_length(handle, &max_num_seq_length) == 0) {
+		dpm_manager_destroy(handle);
 		char num_text[10] = {0, };
 		snprintf(num_text, sizeof(num_text), "%d", max_num_seq_length);
 		xtk_open_message_popup(self, num_text);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_password_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	return POLICY_RESULT_FAIL;
 }
 
-xtk_policy_t xtk_password_policy[] = {
+xtk_policy_t xtk_password_handle[] = {
 	{
 		.id = "SET_PASSWORD_QUALITY",
 		.handler = set_password_quality_handler
@@ -1062,19 +815,19 @@ xtk_policy_t xtk_password_policy[] = {
 	}
 };
 
-xtk_policy_group_t password_policy_group = {
+xtk_policy_group_t password_handle_group = {
 	.id = "PASSWORD"
 };
 
-void __CONSTRUCTOR__ xtk_password_policy_constructor()
+void __CONSTRUCTOR__ xtk_password_handle_constructor()
 {
 	int ret = 0;
 
-	dlog_print(DLOG_DEBUG, LOG_TAG, "password policy constructor");
+	dlog_print(DLOG_DEBUG, LOG_TAG, "password handle constructor");
 
-	int nr = ARRAY_SIZE(xtk_password_policy);
-	ret = xtk_init_policy(&password_policy_group, xtk_password_policy, nr);
+	int nr = ARRAY_SIZE(xtk_password_handle);
+	ret = xtk_init_policy(&password_handle_group, xtk_password_handle, nr);
 	if (ret < 0) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "password policy initialization fail");
+		dlog_print(DLOG_ERROR, LOG_TAG, "password handle initialization fail");
 	}
 }
