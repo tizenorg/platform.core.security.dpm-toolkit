@@ -14,14 +14,14 @@
  *  limitations under the License
  */
 
-#include <dpm/application.h>
-
 #include "dpm-toolkit.h"
+
+#include <dpm/application.h>
 
 int install_package_handler(struct xtk_policy* self)
 {
 	char* pkgpath;
-	dpm_context_h context;
+	device_policy_manager_h handle;
 
 	if (xtk_open_entry_popup(self, "/opt/data/dpm/sampleapp.tpk",
 								   "Enter package path",
@@ -30,20 +30,20 @@ int install_package_handler(struct xtk_policy* self)
 		return POLICY_RESULT_NONE;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
+	handle = dpm_manager_create();
+	if (handle == NULL) {
 		xtk_open_message_popup(self, "Failed to create device policy manager");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_install_package(context, pkgpath) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
+	if (dpm_application_install_package(handle, pkgpath) != DPM_ERROR_NONE) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to enforce policy");
 		return POLICY_RESULT_FAIL;
 	}
 
 	xtk_open_message_popup(self, "Package installed");
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_SUCCESS;
 }
@@ -51,10 +51,10 @@ int install_package_handler(struct xtk_policy* self)
 int uninstall_package_handler(struct xtk_policy* self)
 {
 	char* pkgid;
-	dpm_context_h context;
+	device_policy_manager_h handle;
 
-	context = dpm_context_create();
-	if (context == NULL) {
+	handle = dpm_manager_create();
+	if (handle == NULL) {
 		xtk_open_message_popup(self, "Failed to create device policy manager");
 		return POLICY_RESULT_FAIL;
 	}
@@ -66,14 +66,14 @@ int uninstall_package_handler(struct xtk_policy* self)
 		return POLICY_RESULT_NONE;
 	};
 
-	if (dpm_application_uninstall_package(context, pkgid) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
+	if (dpm_application_uninstall_package(handle, pkgid) != DPM_ERROR_NONE) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to enforce policy");
 		return POLICY_RESULT_FAIL;
 	}
 
 	xtk_open_message_popup(self, "Package uninstalled");
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_SUCCESS;
 }
@@ -82,7 +82,7 @@ int set_mode_restriction_handler(struct xtk_policy* self)
 {
 	char* msg;
 	int state, index;
-	dpm_context_h context;
+	device_policy_manager_h handle;
 	const char *text[] = {
 		"Disable package installation",
 		"Disable package uninstallation"
@@ -93,8 +93,8 @@ int set_mode_restriction_handler(struct xtk_policy* self)
 		return POLICY_RESULT_NONE;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
+	handle = dpm_manager_create();
+	if (handle == NULL) {
 		xtk_open_message_popup(self, "Failed to create device policy manager");
 		return POLICY_RESULT_FAIL;
 	}
@@ -104,25 +104,25 @@ int set_mode_restriction_handler(struct xtk_policy* self)
 	case 1 : index = DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL; break;
 	}
 
-	if (dpm_application_set_mode_restriction(context, index) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
+	if (dpm_application_set_mode_restriction(handle, index) != DPM_ERROR_NONE) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to enforce policy");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_get_mode_restriction(context, &state) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
+	if (dpm_application_get_mode_restriction(handle, &state) != DPM_ERROR_NONE) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to query policy");
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (index != (state & index)) {
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Policy was not setted properly");
 		return POLICY_RESULT_FAIL;
 	}
 
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	switch (index) {
 	case DPM_PACKAGE_RESTRICTION_MODE_INSTALL:
 		msg = "All package installation will not be allowed";
@@ -141,7 +141,7 @@ int unset_mode_restriction_handler(struct xtk_policy* self)
 {
 	char* msg;
 	int state, index;
-	dpm_context_h context;
+	device_policy_manager_h handle;
 	const char *text[] = {
 		"Enable package installation",
 		"Enable package uninstallation"
@@ -152,8 +152,8 @@ int unset_mode_restriction_handler(struct xtk_policy* self)
 		return POLICY_RESULT_NONE;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
+	handle = dpm_manager_create();
+	if (handle == NULL) {
 		xtk_open_message_popup(self, "Failed to create device policy manager");
 		return POLICY_RESULT_FAIL;
 	}
@@ -163,20 +163,20 @@ int unset_mode_restriction_handler(struct xtk_policy* self)
 	case 1 : index = DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL; break;
 	}
 
-	if (dpm_application_unset_mode_restriction(context, index) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
+	if (dpm_application_unset_mode_restriction(handle, index) != DPM_ERROR_NONE) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to enforce policy");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_get_mode_restriction(context, &state) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
+	if (dpm_application_get_mode_restriction(handle, &state) != DPM_ERROR_NONE) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to query policy");
 		return POLICY_RESULT_FAIL;
 	}
 
 	if ((state & index) == index) {
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Policy was not setted properly");
 		return POLICY_RESULT_FAIL;
 	}
@@ -191,7 +191,7 @@ int unset_mode_restriction_handler(struct xtk_policy* self)
 	}
 
 	xtk_open_message_popup(self, msg);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_SUCCESS;
 }
@@ -200,21 +200,21 @@ int get_mode_restriction_handler(struct xtk_policy* self)
 {
 	int state;
 	char msg[128];
-	dpm_context_h context;
+	device_policy_manager_h handle;
 
-	context = dpm_context_create();
-	if (context == NULL) {
+	handle = dpm_manager_create();
+	if (handle == NULL) {
 		xtk_open_message_popup(self, "Failed to create device policy manager");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_get_mode_restriction(context, &state) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
+	if (dpm_application_get_mode_restriction(handle, &state) != DPM_ERROR_NONE) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to enforce policy");
 		return POLICY_RESULT_FAIL;
 	}
 
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 	snprintf(msg, 128, "Package installation is %s, Package uninstallation is %s",
 			(state & DPM_PACKAGE_RESTRICTION_MODE_INSTALL) ? "DISABLED" : "ENABLED",
 		 	(state & DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL) ? "DISABLED" : "ENABLED");
@@ -228,7 +228,7 @@ int add_privilege_to_blacklist_handler(struct xtk_policy* self)
 {
 	int state, index;
 	char *privilege;
-	dpm_context_h context;
+	device_policy_manager_h handle;
 	const char* text[] = {
 		"Wrt Packakage Privilege",
 		"Core Package Privilege"
@@ -246,35 +246,35 @@ int add_privilege_to_blacklist_handler(struct xtk_policy* self)
 		return POLICY_RESULT_NONE;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
+	handle = dpm_manager_create();
+	if (handle == NULL) {
 		free(privilege);
 		xtk_open_message_popup(self, "Failed to create device policy manager");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_add_privilege_to_blacklist(context, index, privilege) != DPM_ERROR_NONE) {
+	if (dpm_application_add_privilege_to_blacklist(handle, index, privilege) != DPM_ERROR_NONE) {
 		free(privilege);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to enforce policy");
 		return POLICY_RESULT_FAIL;
 	}
 
-    if (dpm_application_check_privilege_is_blacklisted(context, index, privilege, &state) != DPM_ERROR_NONE) {
+    if (dpm_application_check_privilege_is_blacklisted(handle, index, privilege, &state) != DPM_ERROR_NONE) {
 		free(privilege);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to query privilege blacklist");
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (!state) {
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Adding privilege to blacklist was failed");
 		free(privilege);
 		return POLICY_RESULT_FAIL;
 	}
 
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	xtk_open_message_popup(self, "The privilege is disabled");
 	return POLICY_RESULT_SUCCESS;
@@ -284,7 +284,7 @@ int remove_privilege_from_blacklist_handler(struct xtk_policy* self)
 {
 	int state, index;
 	char *privilege;
-	dpm_context_h context;
+	device_policy_manager_h handle;
 	const char* text[] = {
 		"Wrt Packakage Privilege",
 		"Core Package Privilege"
@@ -302,23 +302,23 @@ int remove_privilege_from_blacklist_handler(struct xtk_policy* self)
 		return POLICY_RESULT_NONE;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
+	handle = dpm_manager_create();
+	if (handle == NULL) {
 		free(privilege);
 		xtk_open_message_popup(self, "Failed to create device policy manager");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_remove_privilege_from_blacklist(context, index, privilege) != DPM_ERROR_NONE) {
+	if (dpm_application_remove_privilege_from_blacklist(handle, index, privilege) != DPM_ERROR_NONE) {
 		free(privilege);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to enforce policy");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_check_privilege_is_blacklisted(context, index, privilege, &state) != DPM_ERROR_NONE) {
+	if (dpm_application_check_privilege_is_blacklisted(handle, index, privilege, &state) != DPM_ERROR_NONE) {
 		free(privilege);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to query privilege blacklist");
 		return POLICY_RESULT_FAIL;
 	}
@@ -326,13 +326,13 @@ int remove_privilege_from_blacklist_handler(struct xtk_policy* self)
 	free(privilege);
 
 	if (state) {
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Removing privilege from blacklist was failed");
 		return POLICY_RESULT_FAIL;
 	}
 
 	xtk_open_message_popup(self, "Privilege is enabled");
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_SUCCESS;
 }
@@ -341,7 +341,7 @@ int check_privilege_is_blacklisted_handler(struct xtk_policy* self)
 {
 	int state, index;
 	char *privilege;
-	dpm_context_h context;
+	device_policy_manager_h handle;
 	const char* text[] = {
 		"Wrt Packakage Privilege",
 		"Core Package Privilege"
@@ -359,14 +359,14 @@ int check_privilege_is_blacklisted_handler(struct xtk_policy* self)
 		return POLICY_RESULT_NONE;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
+	handle = dpm_manager_create();
+	if (handle == NULL) {
 		xtk_open_message_popup(self, "Failed to create device policy manager");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_application_check_privilege_is_blacklisted(context, index, privilege, &state) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
+	if (dpm_application_check_privilege_is_blacklisted(handle, index, privilege, &state) != DPM_ERROR_NONE) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to query privilege blacklist");
 		return POLICY_RESULT_FAIL;
 	}
@@ -374,7 +374,7 @@ int check_privilege_is_blacklisted_handler(struct xtk_policy* self)
 	xtk_open_message_popup(self, state ? "Privilege is disabled"
 									   : "Privilege is enabled");
 
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_SUCCESS;
 }

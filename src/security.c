@@ -20,25 +20,25 @@
 
 int lock_now_handler(struct xtk_policy* self)
 {
-	dpm_context_h context;
+	device_policy_manager_h handle;
 
 	if (xtk_open_confirm_popup(self,"This operation will lockout the screen") == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	};
 
-	context = dpm_context_create();
-	if (context == NULL) {
+	handle = dpm_manager_create();
+	if (handle == NULL) {
 		xtk_open_message_popup(self, "Failed to create device policy manager");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_security_lockout_screen(context) != DPM_ERROR_NONE) {
+	if (dpm_security_lockout_screen(handle) != DPM_ERROR_NONE) {
 		xtk_open_message_popup(self, "Failed to lockout screen");
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_SUCCESS;
 }
@@ -46,7 +46,7 @@ int lock_now_handler(struct xtk_policy* self)
 int encrypt_device_handler(struct xtk_policy* self)
 {
     int index;
-    dpm_context_h context;
+    device_policy_manager_h handle;
     const char *text[] = {
         "Encrypt Internal Storage",
         "Encrypt External Storage"
@@ -57,27 +57,27 @@ int encrypt_device_handler(struct xtk_policy* self)
         return POLICY_RESULT_NONE;
     }
 
-    context = dpm_context_create();
-    if (context == NULL) {
+    handle = dpm_manager_create();
+    if (handle == NULL) {
         xtk_open_message_popup(self, "Failed to create device policy manager");
         return POLICY_RESULT_FAIL;
     }
 
     if (index == 0) {
-        if (dpm_security_set_internal_storage_encryption(context, TRUE) != DPM_ERROR_NONE) {
-            dpm_context_destroy(context);
+        if (dpm_security_set_internal_storage_encryption(handle, TRUE) != DPM_ERROR_NONE) {
+            dpm_manager_destroy(handle);
             xtk_open_message_popup(self, "Failed to enforce policy");
             return POLICY_RESULT_FAIL;
         }
     } else if (index == 1) {
-        if (dpm_security_set_external_storage_encryption(context, TRUE) != DPM_ERROR_NONE) {
-            dpm_context_destroy(context);
+        if (dpm_security_set_external_storage_encryption(handle, TRUE) != DPM_ERROR_NONE) {
+            dpm_manager_destroy(handle);
             xtk_open_message_popup(self, "Failed to enforce policy");
             return POLICY_RESULT_FAIL;
         }
     }
 
-    dpm_context_destroy(context);
+    dpm_manager_destroy(handle);
 
     xtk_open_message_popup(self, "Operation successfully triggerred, "
                                  "but product must provide encryption backend");
@@ -88,7 +88,7 @@ int encrypt_device_handler(struct xtk_policy* self)
 int decrypt_device_handler(struct xtk_policy* self)
 {
     int index;
-    dpm_context_h context;
+    device_policy_manager_h handle;
     const char *text[] = {
         "Decrypt Internal Storage",
         "Decrypt External Storage"
@@ -99,27 +99,27 @@ int decrypt_device_handler(struct xtk_policy* self)
         return POLICY_RESULT_NONE;
     }
 
-    context = dpm_context_create();
-    if (context == NULL) {
+    handle = dpm_manager_create();
+    if (handle == NULL) {
         xtk_open_message_popup(self, "Failed to create device policy manager");
         return POLICY_RESULT_FAIL;
     }
 
     if (index == 0) {
-        if (dpm_security_set_internal_storage_encryption(context, FALSE) != DPM_ERROR_NONE) {
-            dpm_context_destroy(context);
+        if (dpm_security_set_internal_storage_encryption(handle, FALSE) != DPM_ERROR_NONE) {
+            dpm_manager_destroy(handle);
             xtk_open_message_popup(self, "Failed to enforce policy");
             return POLICY_RESULT_FAIL;
         }
     } else if (index == 1) {
-        if (dpm_security_set_external_storage_encryption(context, FALSE) != DPM_ERROR_NONE) {
-            dpm_context_destroy(context);
+        if (dpm_security_set_external_storage_encryption(handle, FALSE) != DPM_ERROR_NONE) {
+            dpm_manager_destroy(handle);
             xtk_open_message_popup(self, "Failed to enforce policy");
             return POLICY_RESULT_FAIL;
         }
     }
 
-    dpm_context_destroy(context);
+    dpm_manager_destroy(handle);
 
     xtk_open_message_popup(self, "Operation successfully triggerred, "
                                  "but product must provide decryption backend");

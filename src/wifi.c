@@ -19,49 +19,36 @@
 
 int wifi_set_profile_change_state_handler(struct xtk_policy* self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_wifi_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_wifi_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create wifi profile change policy handle");
-		dpm_context_destroy(context);
+	if (dpm_wifi_set_profile_change_restriction(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_wifi_set_profile_change_restriction(policy, allow) != 0) {
-		dpm_context_release_wifi_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_wifi_is_profile_change_restricted(policy, &state) != 0) {
-		dpm_context_release_wifi_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_wifi_is_profile_change_restricted(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_wifi_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_wifi_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -69,80 +56,57 @@ int wifi_set_profile_change_state_handler(struct xtk_policy* self)
 int wifi_get_profile_change_state_handler(struct xtk_policy* self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_wifi_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_wifi_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create wifi profile change policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_wifi_is_profile_change_restricted(policy, &state) == 0) {
-		dpm_context_release_wifi_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_wifi_is_profile_change_restricted(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_wifi_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int wifi_set_network_access_restriction_handler(struct xtk_policy* self)
 {
-	int state;
-	int enable;
-	dpm_context_h context = NULL;
-	dpm_wifi_policy_h policy = NULL;
+	int state, enable;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, RESTRICTION_MODE_OPTIONS, &enable) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_wifi_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create wifi network access policy handle");
-		dpm_context_destroy(context);
+	if (dpm_wifi_set_network_access_restriction(handle, enable) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_wifi_set_network_access_restriction(policy, enable) != 0) {
-		dpm_context_release_wifi_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_wifi_is_network_access_restricted(policy, &state) != 0) {
-		dpm_context_release_wifi_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_wifi_is_network_access_restricted(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == enable) {
-		dpm_context_release_wifi_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, RESTRICTION_MODE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_wifi_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -150,31 +114,21 @@ int wifi_set_network_access_restriction_handler(struct xtk_policy* self)
 int wifi_is_network_access_restricted_handler(struct xtk_policy* self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_wifi_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_wifi_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create wifi network access policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_wifi_is_network_access_restricted(policy, &state) == 0) {
-		dpm_context_release_wifi_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_wifi_is_network_access_restricted(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, RESTRICTION_MODE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_wifi_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -182,8 +136,7 @@ int wifi_is_network_access_restricted_handler(struct xtk_policy* self)
 int wifi_add_ssid_to_blocklist_handler(struct xtk_policy* self)
 {
 	char* entry = NULL;
-	dpm_context_h context = NULL;
-	dpm_wifi_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_entry_popup(self, NULL, "SSID", &entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
@@ -195,28 +148,19 @@ int wifi_add_ssid_to_blocklist_handler(struct xtk_policy* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_wifi_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create add ssid to blocklist policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_wifi_add_ssid_to_blocklist(policy, entry) == 0) {
-		dpm_context_release_wifi_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_wifi_add_ssid_to_blocklist(handle, entry) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, entry);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_wifi_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -224,8 +168,7 @@ int wifi_add_ssid_to_blocklist_handler(struct xtk_policy* self)
 int wifi_remove_ssid_from_blocklist_handler(struct xtk_policy* self)
 {
 	char* entry = NULL;
-	dpm_context_h context = NULL;
-	dpm_wifi_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_entry_popup(self, NULL, "SSID", &entry) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
@@ -236,28 +179,19 @@ int wifi_remove_ssid_from_blocklist_handler(struct xtk_policy* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_wifi_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create remove ssid from blocklist policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_wifi_remove_ssid_from_blocklist(policy, entry) == 0) {
-		dpm_context_release_wifi_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_wifi_remove_ssid_from_blocklist(handle, entry) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, entry);
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_wifi_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }

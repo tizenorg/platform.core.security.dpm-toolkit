@@ -23,8 +23,7 @@ int set_device_restriction_handler(struct xtk_policy *self)
 {
 	int state;
 	int enable;
-	dpm_context_h context = NULL;
-	dpm_bluetooth_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, RESTRICTION_MODE_OPTIONS, &enable) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
@@ -32,40 +31,29 @@ int set_device_restriction_handler(struct xtk_policy *self)
 
 	dlog_print(DLOG_ERROR, LOG_TAG, "enable %d", enable);
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_bluetooth_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device restriction policy handle");
-		dpm_context_destroy(context);
+	if (dpm_bluetooth_set_device_restriction(handle, enable) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_bluetooth_set_device_restriction(policy, enable) != 0) {
-		dpm_context_release_bluetooth_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_bluetooth_is_device_restricted(policy, &state) != 0) {
-		dpm_context_release_bluetooth_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_bluetooth_is_device_restricted(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == enable) {
-		dpm_context_release_bluetooth_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, RESTRICTION_MODE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_bluetooth_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -73,31 +61,21 @@ int set_device_restriction_handler(struct xtk_policy *self)
 int is_device_restricted_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_bluetooth_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_bluetooth_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device restriction policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_bluetooth_is_device_restricted(policy, &state) == 0) {
-		dpm_context_release_bluetooth_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_bluetooth_is_device_restricted(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, RESTRICTION_MODE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_bluetooth_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -106,47 +84,35 @@ int set_uuid_restriction_handler(struct xtk_policy *self)
 {
 	int state;
 	int enable;
-	dpm_context_h context = NULL;
-	dpm_bluetooth_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, RESTRICTION_MODE_OPTIONS, &enable) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_bluetooth_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create uuid restriction policy handle");
-		dpm_context_destroy(context);
+	if (dpm_bluetooth_set_uuid_restriction(handle, enable) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_bluetooth_set_uuid_restriction(policy, enable) != 0) {
-		dpm_context_release_bluetooth_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_bluetooth_is_uuid_restricted(policy, &state) != 0) {
-		dpm_context_release_bluetooth_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_bluetooth_is_uuid_restricted(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == enable) {
-		dpm_context_release_bluetooth_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, RESTRICTION_MODE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_bluetooth_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -154,31 +120,21 @@ int set_uuid_restriction_handler(struct xtk_policy *self)
 int is_uuid_restricted_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_bluetooth_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_bluetooth_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create uuid restriction policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_bluetooth_is_uuid_restricted(policy, &state) == 0) {
-		dpm_context_release_bluetooth_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_bluetooth_is_uuid_restricted(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, RESTRICTION_MODE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_bluetooth_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }

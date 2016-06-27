@@ -15,53 +15,41 @@
  */
 
 #include "dpm-toolkit.h"
+
 #include <dpm/restriction.h>
 
 int set_camera_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create camera policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_camera_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_camera_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_camera_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_camera_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -69,80 +57,57 @@ int set_camera_state_handler(struct xtk_policy *self)
 int get_camera_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create camera policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_camera_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_camera_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int set_microphone_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create Microphone policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_microphone_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_microphone_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_microphone_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_microphone_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -150,31 +115,21 @@ int set_microphone_state_handler(struct xtk_policy *self)
 int get_microphone_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create microphone policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_microphone_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_microphone_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -183,47 +138,35 @@ int set_location_state_handler(struct xtk_policy *self)
 {
 	int state;
 	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create location policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_location_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_location_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_location_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_location_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -231,81 +174,58 @@ int set_location_state_handler(struct xtk_policy *self)
 int get_location_state_handler(struct xtk_policy *self)
 {
 	int state, ret;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create location policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	ret = dpm_restriction_get_location_state(policy, &state);
+	ret = dpm_restriction_get_location_state(handle, &state);
 	if (ret == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int set_clipboard_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create clipboard policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_clipboard_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_clipboard_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_clipboard_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_clipboard_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -313,161 +233,57 @@ int set_clipboard_state_handler(struct xtk_policy *self)
 int get_clipboard_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create clipboard policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_clipboard_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_clipboard_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
-
-	return POLICY_RESULT_FAIL;
-}
-
-int set_settings_changes_state_handler(struct xtk_policy *self)
-{
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
-
-	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
-		return POLICY_RESULT_FAIL;
-	}
-
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create setting changes policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_set_settings_changes_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_settings_changes_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
-		return POLICY_RESULT_NONE;
-	}
-
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
-
-	return POLICY_RESULT_FAIL;
-}
-
-int get_settings_changes_state_handler(struct xtk_policy *self)
-{
-	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
-
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
-		return POLICY_RESULT_FAIL;
-	}
-
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create setting changes policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_settings_changes_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
-		return POLICY_RESULT_NONE;
-	}
-
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int set_usb_debugging_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb debugging policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_usb_debugging_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_usb_debugging_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_usb_debugging_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_usb_debugging_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -475,80 +291,57 @@ int set_usb_debugging_state_handler(struct xtk_policy *self)
 int get_usb_debugging_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb debugging policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_usb_debugging_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_usb_debugging_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int set_wifi_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create wifi policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_wifi_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_wifi_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_wifi_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_wifi_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -556,31 +349,21 @@ int set_wifi_state_handler(struct xtk_policy *self)
 int get_wifi_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create wifi policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_wifi_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_wifi_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -589,47 +372,35 @@ int set_wifi_hotspot_state_handler(struct xtk_policy *self)
 {
 	int state;
 	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create wifi hotspot policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_wifi_hotspot_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_wifi_hotspot_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_wifi_hotspot_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_wifi_hotspot_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -637,80 +408,57 @@ int set_wifi_hotspot_state_handler(struct xtk_policy *self)
 int get_wifi_hotspot_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create wifi hotspot policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_wifi_hotspot_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_wifi_hotspot_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int set_bluetooth_tethering_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create bluetooth tethering policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_bluetooth_tethering_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_bluetooth_tethering_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_bluetooth_tethering_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_bluetooth_tethering_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -718,80 +466,57 @@ int set_bluetooth_tethering_state_handler(struct xtk_policy *self)
 int get_bluetooth_tethering_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create bluetooth tethering policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_bluetooth_tethering_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_bluetooth_tethering_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int set_usb_tethering_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_usb_tethering_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_usb_tethering_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_usb_tethering_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_usb_tethering_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -799,31 +524,21 @@ int set_usb_tethering_state_handler(struct xtk_policy *self)
 int get_usb_tethering_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_usb_tethering_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_usb_tethering_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -831,7 +546,7 @@ int get_usb_tethering_state_handler(struct xtk_policy *self)
 int set_external_storage_state_handler(struct xtk_policy *self)
 {
 	int index, state;
-	dpm_context_h context = NULL;
+	device_policy_manager_h handle = NULL;
 	const char* text[] = {
 		"Disallow External Storage",
 		"Allow External Storage"
@@ -841,26 +556,26 @@ int set_external_storage_state_handler(struct xtk_policy *self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		xtk_open_message_popup(self, "Failed to create device policy manager");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		xtk_open_message_popup(self, "Failed to create device handle manager");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_external_storage_state(context, index) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to enforce policy");
+	if (dpm_restriction_set_external_storage_state(handle, index) != DPM_ERROR_NONE) {
+		dpm_manager_destroy(handle);
+		xtk_open_message_popup(self, "Failed to enforce handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_get_external_storage_state(context, &state) != DPM_ERROR_NONE) {
-		dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to query policy");
+	if (dpm_restriction_get_external_storage_state(handle, &state) != DPM_ERROR_NONE) {
+		dpm_manager_destroy(handle);
+		xtk_open_message_popup(self, "Failed to query handle");
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state != index) {
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Policy was not setted properly");;
 		return POLICY_RESULT_NONE;
 	}
@@ -868,7 +583,7 @@ int set_external_storage_state_handler(struct xtk_policy *self)
 	xtk_open_message_popup(self, state ? "External Storage Allowed"
 									   : "External Storage Disallowed");
 
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -876,73 +591,60 @@ int set_external_storage_state_handler(struct xtk_policy *self)
 int get_external_storage_state_handler(struct xtk_policy *self)
 {
     int state;
-    dpm_context_h context = NULL;
+    device_policy_manager_h handle = NULL;
 
-    context = dpm_context_create();
-    if (context == NULL) {
-		xtk_open_message_popup(self, "Failed to create device policy manager");
+    handle = dpm_manager_create();
+    if (handle == NULL) {
+		xtk_open_message_popup(self, "Failed to create device handle manager");
         return POLICY_RESULT_FAIL;
     }
 
-    if (dpm_restriction_get_external_storage_state(context, &state) != DPM_ERROR_NONE) {
-        dpm_context_destroy(context);
-		xtk_open_message_popup(self, "Failed to query policy");
+    if (dpm_restriction_get_external_storage_state(handle, &state) != DPM_ERROR_NONE) {
+        dpm_manager_destroy(handle);
+		xtk_open_message_popup(self, "Failed to query handle");
         return POLICY_RESULT_NONE;
     }
 
 	xtk_open_message_popup(self, state ? "External Storage Allowed"
 									   : "External Storage Disallowed");
 
-    dpm_context_destroy(context);
+    dpm_manager_destroy(handle);
 
     return POLICY_RESULT_FAIL;
 }
 
 int set_bluetooth_mode_change_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_bluetooth_mode_change_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_bluetooth_mode_change_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_bluetooth_mode_change_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_bluetooth_mode_change_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -950,80 +652,57 @@ int set_bluetooth_mode_change_state_handler(struct xtk_policy *self)
 int get_bluetooth_mode_change_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_bluetooth_mode_change_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_bluetooth_mode_change_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int set_bluetooth_desktop_connectivity_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_bluetooth_desktop_connectivity_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_bluetooth_desktop_connectivity_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_bluetooth_desktop_connectivity_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_bluetooth_desktop_connectivity_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -1031,80 +710,57 @@ int set_bluetooth_desktop_connectivity_state_handler(struct xtk_policy *self)
 int get_bluetooth_desktop_connectivity_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_bluetooth_desktop_connectivity_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_bluetooth_desktop_connectivity_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int set_bluetooth_pairing_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_bluetooth_pairing_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_bluetooth_pairing_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_bluetooth_pairing_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_bluetooth_pairing_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -1112,80 +768,57 @@ int set_bluetooth_pairing_state_handler(struct xtk_policy *self)
 int get_bluetooth_pairing_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_bluetooth_pairing_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_bluetooth_pairing_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int set_popimap_email_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_popimap_email_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_popimap_email_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_popimap_email_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_popimap_email_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -1193,80 +826,57 @@ int set_popimap_email_state_handler(struct xtk_policy *self)
 int get_popimap_email_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_popimap_email_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_popimap_email_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int set_messaging_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_messaging_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_messaging_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_messaging_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_messaging_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -1274,80 +884,57 @@ int set_messaging_state_handler(struct xtk_policy *self)
 int get_messaging_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_messaging_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_messaging_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
 
 int set_browser_state_handler(struct xtk_policy *self)
 {
-	int state;
-	int allow;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	int state, allow;
+	device_policy_manager_h handle = NULL;
 
 	if (xtk_open_radio_popup(self, STATE_CHANGE_OPTIONS, &allow) == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	}
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
+	if (dpm_restriction_set_browser_state(handle, allow) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (dpm_restriction_set_browser_state(policy, allow) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_browser_state(policy, &state) != 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_browser_state(handle, &state) != 0) {
+		dpm_manager_destroy(handle);
 		return POLICY_RESULT_FAIL;
 	}
 
 	if (state == allow) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -1355,31 +942,21 @@ int set_browser_state_handler(struct xtk_policy *self)
 int get_browser_state_handler(struct xtk_policy *self)
 {
 	int state;
-	dpm_context_h context = NULL;
-	dpm_restriction_policy_h policy = NULL;
+	device_policy_manager_h handle = NULL;
 
-	context = dpm_context_create();
-	if (context == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device policy context handle");
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create device handle handle handle");
 		return POLICY_RESULT_FAIL;
 	}
 
-	policy = dpm_context_acquire_restriction_policy(context);
-	if (policy == NULL) {
-		dlog_print(DLOG_ERROR, LOG_TAG, "Failed to create usb tethering policy handle");
-		dpm_context_destroy(context);
-		return POLICY_RESULT_FAIL;
-	}
-
-	if (dpm_restriction_get_browser_state(policy, &state) == 0) {
-		dpm_context_release_restriction_policy(context, policy);
-		dpm_context_destroy(context);
+	if (dpm_restriction_get_browser_state(handle, &state) == 0) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, STATE_CHANGE_MESSAGE(state));
 		return POLICY_RESULT_NONE;
 	}
 
-	dpm_context_release_restriction_policy(context, policy);
-	dpm_context_destroy(context);
+	dpm_manager_destroy(handle);
 
 	return POLICY_RESULT_FAIL;
 }
@@ -1416,14 +993,6 @@ xtk_policy_t xtk_restriction_policy[] = {
 	{
 		.id = "GET_CLIPBOARD_STATE",
 		.handler = get_clipboard_state_handler
-	},
-	{
-		.id = "SET_SETTINGS_CHANGES_STATE",
-		.handler = set_settings_changes_state_handler
-	},
-	{
-		.id = "GET_SETTINGS_CHANGES_STATE",
-		.handler = get_settings_changes_state_handler
 	},
 	{
 		.id = "SET_USB_DEBUGGING_STATE",
