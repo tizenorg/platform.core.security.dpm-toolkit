@@ -82,7 +82,7 @@
 	</policy-group>
 
 	<policy-group id="ZONE" desc="Zone Policy">
-		<policy id="CREATE_ZONE" desc="Create zone" status="ON" wizappid="org.tizen.zone-setup-wizard"/>
+		<policy id="CREATE_ZONE" desc="Create zone" status="ON" wizappid="org.tizen.krate-setup-wizard"/>
 		<policy id="DESTROY_ZONE" desc="Destroy zone" status="ON"/>
 		<policy id="GET_ZONE_LIST" desc="Get zones list" status="ON"/>
 		<policy id="GET_ZONE_STATE" desc="Get zone state" status="ON"/>

@@ -119,6 +119,34 @@ int get_zone_state_handler(struct xtk_policy* self)
 	return POLICY_RESULT_NONE;
 }
 
+static bool zone_list_cb(const char* name, void* user_data)
+{
+    struct xtk_policy* self = (struct xtk_policy*)user_data;
+    xtk_open_message_popup(self, name);
+
+    return true;
+}
+
+int get_zone_list_handler(struct xtk_policy* self)
+{
+	device_policy_manager_h handle = NULL;
+
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		xtk_open_message_popup(self, "Failed to create device handle handle handle");
+		return POLICY_RESULT_FAIL;
+	}
+
+	int ret = dpm_zone_foreach_name(handle, DPM_ZONE_STATE_ALL, zone_list_cb, self);
+	dpm_manager_destroy(handle);
+
+	if (ret != DPM_ERROR_NONE) {
+            xtk_open_message_popup(self, "Failed to get zone state");
+            return POLICY_RESULT_FAIL;
+        }
+	return POLICY_RESULT_NONE;
+}
+
 xtk_policy_t xtk_zone_policy[] = {
 	{
 		.id = "CREATE_ZONE",
@@ -131,6 +159,10 @@ xtk_policy_t xtk_zone_policy[] = {
 	{
 		.id = "GET_ZONE_STATE",
 		.handler = get_zone_state_handler
+	},
+	{
+		.id = "GET_ZONE_LIST",
+		.handler = get_zone_list_handler
 	}
 };
 
