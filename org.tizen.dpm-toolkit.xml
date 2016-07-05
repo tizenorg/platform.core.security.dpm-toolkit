@@ -7,4 +7,23 @@
         <label>dpm-toolkit</label>
         <icon>org.tizen.dpm-toolkit.png</icon>
     </ui-application>
+    <privileges>
+        <privilege>%http://tizen.org/privilege/dpm.password</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.camera</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.microphone</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.location</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.storage</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.clipboard</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.debugging</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.wifi</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.bluetooth</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.usb</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.message</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.email</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.browser</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.zone</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.lock</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.security</privilege>
+        <privilege>%http://tizen.org/privilege/dpm.wipe</privilege>
+    </privileges>
 </manifest>
