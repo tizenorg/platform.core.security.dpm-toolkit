@@ -295,6 +295,7 @@ static void _gl_policy_group_select(void* data, Evas_Object* obj, void* event_in
 		elm_genlist_item_append(genlist, itc, (void *)entity, NULL, ELM_GENLIST_ITEM_NONE,
 							    _gl_policy_select, (void *)entity);
 	}
+	elm_genlist_item_class_free(itc);
 
 	elm_naviframe_item_push(naviframe, selected_group->id, NULL, NULL, genlist, NULL);
 }
@@ -326,6 +327,7 @@ static Evas_Object* create_genlist(Evas_Object* naviframe)
 		elm_genlist_item_append(widget, itc, (void *)policy_group, NULL, ELM_GENLIST_ITEM_NONE,
 								_gl_policy_group_select, (void *)policy_group);
 	}
+	elm_genlist_item_class_free(itc);
 
 	return widget;
 }
