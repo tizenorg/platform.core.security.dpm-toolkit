@@ -14,8 +14,9 @@
  *  limitations under the License
  */
 
-#include "dpm-toolkit.h"
 #include <dpm/wifi.h>
+
+#include "dpm-toolkit.h"
 
 int wifi_set_profile_change_state_handler(struct xtk_policy* self)
 {

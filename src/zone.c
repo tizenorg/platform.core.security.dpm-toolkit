@@ -14,8 +14,9 @@
  *  limitations under the License
  */
 
-#include "dpm-toolkit.h"
 #include <dpm/zone.h>
+
+#include "dpm-toolkit.h"
 
 int create_zone_handler(struct xtk_policy* self)
 {
@@ -102,11 +103,11 @@ int get_zone_state_handler(struct xtk_policy* self)
 
 	switch (ret) {
 	case DPM_ERROR_NONE:
-                if (state & DPM_ZONE_STATE_RUNNING) {
-                    zone_state = "Running";
-                } else if (state & DPM_ZONE_STATE_LOCKED) {
-                    zone_state = "Locked";
-                }
+				if (state & DPM_ZONE_STATE_RUNNING) {
+					zone_state = "Running";
+				} else if (state & DPM_ZONE_STATE_LOCKED) {
+					zone_state = "Locked";
+				}
 
 		xtk_open_message_popup(self, zone_state);
 		return POLICY_RESULT_NONE;
@@ -115,16 +116,16 @@ int get_zone_state_handler(struct xtk_policy* self)
 		return POLICY_RESULT_NONE;
 	}
 
-        xtk_open_message_popup(self, "Failed to get zone state");
+		xtk_open_message_popup(self, "Failed to get zone state");
 	return POLICY_RESULT_NONE;
 }
 
 static bool zone_list_cb(const char* name, void* user_data)
 {
-    struct xtk_policy* self = (struct xtk_policy*)user_data;
-    xtk_open_message_popup(self, name);
+	struct xtk_policy* self = (struct xtk_policy*)user_data;
+	xtk_open_message_popup(self, name);
 
-    return true;
+	return true;
 }
 
 int get_zone_list_handler(struct xtk_policy* self)
@@ -141,9 +142,9 @@ int get_zone_list_handler(struct xtk_policy* self)
 	dpm_manager_destroy(handle);
 
 	if (ret != DPM_ERROR_NONE) {
-            xtk_open_message_popup(self, "Failed to get zone state");
-            return POLICY_RESULT_FAIL;
-        }
+			xtk_open_message_popup(self, "Failed to get zone state");
+			return POLICY_RESULT_FAIL;
+		}
 	return POLICY_RESULT_NONE;
 }
 

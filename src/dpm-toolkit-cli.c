@@ -54,7 +54,7 @@ inline void section_separator(void)
 
 inline void group_separator(void)
 {
-    fancy_text(DEFAULT, NONE, "--------------------------------------------------\n");
+	fancy_text(DEFAULT, NONE, "--------------------------------------------------\n");
 }
 
 inline void text_header(const char* title, const char* msg)
@@ -74,7 +74,7 @@ static int open_entry_popup(const char* title, const char* msg, const char* guid
 	text_header(title, msg);
 	section_separator();
 	fancy_text(DEFAULT, NONE, "Enter text(type '.' to cancel) : ");
-        *value = malloc(64);
+		*value = malloc(64);
 	scanf("%64s", *value);
 	if (*value[0] == '.') {
 		return XTK_EVENT_CANCEL;

@@ -14,9 +14,9 @@
  *  limitations under the License
  */
 
-#include "dpm-toolkit.h"
-
 #include <dpm/application.h>
+
+#include "dpm-toolkit.h"
 
 int install_package_handler(struct xtk_policy* self)
 {
@@ -59,7 +59,7 @@ int uninstall_package_handler(struct xtk_policy* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-	if (xtk_open_entry_popup(self, "org.tizen.sampleapp",
+	if (xtk_open_entry_popup(self, "sampleapp",
 								   "Enter package id",
 								   &pkgid) == XTK_EVENT_CANCEL) {
 		dlog_print(DLOG_DEBUG, LOG_TAG, "Entry get canceled");
@@ -100,8 +100,8 @@ int set_mode_restriction_handler(struct xtk_policy* self)
 	}
 
 	switch (index) {
-	case 0 : index = DPM_PACKAGE_RESTRICTION_MODE_INSTALL; break;
-	case 1 : index = DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL; break;
+	case 0: index = DPM_PACKAGE_RESTRICTION_MODE_INSTALL; break;
+	case 1: index = DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL; break;
 	}
 
 	if (dpm_application_set_mode_restriction(handle, index) != DPM_ERROR_NONE) {
@@ -159,8 +159,8 @@ int unset_mode_restriction_handler(struct xtk_policy* self)
 	}
 
 	switch (index) {
-	case 0 : index = DPM_PACKAGE_RESTRICTION_MODE_INSTALL; break;
-	case 1 : index = DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL; break;
+	case 0: index = DPM_PACKAGE_RESTRICTION_MODE_INSTALL; break;
+	case 1: index = DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL; break;
 	}
 
 	if (dpm_application_unset_mode_restriction(handle, index) != DPM_ERROR_NONE) {
@@ -183,10 +183,10 @@ int unset_mode_restriction_handler(struct xtk_policy* self)
 
 	switch (index) {
 	case DPM_PACKAGE_RESTRICTION_MODE_INSTALL:
-		msg = "All package installation is disabled";
+		msg = "All package installation is enabled";
 		break;
 	case DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL:
-		msg = "All package uninstallation is disabled";
+		msg = "All package uninstallation is enabled";
 		break;
 	}
 
@@ -217,7 +217,7 @@ int get_mode_restriction_handler(struct xtk_policy* self)
 	dpm_manager_destroy(handle);
 	snprintf(msg, 128, "Package installation is %s, Package uninstallation is %s",
 			(state & DPM_PACKAGE_RESTRICTION_MODE_INSTALL) ? "DISABLED" : "ENABLED",
-		 	(state & DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL) ? "DISABLED" : "ENABLED");
+			 (state & DPM_PACKAGE_RESTRICTION_MODE_UNINSTALL) ? "DISABLED" : "ENABLED");
 
 	xtk_open_message_popup(self, msg);
 
@@ -260,7 +260,7 @@ int add_privilege_to_blacklist_handler(struct xtk_policy* self)
 		return POLICY_RESULT_FAIL;
 	}
 
-    if (dpm_application_check_privilege_is_blacklisted(handle, index, privilege, &state) != DPM_ERROR_NONE) {
+	if (dpm_application_check_privilege_is_blacklisted(handle, index, privilege, &state) != DPM_ERROR_NONE) {
 		free(privilege);
 		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to query privilege blacklist");
