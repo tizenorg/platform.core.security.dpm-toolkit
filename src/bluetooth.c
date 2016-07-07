@@ -16,8 +16,9 @@
 
 #include <stdbool.h>
 
-#include "dpm-toolkit.h"
 #include <dpm/bluetooth.h>
+
+#include "dpm-toolkit.h"
 
 int set_device_restriction_handler(struct xtk_policy *self)
 {

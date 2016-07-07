@@ -22,7 +22,7 @@ int lock_now_handler(struct xtk_policy* self)
 {
 	device_policy_manager_h handle;
 
-	if (xtk_open_confirm_popup(self,"This operation will lockout the screen") == XTK_EVENT_CANCEL) {
+	if (xtk_open_confirm_popup(self, "This operation will lockout the screen") == XTK_EVENT_CANCEL) {
 		return POLICY_RESULT_FAIL;
 	};
 
@@ -45,129 +45,129 @@ int lock_now_handler(struct xtk_policy* self)
 
 int encrypt_device_handler(struct xtk_policy* self)
 {
-    int index;
-    device_policy_manager_h handle;
-    const char *text[] = {
-        "Encrypt Internal Storage",
-        "Encrypt External Storage"
-    };
+	int index;
+	device_policy_manager_h handle;
+	const char *text[] = {
+		"Encrypt Internal Storage",
+		"Encrypt External Storage"
+	};
 
-    if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
-        dlog_print(DLOG_DEBUG, LOG_TAG, "Selection canceled");
-        return POLICY_RESULT_NONE;
-    }
+	if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Selection canceled");
+		return POLICY_RESULT_NONE;
+	}
 
-    handle = dpm_manager_create();
-    if (handle == NULL) {
-        xtk_open_message_popup(self, "Failed to create device policy manager");
-        return POLICY_RESULT_FAIL;
-    }
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		xtk_open_message_popup(self, "Failed to create device policy manager");
+		return POLICY_RESULT_FAIL;
+	}
 
-    if (index == 0) {
-        if (dpm_security_set_internal_storage_encryption(handle, TRUE) != DPM_ERROR_NONE) {
-            dpm_manager_destroy(handle);
-            xtk_open_message_popup(self, "Failed to enforce policy");
-            return POLICY_RESULT_FAIL;
-        }
-    } else if (index == 1) {
-        if (dpm_security_set_external_storage_encryption(handle, TRUE) != DPM_ERROR_NONE) {
-            dpm_manager_destroy(handle);
-            xtk_open_message_popup(self, "Failed to enforce policy");
-            return POLICY_RESULT_FAIL;
-        }
-    }
+	if (index == 0) {
+		if (dpm_security_set_internal_storage_encryption(handle, TRUE) != DPM_ERROR_NONE) {
+			dpm_manager_destroy(handle);
+			xtk_open_message_popup(self, "Failed to enforce policy");
+			return POLICY_RESULT_FAIL;
+		}
+	} else if (index == 1) {
+		if (dpm_security_set_external_storage_encryption(handle, TRUE) != DPM_ERROR_NONE) {
+			dpm_manager_destroy(handle);
+			xtk_open_message_popup(self, "Failed to enforce policy");
+			return POLICY_RESULT_FAIL;
+		}
+	}
 
-    dpm_manager_destroy(handle);
+	dpm_manager_destroy(handle);
 
-    xtk_open_message_popup(self, "Operation successfully triggerred, "
-                                 "but product must provide encryption backend");
+	xtk_open_message_popup(self, "Operation successfully triggerred, "
+								 "but product must provide encryption backend");
 
-    return POLICY_RESULT_SUCCESS;
+	return POLICY_RESULT_SUCCESS;
 }
 
 int decrypt_device_handler(struct xtk_policy* self)
 {
-    int index;
-    device_policy_manager_h handle;
-    const char *text[] = {
-        "Decrypt Internal Storage",
-        "Decrypt External Storage"
-    };
+	int index;
+	device_policy_manager_h handle;
+	const char *text[] = {
+		"Decrypt Internal Storage",
+		"Decrypt External Storage"
+	};
 
-    if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
-        dlog_print(DLOG_DEBUG, LOG_TAG, "Selection canceled");
-        return POLICY_RESULT_NONE;
-    }
+	if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Selection canceled");
+		return POLICY_RESULT_NONE;
+	}
 
-    handle = dpm_manager_create();
-    if (handle == NULL) {
-        xtk_open_message_popup(self, "Failed to create device policy manager");
-        return POLICY_RESULT_FAIL;
-    }
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		xtk_open_message_popup(self, "Failed to create device policy manager");
+		return POLICY_RESULT_FAIL;
+	}
 
-    if (index == 0) {
-        if (dpm_security_set_internal_storage_encryption(handle, FALSE) != DPM_ERROR_NONE) {
-            dpm_manager_destroy(handle);
-            xtk_open_message_popup(self, "Failed to enforce policy");
-            return POLICY_RESULT_FAIL;
-        }
-    } else if (index == 1) {
-        if (dpm_security_set_external_storage_encryption(handle, FALSE) != DPM_ERROR_NONE) {
-            dpm_manager_destroy(handle);
-            xtk_open_message_popup(self, "Failed to enforce policy");
-            return POLICY_RESULT_FAIL;
-        }
-    }
+	if (index == 0) {
+		if (dpm_security_set_internal_storage_encryption(handle, FALSE) != DPM_ERROR_NONE) {
+			dpm_manager_destroy(handle);
+			xtk_open_message_popup(self, "Failed to enforce policy");
+			return POLICY_RESULT_FAIL;
+		}
+	} else if (index == 1) {
+		if (dpm_security_set_external_storage_encryption(handle, FALSE) != DPM_ERROR_NONE) {
+			dpm_manager_destroy(handle);
+			xtk_open_message_popup(self, "Failed to enforce policy");
+			return POLICY_RESULT_FAIL;
+		}
+	}
 
-    dpm_manager_destroy(handle);
+	dpm_manager_destroy(handle);
 
-    xtk_open_message_popup(self, "Operation successfully triggerred, "
-                                 "but product must provide decryption backend");
+	xtk_open_message_popup(self, "Operation successfully triggerred, "
+								 "but product must provide decryption backend");
 
-    return POLICY_RESULT_SUCCESS;
+	return POLICY_RESULT_SUCCESS;
 
 }
 
 int wipe_data_handler(struct xtk_policy* self)
 {
-    int index;
-    device_policy_manager_h handle;
-    const char *text[] = {
-        "Wipe Internal Storage",
-        "Wipe External Storage"
-    };
+	int index;
+	device_policy_manager_h handle;
+	const char *text[] = {
+		"Wipe Internal Storage",
+		"Wipe External Storage"
+	};
 
-    if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
-        dlog_print(DLOG_DEBUG, LOG_TAG, "Selection canceled");
-        return POLICY_RESULT_NONE;
-    }
+	if (xtk_open_radio_popup(self, text, ARRAY_SIZE(text), &index) == XTK_EVENT_CANCEL) {
+		dlog_print(DLOG_DEBUG, LOG_TAG, "Selection canceled");
+		return POLICY_RESULT_NONE;
+	}
 
-    handle = dpm_manager_create();
-    if (handle == NULL) {
-        xtk_open_message_popup(self, "Failed to create device policy manager");
-        return POLICY_RESULT_FAIL;
-    }
+	handle = dpm_manager_create();
+	if (handle == NULL) {
+		xtk_open_message_popup(self, "Failed to create device policy manager");
+		return POLICY_RESULT_FAIL;
+	}
 
-    if (index == 0) {
-        if (dpm_security_wipe_data(handle, DPM_SECURITY_WIPE_INTERNAL_STORAGE) != DPM_ERROR_NONE) {
-            dpm_manager_destroy(handle);
-            xtk_open_message_popup(self, "Failed to enforce policy");
-            return POLICY_RESULT_FAIL;
-        }
-    } else if (index == 1) {
-        if (dpm_security_wipe_data(handle, DPM_SECURITY_WIPE_EXTERNAL_STORAGE) != DPM_ERROR_NONE) {
-            dpm_manager_destroy(handle);
-            xtk_open_message_popup(self, "Failed to enforce policy");
-            return POLICY_RESULT_FAIL;
-        }
-    }
+	if (index == 0) {
+		if (dpm_security_wipe_data(handle, DPM_SECURITY_WIPE_INTERNAL_STORAGE) != DPM_ERROR_NONE) {
+			dpm_manager_destroy(handle);
+			xtk_open_message_popup(self, "Failed to enforce policy");
+			return POLICY_RESULT_FAIL;
+		}
+	} else if (index == 1) {
+		if (dpm_security_wipe_data(handle, DPM_SECURITY_WIPE_EXTERNAL_STORAGE) != DPM_ERROR_NONE) {
+			dpm_manager_destroy(handle);
+			xtk_open_message_popup(self, "Failed to enforce policy");
+			return POLICY_RESULT_FAIL;
+		}
+	}
 
-    dpm_manager_destroy(handle);
+	dpm_manager_destroy(handle);
 
-    xtk_open_message_popup(self, "Operation successfully triggerred "
-                                 "but it may take a long time to complete");
+	xtk_open_message_popup(self, "Operation successfully triggerred "
+								 "but it may take a long time to complete");
 
-    return POLICY_RESULT_SUCCESS;
+	return POLICY_RESULT_SUCCESS;
 }
 
 xtk_policy_t xtk_security_policy[] = {

@@ -14,9 +14,9 @@
  *  limitations under the License
  */
 
-#include "dpm-toolkit.h"
-
 #include <dpm/restriction.h>
+
+#include "dpm-toolkit.h"
 
 int set_camera_state_handler(struct xtk_policy *self)
 {
@@ -590,27 +590,27 @@ int set_external_storage_state_handler(struct xtk_policy *self)
 
 int get_external_storage_state_handler(struct xtk_policy *self)
 {
-    int state;
-    device_policy_manager_h handle = NULL;
+	int state;
+	device_policy_manager_h handle = NULL;
 
-    handle = dpm_manager_create();
-    if (handle == NULL) {
+	handle = dpm_manager_create();
+	if (handle == NULL) {
 		xtk_open_message_popup(self, "Failed to create device handle manager");
-        return POLICY_RESULT_FAIL;
-    }
+		return POLICY_RESULT_FAIL;
+	}
 
-    if (dpm_restriction_get_external_storage_state(handle, &state) != DPM_ERROR_NONE) {
-        dpm_manager_destroy(handle);
+	if (dpm_restriction_get_external_storage_state(handle, &state) != DPM_ERROR_NONE) {
+		dpm_manager_destroy(handle);
 		xtk_open_message_popup(self, "Failed to query handle");
-        return POLICY_RESULT_NONE;
-    }
+		return POLICY_RESULT_NONE;
+	}
 
 	xtk_open_message_popup(self, state ? "External Storage Allowed"
 									   : "External Storage Disallowed");
 
-    dpm_manager_destroy(handle);
+	dpm_manager_destroy(handle);
 
-    return POLICY_RESULT_FAIL;
+	return POLICY_RESULT_FAIL;
 }
 
 int set_bluetooth_mode_change_state_handler(struct xtk_policy *self)
@@ -1034,14 +1034,14 @@ xtk_policy_t xtk_restriction_policy[] = {
 		.id = "GET_USB_TETHERING_STATE",
 		.handler = get_usb_tethering_state_handler
 	},
-    {
-        .id = "SET_EXTERNAL_STORAGE_STATE",
-        .handler = set_external_storage_state_handler
-    },
-    {
-        .id = "GET_EXTERNAL_STORAGE_STATE",
-        .handler = get_external_storage_state_handler
-    },
+	{
+		.id = "SET_EXTERNAL_STORAGE_STATE",
+		.handler = set_external_storage_state_handler
+	},
+	{
+		.id = "GET_EXTERNAL_STORAGE_STATE",
+		.handler = get_external_storage_state_handler
+	},
 	{
 		.id = "SET_BLUETOOTH_MODE_CHANGE_STATE",
 		.handler = set_bluetooth_mode_change_state_handler

@@ -14,9 +14,9 @@
  *  limitations under the License
  */
 
-#include "dpm-toolkit.h"
-
 #include <dpm/password.h>
+
+#include "dpm-toolkit.h"
 
 int set_password_quality_handler(struct xtk_policy *self)
 {

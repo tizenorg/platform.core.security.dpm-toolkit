@@ -96,7 +96,7 @@ static inline const char* policy_get_title(xtk_policy_t* entity)
 
 static inline const char* policy_get_default_value(xtk_policy_t* entity)
 {
- 	return entity->param;
+	 return entity->param;
 }
 
 xtk_context_t* xtk_context_get_current(void);

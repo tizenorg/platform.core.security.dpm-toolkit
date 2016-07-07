@@ -293,7 +293,7 @@ static void _gl_policy_group_select(void* data, Evas_Object* obj, void* event_in
 		xtk_policy_t* entity = glist_to_policy(policy_list);
 
 		elm_genlist_item_append(genlist, itc, (void *)entity, NULL, ELM_GENLIST_ITEM_NONE,
-							    _gl_policy_select, (void *)entity);
+								_gl_policy_select, (void *)entity);
 	}
 	elm_genlist_item_class_free(itc);
 

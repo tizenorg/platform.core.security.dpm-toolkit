@@ -151,28 +151,28 @@ int xtk_init_policy(xtk_policy_group_t* group, xtk_policy_t* policy, int nr)
 
 char* get_now_zone(void)
 {
-    struct passwd pwd, *result;
-    int bufsize;
+	struct passwd pwd, *result;
+	int bufsize;
 
-    bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
-    if (bufsize == -1) {
-        bufsize = 16384;
+	bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
+	if (bufsize == -1) {
+		bufsize = 16384;
 	}
 
-    char *buf = malloc(bufsize * sizeof(char));
+	char *buf = malloc(bufsize * sizeof(char));
 	if (buf == NULL) {
 		return NULL;
 	}
 
-    getpwuid_r(getuid(), &pwd, buf, bufsize, &result);
-    if (result == NULL) {
-        free(buf);
-        return NULL;
-    }
+	getpwuid_r(getuid(), &pwd, buf, bufsize, &result);
+	if (result == NULL) {
+		free(buf);
+		return NULL;
+	}
 
-    free(buf);
+	free(buf);
 
-    return strdup(result->pw_name);
+	return strdup(result->pw_name);
 }
 
 void xtk_free_policy_list(void)
