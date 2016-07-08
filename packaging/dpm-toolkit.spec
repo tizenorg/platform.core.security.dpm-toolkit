@@ -2,7 +2,6 @@ Name: org.tizen.dpm-toolkit
 Summary: Tizen DPM test toolkit package
 Version: 0.1
 Release: 0
-ExclusiveArch: %arm
 Group: Security/Other
 License: Apache-2.0
 Source0: %{name}-%{version}.tar.gz
