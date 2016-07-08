@@ -107,7 +107,7 @@ static Evas_Object* create_entry_box(Evas_Object* parent, const char* msg, const
 static Evas_Object* create_radio_group(Evas_Object* parent, const char* text[], int nr)
 {
 	int i;
-	Evas_Object* radio_group;
+	Evas_Object* radio_group = NULL;
 	Evas_Object* box = elm_box_add(parent);
 	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
